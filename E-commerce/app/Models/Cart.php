@@ -12,4 +12,7 @@ class Cart extends Model
         'quantity',
         'total_price'
     ];
+    public function users(){
+        return $this->belongsTo(User::class);
+    }
 }
