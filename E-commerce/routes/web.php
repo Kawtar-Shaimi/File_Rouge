@@ -37,3 +37,12 @@ Route::prefix('/')->middleware('auth')->group(function () {
 Route::get('/', function (){
     return view('auth.verifyEmail');
 });
+Route::get('/login', function (){
+    return view('auth.login');
+});
+Route::get('/register', function (){
+    return view('auth.register');
+});
+Route::get('/affichage', function (){
+    return view('client.index');
+});
