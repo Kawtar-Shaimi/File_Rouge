@@ -13,7 +13,7 @@
             <p class="text-gray-300 mb-6">
                 Before proceeding, please check your email for a verification link. If you did not receive the email,
                 <form class="inline" method="POST" action="">
-                    @csrf
+                    @csrf 
                     <button type="submit" class="text-purple-500 hover:underline">click here to request another</button>.
                 </form>
             </p>
