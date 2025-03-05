@@ -48,3 +48,6 @@ Route::get('/affichage', function (){
     return view('client.index');
 });
 Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
+Route::get('/products',function(){
+    return view('product.index');
+});
