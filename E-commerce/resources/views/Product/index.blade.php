@@ -129,6 +129,7 @@
                     `;
                     productGrid.innerHTML += productCard;
                 });
+                
 
                 document.querySelectorAll(".decrease-quantity").forEach(button => {
                     button.addEventListener("click", (event) => {
