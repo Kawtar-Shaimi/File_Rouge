@@ -33,3 +33,7 @@ Route::prefix('/')->middleware('auth')->group(function () {
         return redirect()->route('developers.index');
     })->name('home');
 });
+// Home route
+Route::get('/', function (){
+    return view('auth.verifyEmail');
+});
