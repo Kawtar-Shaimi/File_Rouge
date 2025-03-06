@@ -57,3 +57,6 @@ Route::get('/carts',function(){
 Route::get('/checkout',function(){
     return view('product.checkout');
 });
+Route::get('/succes',function(){
+    return view('product.succes');
+});
