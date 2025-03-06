@@ -63,3 +63,6 @@ Route::get('/succes',function(){
 Route::get('/payement',function(){
     return view('product.payement');
 });
+Route::get('/myproducts',function(){
+    return view(view: 'publisher.myproducts');
+});
