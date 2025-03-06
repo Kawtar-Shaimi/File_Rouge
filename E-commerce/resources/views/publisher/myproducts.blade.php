@@ -74,7 +74,7 @@
 
         <!-- Bouton Ajouter un Produit -->
         <div class="text-center mt-6">
-            <button class="bg-blue-500 text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-blue-600 transition duration-300 shadow-md">
+            <button class="bg-purple-400 text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-blue-600 transition duration-300 shadow-md">
                 ➕ Ajouter un produit
             </button>
         </div>

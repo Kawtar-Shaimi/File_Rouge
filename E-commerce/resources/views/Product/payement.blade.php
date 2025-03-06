@@ -55,7 +55,7 @@
             </div>
 
             <!-- Bouton de paiement -->
-            <button class="w-full bg-blue-500 text-white font-bold py-3 mt-6 rounded-lg hover:bg-blue-600">
+            <button class="w-full bg-purple-400 text-white font-bold py-3 mt-6 rounded-lg hover:bg-blue-600">
                 Payer maintenant
             </button>
         </div>

@@ -48,7 +48,7 @@
                     <span>Total à payer:</span>
                     <span>$24.99</span>
                 </div>
-                <button class="w-full bg-blue-500 text-white font-bold py-3 mt-4 rounded-lg">Passer la commande</button>
+                <button class="w-full bg-purple-400 text-white font-bold py-3 mt-4 rounded-lg">Passer la commande</button>
             </div>
         </div>
 

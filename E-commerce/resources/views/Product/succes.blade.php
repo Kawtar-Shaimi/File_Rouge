@@ -20,7 +20,7 @@
             </div>
             <p class="text-xl font-semibold text-gray-700 mb-6">Merci pour votre achat ! Votre commande a été reçue et est en cours de traitement.</p>
             
-            <button onclick="window.location.href='/'" class="bg-blue-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-600">
+            <button onclick="window.location.href='/'" class="bg-purple-400 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-600">
                 Retour à la page d'accueil
             </button>
         </div>

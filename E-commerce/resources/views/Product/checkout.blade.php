@@ -99,7 +99,7 @@
                 </div>
 
                 <!-- Bouton de paiement -->
-                <button type="submit" class="w-full bg-blue-500 text-white font-bold py-3 rounded-lg mt-6 hover:bg-blue-600">
+                <button type="submit" class="w-full bg-purple-400 text-white font-bold py-3 rounded-lg mt-6 hover:bg-blue-600">
                     Passer la commande
                 </button>
             </form>
