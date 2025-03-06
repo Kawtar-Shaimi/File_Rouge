@@ -51,3 +51,6 @@ Route::get('/clients', [ClientController::class, 'index'])->name('clients.index'
 Route::get('/products',function(){
     return view('product.index');
 });
+Route::get('/carts',function(){
+    return view('product.cart');
+});
