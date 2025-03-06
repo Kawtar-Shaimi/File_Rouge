@@ -69,3 +69,6 @@ Route::get('/myproducts',function(){
 Route::get('/createproduct',function(){
     return view(view: 'publisher.createproduct');
 });
+Route::get('/updateproduct',function(){
+    return view(view: 'publisher.updateproduct');
+});
