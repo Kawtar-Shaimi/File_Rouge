@@ -67,6 +67,7 @@
             </div>
         </div>
 
+        
         <!-- Avis clients -->
         <div class="bg-white p-6 mt-6 rounded-lg shadow-lg">
             <h3 class="text-2xl font-bold text-gray-800 mb-4">Avis des clients</h3>
