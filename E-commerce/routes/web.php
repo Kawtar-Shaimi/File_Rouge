@@ -60,3 +60,6 @@ Route::get('/checkout',function(){
 Route::get('/succes',function(){
     return view('product.succes');
 });
+Route::get('/payement',function(){
+    return view('product.payement');
+});
