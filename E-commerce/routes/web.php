@@ -47,6 +47,9 @@ Route::get('/register', function (){
 Route::get('/affichage', function (){
     return view('client.index');
 });
+Route::get('/showproduct',function(){
+    return view(view: 'client.showproduct');
+});
 Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
 Route::get('/products',function(){
     return view('product.index');
