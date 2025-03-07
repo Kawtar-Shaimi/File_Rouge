@@ -6,21 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Cart extends Model
 {
-    protected $fillable= [
-        'user_id',
-        'product_id',
-        'quantity',
-        'total_price'
-    ];
+    protected $fillable = ['user_id', 'total_price'];
+
     public function users(){
         return $this->belongsTo(User::class);
     }
-    public function products()
-    {
-        return $this->belongsToMany(Product::class)->withPivot('quantity')->withTimestamps();
-    }
-    public function client()
-    {
-        return $this->belongsTo(Client::class);
+
+    public function products(){
+        return $this->hasMany(Product::class);
     }
 }

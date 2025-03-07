@@ -14,12 +14,14 @@ class Product extends Model
         'image',
         'category_id'
     ];
+
     public function category()
     {
         return $this->belongsTo(Category::class);
     }
+
     public function carts()
     {
-        return $this->belongsToMany(Cart::class)->withPivot('quantity')->withTimestamps();
+        return $this->hasMany(Cart::class);
     }
 }
