@@ -13,10 +13,19 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->string('order_number')->unique();
+            $table->string('shipping_address');
+            $table->string('shipping_city');
+            $table->string('shipping_postal_code');
+            $table->string('shipping_country');
+            $table->string('shipping_phone');
+            $table->string('shipping_email');
+            $table->enum('payment_method', ['paypal', 'in shipping']);
+            $table->enum('payment_status', ['pending', 'paid', 'failed'])->default('pending');
+            $table->decimal('total_amount');
+            $table->enum('status', ['pending', 'accepted', 'in shipping', 'completed', 'cancelled'])->default('pending');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->decimal('total_amount');
-            $table->enum('status', ['pending', 'completed', 'cancelled'])->default('pending');
             $table->timestamps();
         });
     }
