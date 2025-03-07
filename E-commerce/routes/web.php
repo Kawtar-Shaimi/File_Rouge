@@ -75,3 +75,6 @@ Route::get('/createproduct',function(){
 Route::get('/updateproduct',function(){
     return view(view: 'publisher.updateproduct');
 });
+Route::get('/admin/index',function(){
+    return view(view: 'admin.index');
+});
