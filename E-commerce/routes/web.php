@@ -84,3 +84,6 @@ Route::get('/admin/index',function(){
 Route::get('/admin/create',function(){
     return view(view: 'admin.create');
 });
+Route::get('/profile',function(){
+    return view(view: 'profile');
+});
