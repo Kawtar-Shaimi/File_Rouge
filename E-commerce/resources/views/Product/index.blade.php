@@ -1,80 +1,54 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <title>Nos Produits</title>
-    <style>
-        .product-card:hover {
-            transform: scale(1.05);
-            transition: transform 0.2s ease-in-out;
-        }
-        .quantity-input::-webkit-outer-spin-button,
-        .quantity-input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        .quantity-input {
-            -moz-appearance: textfield;
-        }
-    </style>
-</head>
-<body class="bg-gray-100 text-gray-900">
+@extends('layouts.app')
 
-    <!-- HEADER -->
-    @include('layouts.header')
+@section('content')
 
-    <!-- Section Recherche et Filtrage -->
-    <div class="container mx-auto px-4 py-10">
-        <h1 class="text-4xl font-bold text-center mb-8 text-blue-600">Nos Produits</h1>
+<!-- Section Recherche et Filtrage -->
+<div class="container mx-auto px-4 py-10">
+    <h1 class="text-4xl font-bold text-center mb-8 text-blue-600">Nos Produits</h1>
 
-        <div class="flex flex-col md:flex-row justify-between items-center mb-6">
-            <!-- Recherche -->
-            <div class="relative w-full md:w-1/3 mb-4 md:mb-0">
-                <input type="text" id="searchInput" placeholder="Rechercher un produit..." 
-                    class="w-full p-3 border rounded-lg shadow-md focus:ring focus:ring-blue-300">
-                <button class="absolute right-2 top-2 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 focus:outline-none">
-                    Chercher
-                </button>
-            </div>
-
-            <!-- Filtre par prix -->
-            <div>
-                <label for="priceFilter" class="block text-lg font-semibold text-blue-600">Filtrer par prix :</label>
-                <input type="range" id="priceFilter" min="10" max="100" value="100" 
-                    class="w-64 cursor-pointer">
-                <span id="priceValue" class="font-semibold">100€</span>
-            </div>
+    <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+        <!-- Recherche -->
+        <div class="relative w-full md:w-1/3 mb-4 md:mb-0">
+            <input type="text" id="searchInput" placeholder="Rechercher un produit..." 
+                class="w-full p-3 border rounded-lg shadow-md focus:ring focus:ring-blue-300">
+            <button class="absolute right-2 top-2 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 focus:outline-none">
+                Chercher
+            </button>
         </div>
 
-        <!-- Produits Grid -->
-        <div id="productGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <!-- Les produits seront injectés ici -->
-        </div>
-
-        <!-- Pagination -->
-        <div class="flex justify-center mt-8">
-            <button id="firstPage" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-l-lg focus:outline-none">
-                Premier
-            </button>
-            <button id="prevPage" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 focus:outline-none">
-                Précédent
-            </button>
-            <span id="pageNumber" class="mx-4 text-lg font-semibold text-blue-600">1</span>
-            <button id="nextPage" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 focus:outline-none">
-                Suivant
-            </button>
-            <button id="lastPage" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-r-lg focus:outline-none">
-                Dernier
-            </button>
+        <!-- Filtre par prix -->
+        <div>
+            <label for="priceFilter" class="block text-lg font-semibold text-blue-600">Filtrer par prix :</label>
+            <input type="range" id="priceFilter" min="10" max="100" value="100" 
+                class="w-64 cursor-pointer">
+            <span id="priceValue" class="font-semibold">100€</span>
         </div>
     </div>
 
-    <!-- FOOTER -->
-    @include('layouts.footer')
+    <!-- Produits Grid -->
+    <div id="productGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <!-- Les produits seront injectés ici -->
+    </div>
 
-    <script>
+    <!-- Pagination -->
+    <div class="flex justify-center mt-8">
+        <button id="firstPage" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-l-lg focus:outline-none">
+            Premier
+        </button>
+        <button id="prevPage" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 focus:outline-none">
+            Précédent
+        </button>
+        <span id="pageNumber" class="mx-4 text-lg font-semibold text-blue-600">1</span>
+        <button id="nextPage" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 focus:outline-none">
+            Suivant
+        </button>
+        <button id="lastPage" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-r-lg focus:outline-none">
+            Dernier
+        </button>
+    </div>
+</div>
+
+<script>
         document.addEventListener("DOMContentLoaded", () => {
             const products = [
                 { id: 1, name: "Produit A", price: 30, image: "https://via.placeholder.com/300" },
@@ -191,5 +165,4 @@
         });
     </script>
 
-</body>
-</html>
+@endsection

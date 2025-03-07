@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ProductController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/login', function () {
@@ -10,9 +12,9 @@ Route::get('/login', function () {
 });
 
 Route::get('/', [ProductController::class, 'index'])->name('products.index');
-Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 /* Auth routes */
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'loginView'])->name('loginView');
@@ -79,7 +81,7 @@ Route::get('/statistics',function(){
     return view(view: 'publisher.statistics');
 });
 Route::get('/admin/index',function(){
-    return view(view: 'admin.index');
+    return view(view: 'admin.categories.create');
 });
 Route::get('/admin/create',function(){
     return view(view: 'admin.create');
