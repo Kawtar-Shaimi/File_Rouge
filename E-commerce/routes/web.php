@@ -78,3 +78,6 @@ Route::get('/updateproduct',function(){
 Route::get('/admin/index',function(){
     return view(view: 'admin.index');
 });
+Route::get('/admin/create',function(){
+    return view(view: 'admin.create');
+});
