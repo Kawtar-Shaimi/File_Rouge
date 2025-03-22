@@ -6,6 +6,7 @@ use App\Models\User;
 use Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -20,6 +21,7 @@ class AuthController extends Controller
     }
 
     public function login(Request $request){
+
         $validatedData = $request->validate([
             'email' => 'required|email',
             'password' => 'required'
@@ -28,7 +30,14 @@ class AuthController extends Controller
         $remember = $request->has('remember');
 
         if (Auth::attempt($validatedData, $remember)) {
-            return redirect()->route('home');
+
+            if(Auth::user()->role == 'client'){
+                return redirect()->route('home');
+            }elseif(Auth::user()->role == 'publisher'){
+                return redirect()->route('publisher.index');
+            }
+
+            return redirect()->route('admin.index');
         }
 
         return back()->withErrors([
@@ -40,7 +49,8 @@ class AuthController extends Controller
         $validatedData = $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
-            'role' => 'required|in:client,developer',
+            'phone' => 'required|unique:users,phone',
+            'role' => 'required|in:client,publisher',
             'password' => 'required|confirmed'
         ]);
 
@@ -52,7 +62,11 @@ class AuthController extends Controller
 
         Auth::login($user, $remember);
 
-        return redirect()->route('home');
+        if($user->role == 'client'){
+            return redirect()->route('home');
+        }
+
+        return redirect()->route('publisher.index');
     }
 
     public function logout(){
