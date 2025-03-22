@@ -45,7 +45,7 @@
                             <label for="phone" class="col-md-4 col-form-label text-md-end">{{ __('Phone') }}</label>
 
                             <div class="col-md-6">
-                                <input id="phone" type="email" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{ old('phone') }}" required autocomplete="phone">
+                                <input id="phone" type="tel" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{ old('phone') }}" required autocomplete="phone">
 
                                 @error('phone')
                                     <span class="invalid-feedback" role="alert">
@@ -66,7 +66,7 @@
                                     <option value="publisher">Publisher</option>
                                 </select>
 
-                                @error('phone')
+                                @error('role')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>

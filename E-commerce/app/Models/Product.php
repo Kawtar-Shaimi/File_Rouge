@@ -12,7 +12,8 @@ class Product extends Model
         'price',
         'stock',
         'image',
-        'category_id'
+        'category_id',
+        'publisher_id',
     ];
 
     public function category()
@@ -26,5 +27,9 @@ class Product extends Model
 
     public function orderProducts(){
         return $this->hasMany(OrderProduct::class);
+    }
+
+    public function publisher(){
+        return $this->belongsTo(Publisher::class);
     }
 }
