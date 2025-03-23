@@ -63,7 +63,7 @@
                                 <span class="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">{{ $order->order->status }}</span>
                             </td>
                             <td class="py-3 px-6 text-center">
-                                <a href="" class="text-blue-500 hover:underline">Voir</a> |
+                                <a href="" class="text-blue-500 hover:underline">Voir</a>
                                 <a href="" class="text-red-500 hover:underline">Annuler</a>
                             </td>
                         </tr>
