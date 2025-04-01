@@ -19,7 +19,7 @@ $(document).ready(function () {
                 success: function(response, _, xhr) {
                     if (xhr.status === 200) {
 
-                        $('#order-modal').removeClass('hidden');
+                        $('#order-modal').removeClass('hidden').addClass('flex');
                         let status = response.data.status;
 
                         const statusMap = {
@@ -69,6 +69,6 @@ $(document).ready(function () {
     });
 
     $('#close-modal').click(function () {
-        $('#order-modal').addClass('hidden');
+        $('#order-modal').addClass('hidden').removeClass('flex');
     });
 });

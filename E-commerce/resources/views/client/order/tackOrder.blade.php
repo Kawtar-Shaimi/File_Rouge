@@ -22,7 +22,7 @@
 </div>
 
 <!-- Modal -->
-<div id="order-modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center hidden">
+<div id="order-modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 items-center justify-center hidden">
     <div class="w-2/4 bg-white px-14 py-16 rounded-lg shadow-lg text-center">
         <h3 class="text-2xl font-semibold text-gray-800">Order Status</h3>
         <div class="mt-6 relative">

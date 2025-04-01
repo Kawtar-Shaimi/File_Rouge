@@ -62,7 +62,7 @@
                     <table class="w-full border-collapse">
                         <tr>
                             <td class="p-3 border">Client ID</td>
-                            <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.users.show', $order-Client) }}">#{{ $order->client->id }}</td>
+                            <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.users.show', $order->client->id ) }}">#{{ $order->client->id }}</td>
                         </tr>
                         <tr>
                             <td class="p-3 border">Client Name</td>
