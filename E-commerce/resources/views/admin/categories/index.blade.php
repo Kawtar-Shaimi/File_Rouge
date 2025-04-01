@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.back-office')
 
 @section('content')
 
@@ -7,11 +7,7 @@
 <!-- Contenu principal -->
 <main class="ml-64 p-6">
 
-    @if (session()->has('success'))
-        <x-alert type="success" :message="session('success')" />
-    @elseif (session()->has('error'))
-        <x-alert type="error" :message="session('error')" />
-    @endif
+
 
     <!-- Tableau des Catégories -->
     <div class="flex justify-between items-center">
@@ -25,6 +21,7 @@
                     <th class="p-3 border">ID</th>
                     <th class="p-3 border">Nom</th>
                     <th class="p-3 border">Description</th>
+                    <th class="p-3 border">Created By</th>
                     <th class="p-3 border">Actions</th>
                 </tr>
             </thead>
@@ -35,6 +32,7 @@
                             <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.categories.show', $category) }}">#{{ $category->id }}</a></td>
                             <td class="p-3 border">{{ $category->name }}</td>
                             <td class="p-3 border">{{ Str::limit($category->description, 15) }}</td>
+                            <td class="p-3 border">{{ $category->admin->name }}</td>
                             <td class="p-3 border">
                                 <button class="bg-blue-500 text-white px-3 py-1 rounded"><a href="{{ route('admin.categories.edit', $category) }}">Modifier</a></button>
                                 <form action="{{ route('admin.categories.delete', $category) }}" method="POST" class="inline">

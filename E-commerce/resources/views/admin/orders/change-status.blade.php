@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.back-office')
 
 @section('content')
 
@@ -19,10 +19,10 @@
                         <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
                         <select id="status" name="status" class="w-full p-3 border rounded-lg mt-1" required>
                             <option value="">Select Status</option>
-                            <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Pending</option>
-                            <option value="in shipping" {{ $order->status == 'in shipping' ? 'selected' : '' }}>In Shipping</option>
-                            <option value="completed" {{ $order->status == 'completed' ? 'selected' : '' }}>Completed</option>
-                            <option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                            <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }} {{ $order->status == 'in shipping' || $order->status == 'completed' || $order->status == 'cancelled' ? 'disabled' : '' }}>Pending</option>
+                            <option value="in shipping" {{ $order->status == 'in shipping' ? 'selected' : '' }} {{ $order->status == 'completed' || $order->status == 'cancelled' ? 'disabled' : '' }}>In Shipping</option>
+                            <option value="completed" {{ $order->status == 'completed' ? 'selected' : '' }} {{ $order->status == 'cancelled' ? 'disabled' : '' }}>Completed</option>
+                            <option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : '' }} {{ $order->status == 'completed' ? 'disabled' : '' }}>Cancelled</option>
                         </select>
                     </div>
                     @error('status')

@@ -17,9 +17,11 @@ return new class extends Migration
             $table->enum('status', ['pending', 'paid', 'failed'])->default('pending');
             $table->decimal('amount');
             $table->unsignedBigInteger('order_id');
-            $table->foreign('order_id')->references('id')->on('orders');
+            $table->foreign('order_id')->references('id')->on('orders')
+                ->onDelete('cascade');
             $table->string('order_number');
-            $table->foreign('order_number')->references('order_number')->on('orders');
+            $table->foreign('order_number')->references('order_number')->on('orders')
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }

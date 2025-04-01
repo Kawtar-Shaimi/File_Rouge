@@ -20,11 +20,13 @@ return new class extends Migration
             $table->string('shipping_country');
             $table->string('shipping_phone');
             $table->string('shipping_email');
+            $table->string('shipping_name');
             $table->enum('payment_method', ['paypal', 'in shipping']);
             $table->decimal('total_amount');
             $table->enum('status', ['pending', 'in shipping', 'completed', 'cancelled'])->default('pending');
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->unsignedBigInteger('client_id');
+            $table->foreign('client_id')->references('id')->on('users')
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }

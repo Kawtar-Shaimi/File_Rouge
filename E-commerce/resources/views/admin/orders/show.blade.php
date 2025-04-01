@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.back-office')
 
 @section('content')
 
@@ -61,12 +61,12 @@
                 <div class="bg-white p-6 rounded-lg shadow-md">
                     <table class="w-full border-collapse">
                         <tr>
-                            <td class="p-3 border">User ID</td>
-                            <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.users.show', $order->user) }}">#{{ $order->user->id }}</td>
+                            <td class="p-3 border">Client ID</td>
+                            <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.users.show', $order-Client) }}">#{{ $order->client->id }}</td>
                         </tr>
                         <tr>
-                            <td class="p-3 border">User Name</td>
-                            <td class="p-3 border">{{ $order->user->name }}</td>
+                            <td class="p-3 border">Client Name</td>
+                            <td class="p-3 border">{{ $order->client->name }}</td>
                         </tr>
                         <tr>
                             <td class="p-3 border">Shipping Email</td>

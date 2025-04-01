@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.back-office')
 
 @section('content')
 
@@ -8,11 +8,7 @@
 
     <h2 class="text-3xl font-extrabold mb-6 text-center text-gray-800">📦 Mes Produits Publiés</h2>
 
-    @if (session()->has('success'))
-        <x-alert type="success" :message="session('success')" />
-    @elseif (session()->has('error'))
-        <x-alert type="error" :message="session('error')" />
-    @endif
+
 
     <!-- Bouton Ajouter un Produit -->
     <div class="text-center my-10">

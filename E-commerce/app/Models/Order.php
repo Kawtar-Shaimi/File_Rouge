@@ -14,14 +14,15 @@ class Order extends Model
         'shipping_country',
         'shipping_phone',
         'shipping_email',
+        'shipping_name',
         'payment_method',
         'total_amount',
         'status',
-        'user_id'
+        'client_id'
     ];
-    public function user()
+    public function client()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Client::class);
     }
 
     public function orderProducts(){

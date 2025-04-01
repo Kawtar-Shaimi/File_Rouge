@@ -1,4 +1,11 @@
-@extends('layouts.app')
+@extends('layouts.front-office')
+
+@section('head')
+    @vite([
+        'resources/css/app.css',
+        'resources/js/app.js'
+    ])
+@endsection
 
 @section('content')
 
@@ -11,10 +18,12 @@
             </svg>
         </div>
         <p class="text-xl font-semibold text-gray-700 mb-6">Merci pour votre achat ! Votre commande a été reçue et est en cours de traitement.</p>
-        
-        <button onclick="window.location.href='/'" class="bg-purple-400 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-600">
-            Retour à la page d'accueil
-        </button>
+        <p class="text-xl font-semibold text-gray-700 mb-6">Votre commande code est {{ $order_number }}</p>
+        <a href="{{ route('home') }}">
+            <button class="bg-purple-400 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-600">
+                Retour à la page d'accueil
+            </button>
+        </a>
     </div>
 </div>
 

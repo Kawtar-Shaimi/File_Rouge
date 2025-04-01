@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.back-office')
 
 @section('content')
 
@@ -7,11 +7,7 @@
 <!-- Contenu principal -->
 <main class="ml-64 p-6">
 
-    @if (session()->has('success'))
-        <x-alert type="success" :message="session('success')" />
-    @elseif (session()->has('error'))
-        <x-alert type="error" :message="session('error')" />
-    @endif
+
 
     <div class="flex justify-between items-center">
         <h2 class="text-2xl font-bold mt-8 mb-4">Liste des Utilisateurs</h2>

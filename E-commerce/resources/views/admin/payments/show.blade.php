@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.back-office')
 
 @section('content')
 
@@ -16,7 +16,7 @@
                     </tr>
                     <tr>
                         <td class="p-3 border">Order ID</td>
-                        <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.payments.show', $payment->order) }}">#{{ $payment->order->id }}</a></td>
+                        <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.orders.show', $payment->order) }}">#{{ $payment->order->id }}</a></td>
                     </tr>
                     <tr>
                         <td class="p-3 border">Order Number</td>
@@ -37,20 +37,20 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="p-3 border">User ID</td>
-                        <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.users.show', $payment->order->user) }}">#{{ $payment->order->user->id }}</a></td>
+                        <td class="p-3 border">Client ID</td>
+                        <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.users.show', $payment->order->client) }}">#{{ $payment->order->client->id }}</a></td>
                     </tr>
                     <tr>
-                        <td class="p-3 border">User Name</td>
-                        <td class="p-3 border">{{ $payment->order->user->name }}</td>
+                        <td class="p-3 border">Client Name</td>
+                        <td class="p-3 border">{{ $payment->order->client->name }}</td>
                     </tr>
                     <tr>
-                        <td class="p-3 border">User Email</td>
-                        <td class="p-3 border">{{ $payment->order->user->email }}</td>
+                        <td class="p-3 border">Client Email</td>
+                        <td class="p-3 border">{{ $payment->order->client->email }}</td>
                     </tr>
                     <tr>
-                        <td class="p-3 border">User Phone</td>
-                        <td class="p-3 border">{{ $payment->order->user->phone }}</td>
+                        <td class="p-3 border">Client Phone</td>
+                        <td class="p-3 border">{{ $payment->order->client->phone }}</td>
                     </tr>
                     <tr>
                         <td class="p-3 border">Payment Amount</td>

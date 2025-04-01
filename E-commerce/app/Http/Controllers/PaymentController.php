@@ -3,14 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Payment;
+use Exception;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
 {
     public function show(Payment $payment)
     {
-        $payment->load('order', 'order.user');
-        return view('admin.payments.show', compact('payment'));
+        try {
+            $payment->load('order', 'order.client');
+            return view('admin.payments.show', compact('payment'));
+        }catch (Exception $e) {
+            return redirect()->back()->with('error', 'Error while getting payment try again later.');
+        }
     }
 
     public function edit(Payment $payment)
@@ -20,29 +25,38 @@ class PaymentController extends Controller
 
     public function update(Request $request, Payment $payment)
     {
-        $request->validate([
-            'status' => 'required|string|in:pending,paid,failed'
-        ]);
+        try {
+            $request->validate([
+                'status' => 'required|string|in:pending,paid,failed'
+            ]);
 
-        $isUpdated = $payment->update([
-            'status' => $request->status
-        ]);
+            $isUpdated = $payment->update([
+                'status' => $request->status
+            ]);
 
-        if (!$isUpdated) {
-            return back()->with('error', 'Payment not updated.');
+            if (!$isUpdated) {
+                return back()->with('error', 'Payment status not updated.');
+            }
+
+            return redirect()->route('admin.index')->with('success', 'Payment status updated successfully.');
+        }catch (Exception $e) {
+            return redirect()->back()->with('error', 'Error while updating payment status try again later.');
         }
-
-        return redirect()->route('admin.index')->with('success', 'Payment updated.');
     }
 
     public function destroy(Payment $payment)
     {
-        $isDeleted = $payment->delete();
 
-        if (!$isDeleted) {
-            return back()->with('error', 'Payment not deleted.');
+        try {
+            $isDeleted = $payment->delete();
+
+            if (!$isDeleted) {
+                return back()->with('error', 'Payment not deleted.');
+            }
+
+            return redirect()->route('admin.index')->with('success', 'Payment deleted successfully.');
+        }catch (Exception $e) {
+            return redirect()->back()->with('error', 'Error while deleting payment try again later.');
         }
-
-        return redirect()->route('admin.index')->with('success', 'Payment deleted.');
     }
 }

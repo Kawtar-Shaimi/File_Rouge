@@ -8,9 +8,15 @@ class Category extends Model
 {
     protected $fillable=[
         'name',
-        'description'
+        'description',
+        'admin_id'
     ];
+
     public function product (){
         return $this->hasMany(Product::class);
+    }
+
+    public function admin(){
+        return $this->belongsTo(Admin::class);
     }
 }

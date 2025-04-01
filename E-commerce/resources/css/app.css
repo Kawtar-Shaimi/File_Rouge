@@ -1,1 +1,19 @@
 @import 'tailwindcss';
+
+.alert{
+    opacity: 1;
+}
+.alert.hide{
+    animation: hide 1s forwards;
+}
+@keyframes hide{
+    0%{
+        opacity: 1;
+    }
+    99%{
+        opacity: 0;
+    }
+    100%{
+        display: none;
+    }
+}

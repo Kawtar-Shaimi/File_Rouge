@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Client extends Model
+class Client extends User
 {
     protected $table = 'users';
 
@@ -15,7 +15,7 @@ class Client extends Model
             $builder->where('role', 'client');
         });
     }
-    
+
     public function cart()
     {
         return $this->hasOne(Cart::class);
@@ -24,5 +24,13 @@ class Client extends Model
     public function orders()
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function wishlist(){
+        return $this->hasOne(Wishlist::class);
+    }
+
+    public function reviews(){
+        return $this->hasMany(Review::class);
     }
 }

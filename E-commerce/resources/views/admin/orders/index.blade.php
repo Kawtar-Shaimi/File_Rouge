@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.back-office')
 
 @section('content')
 
@@ -7,11 +7,7 @@
 <!-- Contenu principal -->
 <main class="ml-64 p-6">
 
-    @if (session()->has('success'))
-        <x-alert type="success" :message="session('success')" />
-    @elseif (session()->has('error'))
-        <x-alert type="error" :message="session('error')" />
-    @endif
+
 
     <!-- Tableau des Commandes -->
     <h2 class="text-2xl font-bold mt-8 mb-4">Liste des Commandes</h2>
@@ -28,13 +24,13 @@
                 </tr>
             </thead>
             <tbody>
-                @if ($orders->count())
+                @if ($orders->count() > 0)
                     @foreach ($orders as $order)
                         <tr class="text-center">
                             <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.orders.show', $order) }}">#{{ $order->id }}</a></td>
-                            <td class="p-3 border">{{ $order->user->name }}</td>
-                            <td class="p-3 border">{{ $order->user->email }}</td>
-                            <td class="p-3 border {{ $order->payment->status === 'paid' ? 'text-green-600 font-bold' : 'text-red-600 font-bold' }}">${{ $order->total_amount }}</td>
+                            <td class="p-3 border">{{ $order->client->name }}</td>
+                            <td class="p-3 border">{{ $order->client->email }}</td>
+                            <td class="p-3 border font-bold {{ $order->payment->status === 'paid' ? 'text-green-600' : ($order->payment->status === 'failed' ? 'text-red-600': 'text-black') }}">${{ $order->total_amount }}</td>
                             <td class="p-3 border">
                                 @if ($order->status == 'pending')
                                     <span class="bg-yellow-400 text-white px-3 py-1 rounded">{{ $order->status }}</span>

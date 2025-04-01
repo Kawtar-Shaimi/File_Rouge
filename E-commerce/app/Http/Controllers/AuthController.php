@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\Client;
+use App\Models\Publisher;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -20,58 +22,92 @@ class AuthController extends Controller
     }
 
     public function login(Request $request){
+        try {
+            $validatedData = $request->validate([
+                'email' => 'required|email',
+                'password' => 'required'
+            ]);
 
-        $validatedData = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
+            $remember = $request->has('remember');
 
-        $remember = $request->has('remember');
+            $guards = ['client', 'publisher', 'admin'];
 
-        if (Auth::attempt($validatedData, $remember)) {
+            foreach ($guards as $guard) {
+                if (Auth::guard($guard)->attempt($validatedData, $remember)) {
 
-            if(Auth::user()->role == 'client'){
-                return redirect()->route('home');
-            }elseif(Auth::user()->role == 'publisher'){
-                return redirect()->route('publisher.index');
+                    $user = Auth::guard($guard)->user();
+
+                    Auth::guard($guard)->login($user, $remember);
+
+                    return match ($guard) {
+                        'client' => redirect()->route('home'),
+                        'publisher' => redirect()->route('publisher.index'),
+                        'admin' => redirect()->route('admin.index'),
+                        default => redirect()->back()->with('error', 'Error while logging in, try again later.')
+                    };
+                }
             }
 
-            return redirect()->route('admin.index');
-        }
+            return back()->withErrors(['email' => 'Invalid credentials.']);
 
-        return back()->withErrors([
-            'email' => 'Invalid credentials.',
-        ]);
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Error while logging in, try again later.');
+        }
     }
 
     public function register(Request $request){
-        $validatedData = $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email',
-            'phone' => 'required|unique:users,phone',
-            'role' => 'required|in:client,publisher',
-            'password' => 'required|confirmed'
-        ]);
+        try {
+            $validatedData = $request->validate([
+                'name' => 'required',
+                'email' => 'required|email|unique:users,email',
+                'phone' => 'required|unique:users,phone',
+                'role' => 'required|in:client,publisher',
+                'password' => 'required|confirmed'
+            ]);
 
-        $validatedData['password'] = Hash::make($validatedData['password']);
+            $validatedData['password'] = Hash::make($validatedData['password']);
 
-        $user = User::create($validatedData);
+            $remember = $request->has('remember');
 
-        $remember = $request->has('remember');
+            switch ($request->role) {
+                case 'client':{
+                    $client = Client::create($validatedData);
 
-        Auth::login($user, $remember);
+                    Auth::guard('client')->login($client, $remember);
 
-        if($user->role == 'client'){
-            return redirect()->route('home');
+                    return redirect()->route('home');
+                }
+                case 'publisher':{
+                    $publisher = Publisher::create($validatedData);
+
+                    Auth::guard('publisher')->login($publisher, $remember);
+
+                    return redirect()->route('publisher.index');
+                }
+
+                default:{
+                    return redirect()->back()->with('error', 'Error while register try again later.');
+                }
+            }
+
+        }catch (Exception $e) {
+            return redirect()->back()->with('error', 'Error while register try again later.');
         }
-
-        return redirect()->route('publisher.index');
     }
 
-    public function logout(){
-        Auth::logout();
+    public function logout($guard){
+        try {
+            if (!in_array($guard, ['client', 'publisher', 'admin'])) {
+                return redirect()->back()->with('error', 'Invalid user type for logout.');
+            }
 
-        return redirect()->route('loginView');
+            Auth::guard($guard)->logout();
+
+            return redirect()->route('loginView');
+
+        }catch (Exception $e) {
+            return redirect()->back()->with('error', 'Error while logout try again later.');
+        }
     }
 }
 

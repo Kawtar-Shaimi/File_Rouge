@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.back-office')
 
 @section('content')
 
@@ -45,7 +45,8 @@
         <table class="min-w-full bg-white border border-gray-300 rounded-lg">
             <thead>
                 <tr class="bg-gray-200 text-gray-700 uppercase text-sm leading-normal">
-                    <th class="py-3 px-6 text-left">ID Commande</th>
+                    <th class="py-3 px-6 text-left">Commande Number</th>
+                    <th class="py-3 px-6 text-left">ID Product</th>
                     <th class="py-3 px-6 text-left">Client</th>
                     <th class="py-3 px-6 text-left">Total</th>
                     <th class="py-3 px-6 text-left">Statut</th>
@@ -56,15 +57,15 @@
                 @if ($orders_count > 0)
                     @foreach ($orders as $order)
                         <tr class="border-b border-gray-200 hover:bg-gray-100">
-                            <td class="py-3 px-6 hover:underline">#{{ $order->order->order_number }}</td>
-                            <td class="py-3 px-6">{{ $order->order->user->name }}</td>
-                            <td class="py-3 px-6">{{ $order->order->total_amount }} DH</td>
+                            <td class="py-3 px-6 underline italic hover:text-blue-400"><a href="{{ route('publisher.orders.show', $order->order->order_number) }}">#{{ $order->order->order_number }}</a></td>
+                            <td class="py-3 px-6 underline italic hover:text-blue-400"><a href="{{ route('publisher.products.show', $order->product) }}">#{{ $order->product->id }}</a></td>
+                            <td class="py-3 px-6">{{ $order->order->client->name }}</td>
+                            <td class="py-3 px-6">{{ $order->total}} DH</td>
                             <td class="py-3 px-6">
                                 <span class="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">{{ $order->order->status }}</span>
                             </td>
                             <td class="py-3 px-6 text-center">
-                                <a href="" class="text-blue-500 hover:underline">Voir</a>
-                                <a href="" class="text-red-500 hover:underline">Annuler</a>
+                                <a href="{{ route('publisher.orders.show', $order->order->order_number) }}" class="text-blue-500 hover:underline">Show</a>
                             </td>
                         </tr>
                     @endforeach

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.back-office')
 
 @section('content')
 
@@ -6,12 +6,6 @@
 
 <!-- Contenu principal -->
 <main class="ml-64 p-6">
-
-    @if (session()->has('success'))
-        <x-alert type="success" :message="session('success')" />
-    @elseif (session()->has('error'))
-        <x-alert type="error" :message="session('error')" />
-    @endif
 
     <!-- Dashboard -->
     <h1 class="text-3xl font-bold mb-6">Tableau de Bord</h1>
@@ -53,9 +47,9 @@
                     @foreach ($payments as $payment)
                         <tr class="text-center">
                             <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.payments.show', $payment) }}">#{{ $payment->id }}</a></td>
-                            <td class="p-3 border">{{ $payment->order->user->name }}</td>
-                            <td class="p-3 border">{{ $payment->order->user->email }}</td>
-                            <td class="p-3 border text-green-600 font-bold">${{ $payment->amount }}</td>
+                            <td class="p-3 border">{{ $payment->order->client->name }}</td>
+                            <td class="p-3 border">{{ $payment->order->client->email }}</td>
+                            <td class="p-3 border font-bold {{ $payment->status == "paid" ? "text-green-600" : ($payment->status == "failed" ? "text-red-600" : "text-black") }}">${{ $payment->amount }}</td>
                             <td class="p-3 border">
                                 @if ($payment->status == 'pending')
                                     <span class="bg-yellow-400 text-white px-3 py-1 rounded">{{ $payment->status }}</span>

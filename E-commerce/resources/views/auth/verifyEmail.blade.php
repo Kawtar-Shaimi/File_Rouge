@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.front-office')
 
 @section('content')
 <div class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 py-12">
@@ -13,7 +13,7 @@
             <p class="text-gray-300 mb-6">
                 Before proceeding, please check your email for a verification link. If you did not receive the email,
                 <form class="inline" method="POST" action="">
-                    @csrf 
+                    @csrf
                     <button type="submit" class="text-purple-500 hover:underline">click here to request another</button>.
                 </form>
             </p>

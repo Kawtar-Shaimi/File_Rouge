@@ -32,4 +32,8 @@ class Product extends Model
     public function publisher(){
         return $this->belongsTo(Publisher::class);
     }
+
+    public function reviews(){
+        return $this->hasMany(Review::class);
+    }
 }

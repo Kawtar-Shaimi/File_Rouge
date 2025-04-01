@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.back-office')
 
 @section('content')
 
@@ -21,6 +21,10 @@
                     <tr>
                         <td class="p-3 border">Category Description</td>
                         <td class="p-3 border">{{ $category->description }}</td>
+                    </tr>
+                    <tr>
+                        <td class="p-3 border">Created By</td>
+                        <td class="p-3 border">{{ $category->admin->name }}</td>
                     </tr>
                     <tr>
                         <td class="p-3 border">Creationt Date</td>

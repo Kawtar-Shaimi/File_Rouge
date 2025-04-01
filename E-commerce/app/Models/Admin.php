@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Admin extends Model
+class Admin extends User
 {
     protected $table = 'users';
 
@@ -15,7 +15,7 @@ class Admin extends Model
             $builder->where('role', 'admin');
         });
     }
-    
+
     public function categories()
     {
         return $this->hasMany(Category::class);

@@ -4,5 +4,11 @@
         <a href="{{ route('publisher.index') }}" class="block px-4 py-2 hover:bg-gray-700">Tableau de bord</a>
         <a href="{{ route('publisher.products.index') }}" class="block px-4 py-2 hover:bg-gray-700">Produits</a>
         <a href="{{ route('publisher.products.create') }}" class="block px-4 py-2 hover:bg-gray-700">Create Produits</a>
+        <a href="{{ route('publisher.reviews.index') }}" class="block px-4 py-2 hover:bg-gray-700">Reviews</a>
+        <a href="{{ route('publisher.orders.index') }}" class="block px-4 py-2 hover:bg-gray-700">Orders</a>
+        <form class="w-full" method="POST" action="{{ route('logout', 'publisher') }}">
+            @csrf
+            <button type="submit" class="block w-full text-left px-4 py-2 hover:bg-gray-700">Logout</button>
+        </form>
     </nav>
 </aside>
