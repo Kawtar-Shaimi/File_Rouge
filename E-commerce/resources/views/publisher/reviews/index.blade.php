@@ -33,11 +33,9 @@
                             <td class="p-3 border">{{ $review->rate }}</td>
                             <td class="p-3 border">{{ $review->client->name }}</td>
                             <td class="p-3 border">
-                                <form action="{{ route('publisher.reviews.delete', $review) }}" method="POST" class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Supprimer</button>
-                                </form>
+                                <a href="{{ route('publisher.reviews.show', $review) }}">
+                                    <button class="bg-blue-500 text-white px-3 py-1 rounded">Show</button>
+                                </a>
                             </td>
                         </tr>
                     @endforeach

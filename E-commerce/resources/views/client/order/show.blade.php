@@ -85,7 +85,7 @@
         </div>
         <div class="mt-10">
             <div class="w-full">
-                <h2 class="text-4xl font-bold text-center mb-6 text-gray-800">Order Products</h2>
+                <h2 class="text-4xl font-bold text-center mb-6 text-gray-800">Order Books</h2>
                 <div class="bg-white p-6 rounded-lg shadow-md">
                     <table class="w-full border-collapse">
                         <thead>
@@ -99,20 +99,20 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if ($order->orderProducts->count() > 0)
-                                @foreach ($order->orderProducts as $orderProduct)
+                            @if ($order->orderBooks->count() > 0)
+                                @foreach ($order->orderBooks as $orderBook)
                                     <tr class="text-center">
-                                        <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('products.show', $orderProduct->product) }}">{{ $orderProduct->product->name }}</a></td>
-                                        <td class="p-3 border truncate w-40">{{ Str::limit($orderProduct->product->description, 15) }}</td>
-                                        <td class="p-3 border text-green-600 font-bold">${{ $orderProduct->product->price }}</td>
-                                        <td class="p-3 border">{{ $orderProduct->product->category->name }}</td>
-                                        <td class="p-3 border">{{ $orderProduct->quantity }}</td>
-                                        <td class="p-3 border text-green-600 font-bold">${{ $orderProduct->total }}</td>
+                                        <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('books.show', $orderBook->book) }}">{{ $orderBook->book->name }}</a></td>
+                                        <td class="p-3 border truncate w-40">{{ Str::limit($orderBook->book->description, 15) }}</td>
+                                        <td class="p-3 border text-green-600 font-bold">${{ $orderBook->book->price }}</td>
+                                        <td class="p-3 border">{{ $orderBook->book->category->name }}</td>
+                                        <td class="p-3 border">{{ $orderBook->quantity }}</td>
+                                        <td class="p-3 border text-green-600 font-bold">${{ $orderBook->total }}</td>
                                     </tr>
                                 @endforeach
                             @else
                                 <tr>
-                                    <td colspan="7" class="text-red-500 text-center py-3 px-6 text-2xl font-bold">No Products In This Order</td>
+                                    <td colspan="7" class="text-red-500 text-center py-3 px-6 text-2xl font-bold">No Books In This Order</td>
                                 </tr>
                             @endif
                         </tbody>

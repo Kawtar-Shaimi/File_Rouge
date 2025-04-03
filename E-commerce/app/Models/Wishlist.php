@@ -12,7 +12,7 @@ class Wishlist extends Model
         return $this->belongsTo(Client::class);
     }
 
-    public function wishlistProducts(){
-        return $this->hasMany(WishlistProduct::class);
+    public function wishlistBooks(){
+        return $this->hasMany(WishlistBook::class);
     }
 }

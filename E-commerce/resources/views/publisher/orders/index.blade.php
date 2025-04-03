@@ -16,7 +16,7 @@
             <thead>
                 <tr class="bg-gray-200">
                     <th class="p-3 border">ID</th>
-                    <th class="py-3 px-6 text-left">ID Product</th>
+                    <th class="py-3 px-6 text-left">ID Book</th>
                     <th class="p-3 border">Client</th>
                     <th class="p-3 border">Email</th>
                     <th class="p-3 border">Montant Total</th>
@@ -29,7 +29,7 @@
                     @foreach ($orders as $order)
                         <tr class="text-center">
                             <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('publisher.orders.show', $order->order->order_number) }}">#{{ $order->order->order_number }}</a></td>
-                            <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('publisher.products.show', $order->product) }}">#{{ $order->product->id }}</a></td>
+                            <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('publisher.books.show', $order->book) }}">#{{ $order->book->id }}</a></td>
                             <td class="p-3 border">{{ $order->order->client->name }}</td>
                             <td class="p-3 border">{{ $order->order->client->email }}</td>
                             <td class="p-3 border font-bold {{ $order->order->payment->status === 'paid' ? 'text-green-600' : ($order->order->payment->status === 'failed' ? 'text-red-600': 'text-black') }}">${{ $order->total }}</td>
@@ -45,7 +45,7 @@
                                 @endif
                             </td>
                             <td class="p-3 border text-center">
-                                <a href="{{ route('publisher.products.show', $order->product) }}" class="text-blue-500 hover:underline">Show</a>
+                                <a href="{{ route('publisher.books.show', $order->book) }}" class="text-blue-500 hover:underline">Show</a>
                             </td>
                         </tr>
                     @endforeach

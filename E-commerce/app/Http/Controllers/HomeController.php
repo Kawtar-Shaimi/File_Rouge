@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -10,31 +10,31 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $products = Product::where('stock', '>', 0)->withSum('orderProducts', 'quantity')
-            ->orderBy('order_products_sum_quantity', 'desc')
+        $books = Book::where('stock', '>', 0)->withSum('orderBooks', 'quantity')
+            ->orderBy('order_books_sum_quantity', 'desc')
             ->take(4)
             ->get();
 
         if (Auth::guard('client')->check()) {
-            foreach ($products as $product) {
-                $query = $product->join('carts_products', 'products.id', '=', 'carts_products.product_id')
-                ->join('carts', 'carts_products.cart_id', '=', 'carts.id')
+            foreach ($books as $book) {
+                $query = $book->join('carts_books', 'books.id', '=', 'carts_books.book_id')
+                ->join('carts', 'carts_books.cart_id', '=', 'carts.id')
                 ->where('carts.client_id', Auth::guard('client')->id())
-                ->where('products.id', $product->id);
+                ->where('books.id', $book->id);
 
-                $product->isInCart = $query->exists();
+                $book->isInCart = $query->exists();
 
-                $product->productQuantity = $product->isInCart
+                $book->bookQuantity = $book->isInCart
                 ? $query->first()->quantity
                 : 0;
 
-                $product->isInWishlist = $product->join('wishlists_products', 'products.id', '=', 'wishlists_products.product_id')
-                ->join('wishlists', 'wishlists_products.wishlist_id', '=', 'wishlists.id')
+                $book->isInWishlist = $book->join('wishlists_books', 'books.id', '=', 'wishlists_books.book_id')
+                ->join('wishlists', 'wishlists_books.wishlist_id', '=', 'wishlists.id')
                 ->where('wishlists.client_id', Auth::guard('client')->id())
-                ->where('products.id', $product->id)->exists();
+                ->where('books.id', $book->id)->exists();
             }
         }
 
-        return view('index', compact('products'));
+        return view('index', compact('books'));
     }
 }

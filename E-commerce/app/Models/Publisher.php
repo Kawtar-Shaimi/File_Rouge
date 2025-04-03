@@ -16,8 +16,8 @@ class Publisher extends User
         });
     }
 
-    public function products()
+    public function books()
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(Book::class);
     }
 }

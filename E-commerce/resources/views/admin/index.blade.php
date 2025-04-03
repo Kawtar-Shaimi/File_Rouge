@@ -15,8 +15,8 @@
             <p class="text-3xl text-blue-500 font-bold">{{ $user_count }}</p>
         </div>
         <div class="bg-white p-6 rounded-lg shadow-lg text-center">
-            <h3 class="text-xl font-bold">Produits</h3>
-            <p class="text-3xl text-green-500 font-bold">{{ $product_count }}</p>
+            <h3 class="text-xl font-bold">Books</h3>
+            <p class="text-3xl text-green-500 font-bold">{{ $book_count }}</p>
         </div>
         <div class="bg-white p-6 rounded-lg shadow-lg text-center">
             <h3 class="text-xl font-bold">Commandes</h3>

@@ -8,7 +8,7 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\BookController;
 use App\Http\Controllers\PublisherController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\UserController;
@@ -32,8 +32,8 @@ Route::prefix('/')->group(function () {
 /* Home routes */
 Route::prefix('/')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
-    Route::get('products', [ProductController::class, 'index'])->name('products');
-    Route::get('products/{product}', [ProductController::class, 'show'])->name('products.show');
+    Route::get('books', [BookController::class, 'index'])->name('books');
+    Route::get('books/{book}', [BookController::class, 'show'])->name('books.show');
 });
 
 /* Clients routes */
@@ -45,19 +45,19 @@ Route::prefix('/client')->as('client.')->middleware('auth:client')->group(functi
     /* Client Cart routes */
     Route::prefix('/cart')->as('cart.')->group(function () {
         Route::get('/', [CartController::class, 'index'])->name('index');
-        Route::post('/add/{product}', [CartController::class, 'addToCart'])->name('add');
-        Route::delete('/remove/{product}', [CartController::class, 'removeFromCart'])->name('remove');
-        Route::delete('/delete/{product}', [CartController::class, 'deleteFromCart'])->name('delete');
+        Route::post('/add/{book}', [CartController::class, 'addToCart'])->name('add');
+        Route::delete('/remove/{book}', [CartController::class, 'removeFromCart'])->name('remove');
+        Route::delete('/delete/{book}', [CartController::class, 'deleteFromCart'])->name('delete');
     });
     /* Client Wishlist routes */
     Route::prefix('/wishlist')->as('wishlist.')->group(function () {
         Route::get('/', [WishlistController::class, 'index'])->name('index');
-        Route::post('/add/{product}', [WishlistController::class, 'addToWishlist'])->name('add');
-        Route::delete('/remove/{product}', [WishlistController::class, 'removeFromWishlist'])->name('remove');
+        Route::post('/add/{book}', [WishlistController::class, 'addToWishlist'])->name('add');
+        Route::delete('/remove/{book}', [WishlistController::class, 'removeFromWishlist'])->name('remove');
     });
     /* Client Review routes */
     Route::prefix('/review')->as('review.')->group(function () {
-        Route::post('/{product}', [ReviewController::class, 'store'])->name('store');
+        Route::post('/{book}', [ReviewController::class, 'store'])->name('store');
         Route::put('/edit/{review}', [ReviewController::class, 'update'])->name('update');
         Route::delete('/delete/{review}', [ReviewController::class, 'destroy'])->name('destroy');
     });
@@ -77,21 +77,20 @@ Route::prefix('/client')->as('client.')->middleware('auth:client')->group(functi
 Route::prefix('/publisher')->as('publisher.')->middleware('auth:publisher')->group(function () {
     /* Publisher Home */
     Route::get('/', [PublisherController::class,  'index'])->name('index');
-    /* Publisher Products routes */
-    Route::prefix('/products')->as('products.')->group(function () {
-        Route::get('/', [PublisherController::class, 'products'])->name('index');
-        Route::get('/create', [ProductController::class, 'create'])->name('create');
-        Route::post('/store', [ProductController::class, 'store'])->name('store');
-        Route::get('/{product}', [PublisherController::class, 'product'])->name('show');
-        Route::get('/edit/{product}', [ProductController::class, 'edit'])->name('edit');
-        Route::put('/update/{product}', [ProductController::class, 'update'])->name('update');
-        Route::delete('/delete/{product}', [ProductController::class, 'destroy'])->name('delete');
+    /* Publisher Books routes */
+    Route::prefix('/books')->as('books.')->group(function () {
+        Route::get('/', [PublisherController::class, 'books'])->name('index');
+        Route::get('/create', [BookController::class, 'create'])->name('create');
+        Route::post('/store', [BookController::class, 'store'])->name('store');
+        Route::get('/{book}', [PublisherController::class, 'book'])->name('show');
+        Route::get('/edit/{book}', [BookController::class, 'edit'])->name('edit');
+        Route::put('/update/{book}', [BookController::class, 'update'])->name('update');
+        Route::delete('/delete/{book}', [BookController::class, 'destroy'])->name('delete');
     });
     /* Publisher Reviews routes */
     Route::prefix('/reviews')->as('reviews.')->group(function () {
         Route::get('/', [PublisherController::class, 'reviews'])->name('index');
         Route::get('/{review}', [PublisherController::class, 'review'])->name('show');
-        Route::delete('/delete/{review}', [PublisherController::class, 'deleteReview'])->name('delete');
     });
     /* Publisher Orders routes */
     Route::prefix('/orders')->as('orders.')->group(function () {
@@ -117,11 +116,11 @@ Route::prefix('/admin')->as('admin.')->middleware('auth:admin')->group(function 
         Route::delete('/delete/{category}', [CategoryController::class, 'destroy'])->name('delete');
     });
 
-    /* Admin Products routes */
-    Route::prefix('/products')->as('products.')->group(function () {
-        Route::get('/', [AdminController::class, 'products'])->name('index');
-        Route::get('/{product}', [AdminController::class, 'product'])->name('show');
-        Route::delete('/delete/{product}', [AdminController::class, 'destroyProduct'])->name('delete');
+    /* Admin Books routes */
+    Route::prefix('/books')->as('books.')->group(function () {
+        Route::get('/', [AdminController::class, 'books'])->name('index');
+        Route::get('/{book}', [AdminController::class, 'book'])->name('show');
+        Route::delete('/delete/{book}', [AdminController::class, 'destroyBook'])->name('delete');
     });
 
     /* Admin Reviews routes */

@@ -12,7 +12,7 @@ class Cart extends Model
         return $this->belongsTo(Client::class);
     }
 
-    public function cartProducts(){
-        return $this->hasMany(CartProduct::class);
+    public function cartBooks(){
+        return $this->hasMany(CartBook::class);
     }
 }

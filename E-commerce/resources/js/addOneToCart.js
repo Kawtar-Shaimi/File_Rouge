@@ -1,15 +1,15 @@
 import { showAlert } from './showAlert';
 
-function addOneToCart(productId, stock) {
+function addOneToCart(bookId, stock) {
     const csrfToken = $('meta[name="csrf-token"]').attr('content');
-    let quantity = parseInt($(`#quantity-${productId}`).val()) + 1;
+    let quantity = parseInt($(`#quantity-${bookId}`).val()) + 1;
 
     if (quantity <= stock) {
         if (quantity > 1) {
-            $(`#removeFromCartBtn-${productId}`).prop('disabled', false);
+            $(`#removeFromCartBtn-${bookId}`).prop('disabled', false);
         }
 
-        const url = `/client/cart/add/${productId}`;
+        const url = `/client/cart/add/${bookId}`;
         const data = {
             quantity: 1,
             _token: csrfToken
@@ -20,7 +20,7 @@ function addOneToCart(productId, stock) {
             data: data,
             success: function(response, _, xhr) {
                 if (xhr.status === 200) {
-                    $(`#quantity-${productId}`).val(quantity);
+                    $(`#quantity-${bookId}`).val(quantity);
                     showAlert("success", response.message)
                 }
             },

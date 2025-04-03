@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Product extends Model
+class Book extends Model
 {
     protected $fillable = [
         'name',
@@ -21,12 +21,12 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function cartProducts(){
-        return $this->hasMany(CartProduct::class);
+    public function cartBooks(){
+        return $this->hasMany(CartBook::class);
     }
 
-    public function orderProducts(){
-        return $this->hasMany(OrderProduct::class);
+    public function orderBooks(){
+        return $this->hasMany(OrderBook::class);
     }
 
     public function publisher(){

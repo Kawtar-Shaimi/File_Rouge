@@ -16,10 +16,10 @@
         <div class="border-b pb-4 mb-4">
             <h3 class="text-xl font-semibold mb-4">Récapitulatif de la commande</h3>
             @if ($cart)
-                @foreach ( $cart->cartProducts as $cartProduct)
+                @foreach ( $cart->cartBooks as $cartBook)
                     <div class="flex justify-between mb-2">
-                        <span>{{ $cartProduct->product->name }}:</span>
-                        <span class="text-green-500">${{ number_format($cartProduct->product->price * $cartProduct->quantity, 2) }}</span>
+                        <span>{{ $cartBook->book->name }}:</span>
+                        <span class="text-green-500">${{ number_format($cartBook->book->price * $cartBook->quantity, 2) }}</span>
                     </div>
                 @endforeach
                 <div class="flex justify-between font-bold text-lg">

@@ -7,7 +7,7 @@
         <nav class="hidden md:flex space-x-4">
             <a href="{{ route('home') }}" class="hover:text-white transition-colors">Home</a>
             @auth('client')
-            <a href="{{ route('products') }}" class="hover:text-white transition-colors">Products</a>
+            <a href="{{ route('books') }}" class="hover:text-white transition-colors">Books</a>
             <a href="{{ route('client.order.track') }}" class="hover:text-white transition-colors">Track Order</a>
                 <a href="{{ route('client.cart.index') }}" class="hover:text-white transition-colors">Cart</a>
                 <a href="{{ route('client.wishlist.index') }}" class="hover:text-white transition-colors">WishList</a>

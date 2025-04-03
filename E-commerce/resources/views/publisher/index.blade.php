@@ -8,7 +8,7 @@
 
     <!-- Statistiques -->
     <div class="grid md:grid-cols-2 gap-6 mb-8">
-        <!-- Total Produits -->
+        <!-- Total Books -->
         <div class="bg-white p-6 rounded-lg shadow-lg flex items-center">
             <div class="p-4 bg-blue-500 text-white rounded-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -20,8 +20,8 @@
                 </svg>
             </div>
             <div class="ml-4">
-                <h3 class="text-lg font-semibold">Total Produits Publiés</h3>
-                <p class="text-2xl font-bold text-gray-700">{{ $products_count }}</p> <!-- Valeur dynamique -->
+                <h3 class="text-lg font-semibold">Total Books Publiés</h3>
+                <p class="text-2xl font-bold text-gray-700">{{ $books_count }}</p> <!-- Valeur dynamique -->
             </div>
         </div>
 
@@ -46,7 +46,7 @@
             <thead>
                 <tr class="bg-gray-200 text-gray-700 uppercase text-sm leading-normal">
                     <th class="py-3 px-6 text-left">Commande Number</th>
-                    <th class="py-3 px-6 text-left">ID Product</th>
+                    <th class="py-3 px-6 text-left">ID Book</th>
                     <th class="py-3 px-6 text-left">Client</th>
                     <th class="py-3 px-6 text-left">Total</th>
                     <th class="py-3 px-6 text-left">Statut</th>
@@ -58,7 +58,7 @@
                     @foreach ($orders as $order)
                         <tr class="border-b border-gray-200 hover:bg-gray-100">
                             <td class="py-3 px-6 underline italic hover:text-blue-400"><a href="{{ route('publisher.orders.show', $order->order->order_number) }}">#{{ $order->order->order_number }}</a></td>
-                            <td class="py-3 px-6 underline italic hover:text-blue-400"><a href="{{ route('publisher.products.show', $order->product) }}">#{{ $order->product->id }}</a></td>
+                            <td class="py-3 px-6 underline italic hover:text-blue-400"><a href="{{ route('publisher.books.show', $order->book) }}">#{{ $order->book->id }}</a></td>
                             <td class="py-3 px-6">{{ $order->order->client->name }}</td>
                             <td class="py-3 px-6">{{ $order->total}} DH</td>
                             <td class="py-3 px-6">

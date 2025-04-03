@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use App\Models\Book;
 use App\Models\Review;
 use Exception;
 use Illuminate\Http\Request;
@@ -27,7 +27,7 @@ class ReviewController extends Controller
         return view('admin.reviews.show', compact('review'));
     }
 
-    public function store(Request $request, Product $product)
+    public function store(Request $request, Book $book)
     {
         try{
             $request->validate([
@@ -39,7 +39,7 @@ class ReviewController extends Controller
                 'rate' => $request->rate,
                 'content' => $request->content,
                 'client_id' =>  Auth::guard('client')->id(),
-                'product_id' => $product->id
+                'book_id' => $book->id
             ]);
 
             if (!$review) {
@@ -125,8 +125,8 @@ class ReviewController extends Controller
                 'message' => 'Review deleted successfully',
                 'data' => [
                     'old_rating' => $oldRating,
-                    'count' => Review::where('product_id', $review->product_id)->count(),
-                    'client_count' => Review::where('client_id', $review->client_id)->where('product_id', $review->product_id)->count()
+                    'count' => Review::where('book_id', $review->book_id)->count(),
+                    'client_count' => Review::where('client_id', $review->client_id)->where('book_id', $review->book_id)->count()
                 ]
             ], 200)->header('Content-Type', 'application/json');
 

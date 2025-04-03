@@ -65,7 +65,7 @@ class ClientController extends Controller
             }
 
 
-            $cart->load('cartProducts.product');
+            $cart->load('cartBooks.book');
             return view('client.payment.checkout', compact('cart'));
 
         } catch (Exception $e) {

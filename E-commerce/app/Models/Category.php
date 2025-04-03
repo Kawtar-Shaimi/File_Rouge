@@ -12,8 +12,8 @@ class Category extends Model
         'admin_id'
     ];
 
-    public function product (){
-        return $this->hasMany(Product::class);
+    public function book (){
+        return $this->hasMany(Book::class);
     }
 
     public function admin(){

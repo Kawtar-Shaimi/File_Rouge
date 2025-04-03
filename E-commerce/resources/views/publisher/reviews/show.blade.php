@@ -34,16 +34,6 @@
                         <td class="p-3 border">Update Date</td>
                         <td class="p-3 border">{{ $review->updated_at }}</td>
                     </tr>
-                    <tr>
-                        <td class="p-3 border">Actions</td>
-                        <td class="p-3 border">
-                            <form action="{{ route('publisher.reviews.delete', $review) }}" method="POST" class="inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Supprimer</button>
-                            </form>
-                        </td>
-                    </tr>
                 </table>
             </div>
         </div>

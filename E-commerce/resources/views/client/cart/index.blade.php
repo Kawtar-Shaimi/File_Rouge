@@ -13,27 +13,27 @@
 <div class="container mx-auto p-6">
     <div class="grid grid-cols-3 gap-6">
         <!-- Section Panier -->
-        <div id="product-container" class="col-span-2 bg-white p-6 rounded-lg shadow-lg">
+        <div id="book-container" class="col-span-2 bg-white p-6 rounded-lg shadow-lg">
             <h2 class="text-2xl font-bold mb-4">Mon Panier</h2>
             @if ($cart)
-                @foreach ( $cart->cartProducts as $cartProduct)
-                    <div id="product-{{ $cartProduct->product->id }}" class="border-b pb-4 mb-4 flex items-center justify-between">
-                        <a href="{{ route('products.show', $cartProduct->product) }}">
+                @foreach ( $cart->cartBooks as $cartBook)
+                    <div id="book-{{ $cartBook->book->id }}" class="border-b pb-4 mb-4 flex items-center justify-between">
+                        <a href="{{ route('books.show', $cartBook->book) }}">
                             <div class="flex items-center">
-                                <img src="{{ asset('storage/' . $cartProduct->product->image) }}" alt="{{ $cartProduct->product->name }}" class="w-24 h-24 rounded-md mr-4">
+                                <img src="{{ asset('storage/' . $cartBook->book->image) }}" alt="{{ $cartBook->book->name }}" class="w-24 h-24 rounded-md mr-4">
                                 <div>
-                                    <h3 class="text-lg font-semibold">{{ $cartProduct->product->name }}</h3>
-                                    <p class="text-gray-600">{{ Str::limit($cartProduct->product->description, 16) }}</p>
-                                    <p class="text-green-500 font-bold">{{ $cartProduct->product->price }}</p>
+                                    <h3 class="text-lg font-semibold">{{ $cartBook->book->name }}</h3>
+                                    <p class="text-gray-600">{{ Str::limit($cartBook->book->description, 16) }}</p>
+                                    <p class="text-green-500 font-bold">{{ $cartBook->book->price }}</p>
                                 </div>
                             </div>
                         </a>
                         <div id="actions">
                             <div class="mt-4 flex items-center justify-end">
-                                <button id="removeFromCartBtn-{{ $cartProduct->product->id }}" class="w-1/5 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white font-bold py-2 px-4 rounded-s-lg" onclick="removeFromCart({{ $cartProduct->product->id }})" {{ $cartProduct->quantity === 1 ? "disabled" : "" }}>-</button>
-                                <input type="text" id="quantity-{{ $cartProduct->product->id }}" name="quantity" value="{{ $cartProduct->quantity }}" class="w-1/5 text-center p-2 bg-gray-100 text-gray-900" readonly disabled>
-                                <button id="addOneToCartBtn-{{ $cartProduct->product->id }}" class="w-1/5 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white font-bold py-2 px-4 rounded-e-lg" onclick="addOneToCart({{ $cartProduct->product->id }}, {{ $cartProduct->product->stock }})">+</button>
-                                <button id="deleteFromCartBtn-{{ $cartProduct->product->id }}" class="text-red-500 ml-4" onclick="deleteFromCart({{ $cartProduct->product->id }})">🗑</button>
+                                <button id="removeFromCartBtn-{{ $cartBook->book->id }}" class="w-1/5 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white font-bold py-2 px-4 rounded-s-lg" onclick="removeFromCart({{ $cartBook->book->id }})" {{ $cartBook->quantity === 1 ? "disabled" : "" }}>-</button>
+                                <input type="text" id="quantity-{{ $cartBook->book->id }}" name="quantity" value="{{ $cartBook->quantity }}" class="w-1/5 text-center p-2 bg-gray-100 text-gray-900" readonly disabled>
+                                <button id="addOneToCartBtn-{{ $cartBook->book->id }}" class="w-1/5 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white font-bold py-2 px-4 rounded-e-lg" onclick="addOneToCart({{ $cartBook->book->id }}, {{ $cartBook->book->stock }})">+</button>
+                                <button id="deleteFromCartBtn-{{ $cartBook->book->id }}" class="text-red-500 ml-4" onclick="deleteFromCart({{ $cartBook->book->id }})">🗑</button>
                             </div>
                         </div>
                     </div>
@@ -50,10 +50,10 @@
         <div class="bg-white p-6 rounded-lg shadow-lg">
             <h2 class="text-xl font-bold mb-4">Récapitulatif</h2>
             @if ($cart)
-                @foreach ( $cart->cartProducts as $cartProduct)
-                    <div id="total_product_container_{{ $cartProduct->product->id }}" class="flex justify-between mb-2">
-                        <span>{{ $cartProduct->product->name }}:</span>
-                        <span id="total_product_price_{{ $cartProduct->product->id }}" class="text-green-500">${{ number_format($cartProduct->product->price * $cartProduct->quantity, 2) }}</span>
+                @foreach ( $cart->cartBooks as $cartBook)
+                    <div id="total_book_container_{{ $cartBook->book->id }}" class="flex justify-between mb-2">
+                        <span>{{ $cartBook->book->name }}:</span>
+                        <span id="total_book_price_{{ $cartBook->book->id }}" class="text-green-500">${{ number_format($cartBook->book->price * $cartBook->quantity, 2) }}</span>
                     </div>
                 @endforeach
                 <div class="flex justify-between font-bold text-lg">

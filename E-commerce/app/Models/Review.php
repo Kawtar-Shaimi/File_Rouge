@@ -10,14 +10,14 @@ class Review extends Model
         'content',
         'rate',
         'client_id',
-        'product_id'
+        'book_id'
     ];
 
     public function client(){
         return $this->belongsTo(Client::class);
     }
 
-    public function product(){
-        return $this->belongsTo(Product::class);
+    public function book(){
+        return $this->belongsTo(Book::class);
     }
 }

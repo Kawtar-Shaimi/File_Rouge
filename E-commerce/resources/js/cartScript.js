@@ -1,15 +1,15 @@
 import { showAlert } from './showAlert';
 
-function addOneToCart(productId, stock) {
+function addOneToCart(bookId, stock) {
     const csrfToken = $('meta[name="csrf-token"]').attr('content');
-    let quantity = parseInt($(`#quantity-${productId}`).val()) + 1;
+    let quantity = parseInt($(`#quantity-${bookId}`).val()) + 1;
 
     if (quantity <= stock) {
         if (quantity > 1) {
-            $(`#removeFromCartBtn-${productId}`).prop('disabled', false);
+            $(`#removeFromCartBtn-${bookId}`).prop('disabled', false);
         }
 
-        const url = `/client/cart/add/${productId}`;
+        const url = `/client/cart/add/${bookId}`;
         const data = {
             quantity: 1,
             _token: csrfToken
@@ -22,8 +22,8 @@ function addOneToCart(productId, stock) {
             success: function(response, _, xhr) {
                 if (xhr.status === 200) {
                     $(`#total_price`).text(`$${response.data.total_price}`);
-                    $(`#total_product_price_${productId}`).text(`$${response.data.total_product_price}`);
-                    $(`#quantity-${productId}`).val(quantity);
+                    $(`#total_book_price_${bookId}`).text(`$${response.data.total_book_price}`);
+                    $(`#quantity-${bookId}`).val(quantity);
                     showAlert("success", response.message)
                 }
             },
@@ -44,12 +44,12 @@ function addOneToCart(productId, stock) {
     }
 }
 
-function removeFromCart(productId) {
+function removeFromCart(bookId) {
     const csrfToken = $('meta[name="csrf-token"]').attr('content');
-    let quantity = parseInt($(`#quantity-${productId}`).val());
+    let quantity = parseInt($(`#quantity-${bookId}`).val());
     if (quantity  > 1) {
         quantity -= 1;
-        const url = `/client/cart/remove/${productId}`;
+        const url = `/client/cart/remove/${bookId}`;
         const data = {
             quantity: 1,
             _token: csrfToken,
@@ -63,11 +63,11 @@ function removeFromCart(productId) {
             success: function(response, _, xhr) {
                 if (xhr.status === 200) {
                     $(`#total_price`).text(`$${response.data.total_price}`);
-                    $(`#total_product_price_${productId}`).text(`$${response.data.total_product_price}`);
+                    $(`#total_book_price_${bookId}`).text(`$${response.data.total_book_price}`);
                     if (quantity === 1) {
-                        $(`#removeFromCartBtn-${productId}`).prop('disabled', true);
+                        $(`#removeFromCartBtn-${bookId}`).prop('disabled', true);
                     }
-                    $(`#quantity-${productId}`).val(quantity);
+                    $(`#quantity-${bookId}`).val(quantity);
                     showAlert("success", response.message)
                 }
             },
@@ -84,15 +84,15 @@ function removeFromCart(productId) {
             }
         });
     }else{
-        $(`#removeFromCartBtn-${productId}`).prop('disabled', true);
+        $(`#removeFromCartBtn-${bookId}`).prop('disabled', true);
     }
 
 }
 
-function deleteFromCart(productId) {
+function deleteFromCart(bookId) {
     const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
-    const url = `/client/cart/delete/${productId}`;
+    const url = `/client/cart/delete/${bookId}`;
     const data = {
         _token: csrfToken,
         _method: 'DELETE'
@@ -104,11 +104,11 @@ function deleteFromCart(productId) {
         data: data,
         success: function(response, _, xhr) {
             if (xhr.status === 200) {
-                $(`#product-${productId}`).remove();
-                $(`#total_product_container_${productId}`).remove();
+                $(`#book-${bookId}`).remove();
+                $(`#total_book_container_${bookId}`).remove();
                 if (response.data.count === 0) {
                     $(`#total_price`).text(`$0`);
-                    $('#product-container').append(`
+                    $('#book-container').append(`
                         <div class="py-10 flex items-center justify-center">
                             <p class="text-red-500 text-4xl font-bold text-center">Your Cart Is Empty</p>
                         </div>

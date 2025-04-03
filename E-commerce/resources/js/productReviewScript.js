@@ -1,6 +1,6 @@
 import { showAlert } from './showAlert';
 
-function rateProduct() {
+function rateBook() {
     let rating = 0;
 
     $('#review-rating i').on('mouseover', function () {
@@ -32,9 +32,9 @@ function rateProduct() {
 
 }
 
-$(document).ready(rateProduct);
+$(document).ready(rateBook);
 
-function addReview(productId) {
+function addReview(bookId) {
     const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
     let review_rating = parseInt($("#rating-value").text())
@@ -49,7 +49,7 @@ function addReview(productId) {
         return;
     }
 
-    const url = `/client/review/${productId}`;
+    const url = `/client/review/${bookId}`;
     const data = {
         content: review_content,
         rate: review_rating,
@@ -69,21 +69,21 @@ function addReview(productId) {
 
                 let reviews_count = parseInt($(`#reviews_count`).text())
                 $(`#reviews_count`).text(reviews_count + 1);
-                $(`#product_reviews_count`).text(reviews_count + 1);
+                $(`#book_reviews_count`).text(reviews_count + 1);
 
 
                 let reviews_avg = (( parseFloat($(`#reviews_avg`).text()) * reviews_count ) + review_rating) / (reviews_count + 1);
                 $(`#reviews_avg`).text(reviews_avg.toFixed(1));
 
-                let product_rating_stars = "";
+                let book_rating_stars = "";
                 for (let i = 1; i <= 5; i++) {
                     if (i <= reviews_avg) {
-                        product_rating_stars += '<i class="fa-solid fa-star ms-2 cursor-pointer text-yellow-400"></i>';
+                        book_rating_stars += '<i class="fa-solid fa-star ms-2 cursor-pointer text-yellow-400"></i>';
                     } else {
-                        product_rating_stars += '<i class="fa-regular fa-star ms-2 cursor-pointer"></i>';
+                        book_rating_stars += '<i class="fa-regular fa-star ms-2 cursor-pointer"></i>';
                     }
                 }
-                $(`#product_reviews_stars`).html(product_rating_stars);
+                $(`#book_reviews_stars`).html(book_rating_stars);
 
                 let rating_stars = "";
                 for (let i = 1; i <= 5; i++) {
@@ -107,10 +107,10 @@ function addReview(productId) {
                         </div>
                         <div id="actions">
                             <div class="mt-4 flex items-center justify-end">
-                                <button id="updateReviewBtn-${response.data.review_id}" class="w-4/5 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-s-lg" onclick="showUpdateReviewForm(${productId}, ${response.data.review_id}, '${review_content}', ${review_rating})">
+                                <button id="updateReviewBtn-${response.data.review_id}" class="w-4/5 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-s-lg" onclick="showUpdateReviewForm(${bookId}, ${response.data.review_id}, '${review_content}', ${review_rating})">
                                     update
                                 </button>
-                                <button id="deleteReviewBtn-${response.data.review_id}" class="bg-red-500 hover:bg-red-600 text-red-500 py-2 px-4 rounded-e-lg" onclick="deleteReview(${response.data.review_id}, ${productId})">🗑</button>
+                                <button id="deleteReviewBtn-${response.data.review_id}" class="bg-red-500 hover:bg-red-600 text-red-500 py-2 px-4 rounded-e-lg" onclick="deleteReview(${response.data.review_id}, ${bookId})">🗑</button>
                             </div>
                         </div>
                     </div>
@@ -132,7 +132,7 @@ function addReview(productId) {
     });
 }
 
-function showUpdateReviewForm(productId, reviewId, content, rate) {
+function showUpdateReviewForm(bookId, reviewId, content, rate) {
     let rating_stars = "";
     for (let i = 1; i <= 5; i++) {
         if (i <= rate) {
@@ -153,17 +153,17 @@ function showUpdateReviewForm(productId, reviewId, content, rate) {
         <div class="mb-4">
             <div class="flex justify-center">
                 <input id="review-content" type="text" value="${content}" class="w-4/5 p-3 border border-gray-300 rounded-s-lg focus:ring focus:ring-purple-400" placeholder="Write your review here...">
-                <button id="submit-review" class="w-1/5 bg-purple-500 text-white font-bold py-3 rounded-e-lg hover:bg-purple-600 transition duration-200" onclick="updateReview(${reviewId}, ${productId})">
+                <button id="submit-review" class="w-1/5 bg-purple-500 text-white font-bold py-3 rounded-e-lg hover:bg-purple-600 transition duration-200" onclick="updateReview(${reviewId}, ${bookId})">
                     Send
                 </button>
                 <p id="review-err" class="text-red-500 text-xs mt-1"></p>
             </div>
         </div>
     `)
-    rateProduct()
+    rateBook()
 }
 
-function updateReview(reviewId, productId) {
+function updateReview(reviewId, bookId) {
     const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
     let review_rating = parseInt($("#rating-value").text())
@@ -199,15 +199,15 @@ function updateReview(reviewId, productId) {
                 let reviews_avg = (( parseFloat($(`#reviews_avg`).text()) * reviews_count ) - response.data.old_rating + review_rating) / reviews_count;
                 $(`#reviews_avg`).text(reviews_avg.toFixed(1));
 
-                let product_rating_stars = "";
+                let book_rating_stars = "";
                 for (let i = 1; i <= 5; i++) {
                     if (i <= reviews_avg) {
-                        product_rating_stars += '<i class="fa-solid fa-star ms-2 cursor-pointer text-yellow-400"></i>';
+                        book_rating_stars += '<i class="fa-solid fa-star ms-2 cursor-pointer text-yellow-400"></i>';
                     } else {
-                        product_rating_stars += '<i class="fa-regular fa-star ms-2 cursor-pointer"></i>';
+                        book_rating_stars += '<i class="fa-regular fa-star ms-2 cursor-pointer"></i>';
                     }
                 }
-                $(`#product_reviews_stars`).html(product_rating_stars);
+                $(`#book_reviews_stars`).html(book_rating_stars);
 
                 let rating_stars = "";
                 for (let i = 1; i <= 5; i++) {
@@ -230,10 +230,10 @@ function updateReview(reviewId, productId) {
                     </div>
                     <div id="actions">
                         <div class="mt-4 flex items-center justify-end">
-                            <button id="updateReviewBtn-${reviewId}" class="w-4/5 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-s-lg" onclick="showUpdateReviewForm(${productId}, ${reviewId}, '${review_content}', ${review_rating})">
+                            <button id="updateReviewBtn-${reviewId}" class="w-4/5 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-s-lg" onclick="showUpdateReviewForm(${bookId}, ${reviewId}, '${review_content}', ${review_rating})">
                                 update
                             </button>
-                            <button id="deleteReviewBtn-${reviewId}" class="bg-red-500 hover:bg-red-600 text-red-500 py-2 px-4 rounded-e-lg" onclick="deleteReview(${reviewId}, ${productId})">🗑</button>
+                            <button id="deleteReviewBtn-${reviewId}" class="bg-red-500 hover:bg-red-600 text-red-500 py-2 px-4 rounded-e-lg" onclick="deleteReview(${reviewId}, ${bookId})">🗑</button>
                         </div>
                     </div>
                 `)
@@ -254,7 +254,7 @@ function updateReview(reviewId, productId) {
     });
 }
 
-function deleteReview(reviewId, productId) {
+function deleteReview(reviewId, bookId) {
     const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
     const url = `/client/review/delete/${reviewId}`;
@@ -274,20 +274,20 @@ function deleteReview(reviewId, productId) {
 
                 let reviews_count = parseInt($(`#reviews_count`).text());
                 $(`#reviews_count`).text(reviews_count - 1);
-                $(`#product_reviews_count`).text(reviews_count - 1);
+                $(`#book_reviews_count`).text(reviews_count - 1);
 
                 let reviews_avg = (( parseFloat($(`#reviews_avg`).text()) * reviews_count ) - response.data.old_rating) / (reviews_count - 1);
                 $(`#reviews_avg`).text(reviews_avg.toFixed(1));
 
-                let product_rating_stars = "";
+                let book_rating_stars = "";
                 for (let i = 1; i <= 5; i++) {
                     if (i <= reviews_avg) {
-                        product_rating_stars += '<i class="fa-solid fa-star ms-2 cursor-pointer text-yellow-400"></i>';
+                        book_rating_stars += '<i class="fa-solid fa-star ms-2 cursor-pointer text-yellow-400"></i>';
                     } else {
-                        product_rating_stars += '<i class="fa-regular fa-star ms-2 cursor-pointer"></i>';
+                        book_rating_stars += '<i class="fa-regular fa-star ms-2 cursor-pointer"></i>';
                     }
                 }
-                $(`#product_reviews_stars`).html(product_rating_stars);
+                $(`#book_reviews_stars`).html(book_rating_stars);
 
                 if (response.data.count === 0) {
                     $(`#reviews_count`).text("0.0");
@@ -315,7 +315,7 @@ function deleteReview(reviewId, productId) {
                         <div class="mb-4">
                             <div class="flex justify-center">
                                 <input id="review-content" type="text" class="w-4/5 p-3 border border-gray-300 rounded-s-lg focus:ring focus:ring-purple-400" placeholder="Write your review here...">
-                                <button id="submit-review" class="w-1/5 bg-purple-500 text-white font-bold py-3 rounded-e-lg hover:bg-purple-600 transition duration-200" onclick="addReview(${productId})">
+                                <button id="submit-review" class="w-1/5 bg-purple-500 text-white font-bold py-3 rounded-e-lg hover:bg-purple-600 transition duration-200" onclick="addReview(${bookId})">
                                     Send
                                 </button>
                             </div>
@@ -324,7 +324,7 @@ function deleteReview(reviewId, productId) {
                     `)
                 }
                 showAlert("success", response.message)
-                rateProduct()
+                rateBook()
             }
         },
         error: function(xhr) {
@@ -342,7 +342,7 @@ function deleteReview(reviewId, productId) {
 
 }
 
-window.rateProduct = rateProduct;
+window.rateBook = rateBook;
 window.addReview = addReview;
 window.showUpdateReviewForm = showUpdateReviewForm;
 window.updateReview = updateReview;

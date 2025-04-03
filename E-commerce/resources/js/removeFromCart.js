@@ -1,11 +1,11 @@
 import { showAlert } from './showAlert';
 
-function removeFromCart(productId) {
+function removeFromCart(bookId) {
     const csrfToken = $('meta[name="csrf-token"]').attr('content');
-    let quantity = parseInt($(`#quantity-${productId}`).val());
+    let quantity = parseInt($(`#quantity-${bookId}`).val());
     if (quantity  > 1) {
         quantity -= 1;
-        const url = `/client/cart/remove/${productId}`;
+        const url = `/client/cart/remove/${bookId}`;
         const data = {
             quantity: 1,
             _token: csrfToken,
@@ -19,9 +19,9 @@ function removeFromCart(productId) {
             success: function(response, _, xhr) {
                 if (xhr.status === 200) {
                     if (quantity === 1) {
-                        $(`#removeFromCartBtn-${productId}`).prop('disabled', true);
+                        $(`#removeFromCartBtn-${bookId}`).prop('disabled', true);
                     }
-                    $(`#quantity-${productId}`).val(quantity);
+                    $(`#quantity-${bookId}`).val(quantity);
                     showAlert("success", response.message)
                 }
             },
@@ -38,7 +38,7 @@ function removeFromCart(productId) {
             }
         });
     }else{
-        $(`#removeFromCartBtn-${productId}`).prop('disabled', true);
+        $(`#removeFromCartBtn-${bookId}`).prop('disabled', true);
     }
 
 }

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Payment;
-use App\Models\Product;
+use App\Models\Book;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -15,47 +15,47 @@ class AdminController extends Controller
     public function index()
     {
         $user_count = User::count();
-        $product_count = Product::count();
+        $book_count = Book::count();
         $order_count = Order::count();
         $category_count = Category::count();
         $payments = Payment::with( 'order.client')->get();
 
-        return view('admin.index', compact('user_count', 'product_count', 'order_count', 'category_count', 'payments'));
+        return view('admin.index', compact('user_count', 'book_count', 'order_count', 'category_count', 'payments'));
     }
 
-    public function products()
+    public function books()
     {
         try {
-            $products = Product::all();
-            return view('admin.products.index', compact('products'));
+            $books = Book::all();
+            return view('admin.books.index', compact('books'));
         }catch (Exception $e) {
-            return redirect()->back()->with('error', 'Error while getting products try again later.');
+            return redirect()->back()->with('error', 'Error while getting books try again later.');
         }
 
     }
 
-    public function product(Product $product)
+    public function book(Book $book)
     {
         try {
-            $product->load('category', 'publisher');
-            return view('admin.products.show', compact('product'));
+            $book->load('category', 'publisher');
+            return view('admin.books.show', compact('book'));
         }catch (Exception $e) {
-            return redirect()->back()->with('error', 'Error while getting product try again later.');
+            return redirect()->back()->with('error', 'Error while getting book try again later.');
         }
     }
 
-    public function destroyProduct(Product $product)
+    public function destroyBook(Book $book)
     {
         try {
-            $isDeleted = $product->delete();
+            $isDeleted = $book->delete();
 
             if (!$isDeleted) {
-                return back()->with('error', 'Product not deleted.');
+                return back()->with('error', 'Book not deleted.');
             }
 
-            return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully.');
+            return redirect()->route('admin.books.index')->with('success', 'Book deleted successfully.');
         }catch (Exception $e) {
-            return redirect()->back()->with('error', 'Error while getting deleting product try again later.');
+            return redirect()->back()->with('error', 'Error while getting deleting book try again later.');
         }
     }
 
@@ -74,7 +74,7 @@ class AdminController extends Controller
     public function order(Order $order)
     {
         try {
-            $order->load('client', 'orderProducts.product', 'payment');
+            $order->load('client', 'orderBooks.book', 'payment');
             return view('admin.orders.show', compact('order'));
         }catch (Exception $e) {
             return redirect()->back()->with('error', 'Error while getting order try again later.');
@@ -137,6 +137,9 @@ class AdminController extends Controller
                 $order->payment()->update([
                     "status" => "failed"
                 ]);
+                foreach ($order->orderBooks as $orderBook) {
+                    $orderBook->book()->increment('quantity', $orderBook->quantity);
+                }
             }
 
             return redirect()->route('admin.orders.index', $order)->with('success', 'Order status updated successfully.');

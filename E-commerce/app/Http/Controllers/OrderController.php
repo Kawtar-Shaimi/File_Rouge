@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
-use App\Models\CartProduct;
+use App\Models\CartBook;
 use App\Models\Order;
 use App\Models\Payment;
-use App\Models\Product;
+use App\Models\Book;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -51,33 +51,33 @@ class OrderController extends Controller
                 return redirect()->back()->with('error', 'Error while ordering try again later.');
             }
 
-            foreach ($cart->cartProducts as $cartProduct) {
+            foreach ($cart->cartBooks as $cartBook) {
 
-                $orderProduct = $order->orderProducts()->create([
+                $orderBook = $order->orderBooks()->create([
                     'order_id' => $order->id,
-                    'product_id' => $cartProduct->product_id,
-                    'quantity' => $cartProduct->quantity,
-                    'total' => $cartProduct->quantity * $cartProduct->product->price,
+                    'book_id' => $cartBook->book_id,
+                    'quantity' => $cartBook->quantity,
+                    'total' => $cartBook->quantity * $cartBook->book->price,
                 ]);
 
-                if (!$orderProduct) {
+                if (!$orderBook) {
                     $order->delete();
                     return redirect()->back()->with('error', 'Error while ordering try again later.');
                 }
 
-                $product = Product::where('id', $cartProduct->product_id)->first();
+                $book = Book::where('id', $cartBook->book_id)->first();
 
-                if (!$product) {
+                if (!$book) {
                     $order->delete();
                     return redirect()->back()->with('error', 'Error while ordering try again later.');
                 }
 
-                $product->update([
-                    'stock' => $product->stock - $cartProduct->quantity
+                $book->update([
+                    'stock' => $book->stock - $cartBook->quantity
                 ]);
 
-                if ($product->stock === 0) {
-                    CartProduct::where('product_id', $product->id)->delete();
+                if ($book->stock === 0) {
+                    CartBook::where('book_id', $book->id)->delete();
                 }
             }
 

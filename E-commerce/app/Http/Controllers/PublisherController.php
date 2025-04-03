@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\OrderProduct;
-use App\Models\Product;
+use App\Models\OrderBook;
+use App\Models\Book;
 use App\Models\Review;
 use Exception;
 use Illuminate\Http\Request;
@@ -13,19 +13,19 @@ class PublisherController extends Controller
 {
     public function index()
     {
-        $products_count = Product::where('publisher_id', Auth::guard('publisher')->id())->count();
-        $orders = OrderProduct::with(['order', 'product', 'order.client'])->whereHas('product', function ($query) {
+        $books_count = Book::where('publisher_id', Auth::guard('publisher')->id())->count();
+        $orders = OrderBook::with(['order', 'book', 'order.client'])->whereHas('book', function ($query) {
             $query->where('publisher_id', Auth::guard('publisher')->id());
         })->get();
         $orders_count = $orders->count();
 
 
-        return view('publisher.index', compact('products_count', 'orders', 'orders_count'));
+        return view('publisher.index', compact('books_count', 'orders', 'orders_count'));
     }
 
     public function orders()
     {
-        $orders = OrderProduct::with(['order', 'product', 'order.client'])->whereHas('product', function ($query) {
+        $orders = OrderBook::with(['order', 'book', 'order.client'])->whereHas('book', function ($query) {
             $query->where('publisher_id', Auth::guard('publisher')->id());
         })->get();
 
@@ -34,7 +34,7 @@ class PublisherController extends Controller
 
     public function order($order_number)
     {
-        $order = OrderProduct::with(['order', 'product', 'order.client'])->whereHas('product', function ($query) {
+        $order = OrderBook::with(['order', 'book', 'order.client'])->whereHas('book', function ($query) {
             $query->where('publisher_id', Auth::guard('publisher')->id());
         })->whereHas('order', function ($query) use ($order_number) {
             $query->where('order_number', $order_number);
@@ -43,21 +43,21 @@ class PublisherController extends Controller
         return view('publisher.orders.show', compact('order'));
     }
 
-    public function products()
+    public function books()
     {
         try {
-            $products = Product::where('publisher_id', Auth::guard('publisher')->id())->get();
-            return view('publisher.products.index', compact('products'));
+            $books = Book::where('publisher_id', Auth::guard('publisher')->id())->get();
+            return view('publisher.books.index', compact('books'));
         }catch (Exception $e) {
-            return redirect()->back()->with('error', 'Error while getting products try again later.');
+            return redirect()->back()->with('error', 'Error while getting books try again later.');
         }
     }
-    public function product(Product $product)
+    public function book(Book $book)
     {
         try {
-            return view('publisher.products.show', compact('product'));
+            return view('publisher.books.show', compact('book'));
         }catch (Exception $e) {
-            return redirect()->back()->with('error', 'Error while getting product try again later.');
+            return redirect()->back()->with('error', 'Error while getting book try again later.');
         }
     }
 
@@ -65,7 +65,7 @@ class PublisherController extends Controller
     {
         try {
             $reviews = Review::with('client')
-            ->whereHas('product', function ($query) {
+            ->whereHas('book', function ($query) {
                 $query->where('publisher_id', Auth::guard('publisher')->id());
             })->get();
 
@@ -79,20 +79,5 @@ class PublisherController extends Controller
     {
         $review->load('client');
         return view('publisher.reviews.show', compact('review'));
-    }
-
-    public function deleteReview(Review $review)
-    {
-        try {
-            $isDeleted = $review->delete();
-
-            if (!$isDeleted) {
-                return back()->with('error', 'Review not deleted.');
-            }
-
-            return redirect()->route('publisher.reviews.index')->with('success', 'Review deleted successfully.');
-        }catch (Exception $e) {
-            return redirect()->back()->with('error', 'Error while deleting review try again later.');
-        }
     }
 }

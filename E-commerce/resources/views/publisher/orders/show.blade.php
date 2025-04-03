@@ -80,7 +80,7 @@
         </div>
         <div class="mt-10">
             <div class="w-full">
-                <h2 class="text-4xl font-bold text-center mb-6 text-gray-800">Order Products</h2>
+                <h2 class="text-4xl font-bold text-center mb-6 text-gray-800">Order Books</h2>
                 <div class="bg-white p-6 rounded-lg shadow-md">
                     <table class="w-full border-collapse">
                         <thead>
@@ -96,11 +96,11 @@
                         </thead>
                         <tbody>
                             <tr class="text-center">
-                                <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('publisher.products.show', $order->product) }}">#{{ $order->product->id }}</a></td>
-                                <td class="p-3 border">{{ $order->product->name }}</td>
-                                <td class="p-3 border truncate w-40">{{ Str::limit($order->product->description, 15) }}</td>
-                                <td class="p-3 border text-green-600 font-bold">${{ $order->product->price }}</td>
-                                <td class="p-3 border">{{ $order->product->category->name }}</td>
+                                <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('publisher.books.show', $order->book) }}">#{{ $order->book->id }}</a></td>
+                                <td class="p-3 border">{{ $order->book->name }}</td>
+                                <td class="p-3 border truncate w-40">{{ Str::limit($order->book->description, 15) }}</td>
+                                <td class="p-3 border text-green-600 font-bold">${{ $order->book->price }}</td>
+                                <td class="p-3 border">{{ $order->book->category->name }}</td>
                                 <td class="p-3 border">{{ $order->quantity }}</td>
                                 <td class="p-3 border text-green-600 font-bold">${{ $order->total }}</td>
                             </tr>
