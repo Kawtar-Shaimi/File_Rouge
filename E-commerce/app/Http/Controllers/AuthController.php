@@ -11,6 +11,13 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('guestAll')->except('logout');
+        $this->middleware('authAll')->only('logout');
+    }
+
     public function loginView()
     {
         return view('auth.login');

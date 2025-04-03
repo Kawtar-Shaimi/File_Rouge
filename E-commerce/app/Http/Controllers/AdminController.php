@@ -12,6 +12,12 @@ use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth:admin');
+    }
+
     public function index()
     {
         $user_count = User::count();
@@ -58,7 +64,6 @@ class AdminController extends Controller
             return redirect()->back()->with('error', 'Error while getting deleting book try again later.');
         }
     }
-
 
     public function orders()
     {

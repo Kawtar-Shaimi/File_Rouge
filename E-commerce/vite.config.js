@@ -15,7 +15,7 @@ export default defineConfig({
                 'resources/js/addToWishlist.js',
                 'resources/js/removeFromWishlist.js',
                 'resources/js/deleteFromWishlist.js',
-                'resources/js/productReviewScript.js'
+                'resources/js/bookReviewScript.js'
             ],
             refresh: true,
         }),

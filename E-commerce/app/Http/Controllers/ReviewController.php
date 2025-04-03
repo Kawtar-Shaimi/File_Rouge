@@ -10,6 +10,13 @@ use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth:client')->except(['index', 'show', 'delete']);
+        $this->middleware('auth:admin')->only(['index', 'show', 'delete']);
+    }
+
     public function index()
     {
         try {

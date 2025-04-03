@@ -11,6 +11,12 @@ use Illuminate\Support\Facades\Auth;
 
 class PublisherController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth:publisher');
+    }
+
     public function index()
     {
         $books_count = Book::where('publisher_id', Auth::guard('publisher')->id())->count();
@@ -52,6 +58,7 @@ class PublisherController extends Controller
             return redirect()->back()->with('error', 'Error while getting books try again later.');
         }
     }
+    
     public function book(Book $book)
     {
         try {

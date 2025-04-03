@@ -36,7 +36,7 @@
 
         <!-- Formulaire d'adresse -->
         <h3 class="text-xl font-semibold mb-4">Adresse de livraison</h3>
-        <form action="{{ route('client.makeOrder') }}" method="POST">
+        <form action="{{ route('client.order.makeOrder') }}" method="POST">
             <div class="space-y-4">
                 @csrf
                 <div>

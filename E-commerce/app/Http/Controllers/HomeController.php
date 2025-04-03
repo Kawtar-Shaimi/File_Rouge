@@ -8,6 +8,12 @@ use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('guestAuth');
+    }
+
     public function index()
     {
         $books = Book::where('stock', '>', 0)->withSum('orderBooks', 'quantity')

@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Middleware\Auth;
+use App\Http\Middleware\Guest;
+use App\Http\Middleware\GuestAuth;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -11,7 +14,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->alias([
+            'authAll' => Auth::class,
+            'guestAll' => Guest::class,
+            'guestAuth' => GuestAuth::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

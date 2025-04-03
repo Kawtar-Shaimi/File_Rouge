@@ -11,6 +11,12 @@ use Illuminate\Support\Facades\Storage;
 
 class BookController extends Controller
 {
+
+    public function __construct(){
+        $this->middleware('guestAuth')->only(['index', 'show']);
+        $this->middleware('auth:publisher')->except(['index', 'show']);
+    }
+
     public function index(){
         $books = Book::where('stock', '>', 0)->where('stock', '>', 0)->paginate(10);
 

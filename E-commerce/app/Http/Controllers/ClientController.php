@@ -11,6 +11,11 @@ use Illuminate\Support\Facades\Auth;
 
 class ClientController extends Controller
 {
+
+    public function __construct(){
+        $this->middleware('auth:client');
+    }
+
     public function index(){
         try {
 
@@ -61,7 +66,7 @@ class ClientController extends Controller
             $cart = Cart::where('client_id', Auth::guard('client')->id())->first();
 
             if (!$cart) {
-                return redirect()->back()->with('error', 'Your cart is empty');
+                return redirect()->route('home')->with('error', 'Your cart is empty');
             }
 
 

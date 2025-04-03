@@ -13,6 +13,12 @@ use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth:client');
+    }
+
     public function makeOrder(Request $request)
     {
         try {
@@ -108,7 +114,7 @@ class OrderController extends Controller
     {
         try {
             if (!$request->session()->has('order_number')) {
-                return redirect()->back();
+                return redirect()->route('home')->with('error', 'You didnt make any order');
             }
             return view('client.payment.success', [
                 'order_number' => $request->session()->get('order_number'),
