@@ -12,6 +12,7 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\PublisherController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VisitController;
 use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 
@@ -147,6 +148,7 @@ Route::prefix('/admin')->as('admin.')->middleware('auth:admin')->group(function 
 
     /* Admin Payments routes */
     Route::controller(PaymentController::class)->prefix('/payments')->as('payments.')->group(function () {
+        Route::get('/', 'index')->name('index');
         Route::get('/{payment}', 'show')->name('show');
         Route::delete('/delete/{payment}', 'destroy')->name('delete');
         Route::get('/edit/{payment}', 'edit')->name('edit');
@@ -162,6 +164,12 @@ Route::prefix('/admin')->as('admin.')->middleware('auth:admin')->group(function 
         Route::get('/edit/{user}', 'edit')->name('edit');
         Route::put('/update/{user}', 'update')->name('update');
         Route::delete('/delete/{user}', 'destroy')->name('delete');
+    });
+
+    /* Admin Visits routes */
+    Route::controller(VisitController::class)->prefix('/visits')->as('visits.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::delete('/delete/{visit}', 'destroy')->name('delete');
     });
 });
 

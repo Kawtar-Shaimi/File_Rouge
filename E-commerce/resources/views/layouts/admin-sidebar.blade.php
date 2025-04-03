@@ -7,6 +7,8 @@
         <a href="{{ route('admin.books.index') }}" class="block px-4 py-2 hover:bg-gray-700">Books</a>
         <a href="{{ route('admin.reviews.index') }}" class="block px-4 py-2 hover:bg-gray-700">Reviews</a>
         <a href="{{ route('admin.orders.index') }}" class="block px-4 py-2 hover:bg-gray-700">Commandes</a>
+        <a href="{{ route('admin.payments.index') }}" class="block px-4 py-2 hover:bg-gray-700">Payments</a>
+        <a href="{{ route('admin.visits.index') }}" class="block px-4 py-2 hover:bg-gray-700">Visits</a>
         <form class="w-full" method="POST" action="{{ route('logout', 'admin') }}">
             @csrf
             <button type="submit" class="block w-full text-left px-4 py-2 hover:bg-gray-700">Logout</button>

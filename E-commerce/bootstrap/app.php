@@ -3,6 +3,7 @@
 use App\Http\Middleware\Auth;
 use App\Http\Middleware\Guest;
 use App\Http\Middleware\GuestAuth;
+use App\Http\Middleware\TrackVisit;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -14,10 +15,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->append(TrackVisit::class);
         $middleware->alias([
             'authAll' => Auth::class,
             'guestAll' => Guest::class,
-            'guestAuth' => GuestAuth::class,
+            'guestAuth' => GuestAuth::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

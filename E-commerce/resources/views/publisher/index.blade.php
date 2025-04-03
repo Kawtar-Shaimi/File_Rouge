@@ -6,77 +6,253 @@
 
 <div class="container w-5/6 ms-auto p-6">
 
+    <!-- Dashboard -->
+    <h1 class="text-3xl font-bold mb-6">Tableau de Bord</h1>
+    
     <!-- Statistiques -->
-    <div class="grid md:grid-cols-2 gap-6 mb-8">
-        <!-- Total Books -->
-        <div class="bg-white p-6 rounded-lg shadow-lg flex items-center">
-            <div class="p-4 bg-blue-500 text-white rounded-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M3 3h18v18H3z"></path>
-                    <path d="M16 3v18"></path>
-                    <path d="M8 3v18"></path>
-                    <path d="M3 10h18"></path>
-                    <path d="M3 16h18"></path>
-                </svg>
-            </div>
-            <div class="ml-4">
-                <h3 class="text-lg font-semibold">Total Books Publiés</h3>
-                <p class="text-2xl font-bold text-gray-700">{{ $books_count }}</p> <!-- Valeur dynamique -->
-            </div>
+    <div class="grid grid-cols-4 gap-6">
+        <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+            <h3 class="text-xl font-bold">Books</h3>
+            <p class="text-3xl text-orange-500 font-bold">{{ $books_count }}</p>
         </div>
-
-        <!-- Total Commandes -->
-        <div class="bg-white p-6 rounded-lg shadow-lg flex items-center">
-            <div class="p-4 bg-green-500 text-white rounded-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M5 9l7 7 7-7"></path>
-                </svg>
-            </div>
-            <div class="ml-4">
-                <h3 class="text-lg font-semibold">Total Commandes Reçues</h3>
-                <p class="text-2xl font-bold text-gray-700">{{ $orders_count }}</p> <!-- Valeur dynamique -->
-            </div>
+        <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+            <h3 class="text-xl font-bold">Commandes</h3>
+            <p class="text-3xl text-red-500 font-bold">{{ $orders_count }}</p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+            <h3 class="text-xl font-bold">Reviews</h3>
+            <p class="text-3xl text-yellow-500 font-bold">{{ $reviews_count }}</p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+            <h3 class="text-xl font-bold">Incomes</h3>
+            <p class="text-3xl text-green-500 font-bold">${{ $incomes }}</p>
         </div>
     </div>
 
-    <!-- Tableau des Commandes -->
-    <div class="bg-white p-6 rounded-lg shadow-lg">
-        <h3 class="text-xl font-semibold mb-4">Commandes Passées</h3>
-        <table class="min-w-full bg-white border border-gray-300 rounded-lg">
-            <thead>
-                <tr class="bg-gray-200 text-gray-700 uppercase text-sm leading-normal">
-                    <th class="py-3 px-6 text-left">Commande Number</th>
-                    <th class="py-3 px-6 text-left">ID Book</th>
-                    <th class="py-3 px-6 text-left">Client</th>
-                    <th class="py-3 px-6 text-left">Total</th>
-                    <th class="py-3 px-6 text-left">Statut</th>
-                    <th class="py-3 px-6 text-center">Actions</th>
-                </tr>
-            </thead>
-            <tbody class="text-gray-600 text-sm font-light">
-                @if ($orders_count > 0)
-                    @foreach ($orders as $order)
-                        <tr class="border-b border-gray-200 hover:bg-gray-100">
-                            <td class="py-3 px-6 underline italic hover:text-blue-400"><a href="{{ route('publisher.orders.show', $order->order->order_number) }}">#{{ $order->order->order_number }}</a></td>
-                            <td class="py-3 px-6 underline italic hover:text-blue-400"><a href="{{ route('publisher.books.show', $order->book) }}">#{{ $order->book->id }}</a></td>
-                            <td class="py-3 px-6">{{ $order->order->client->name }}</td>
-                            <td class="py-3 px-6">{{ $order->total}} DH</td>
-                            <td class="py-3 px-6">
-                                <span class="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">{{ $order->order->status }}</span>
-                            </td>
-                            <td class="py-3 px-6 text-center">
-                                <a href="{{ route('publisher.orders.show', $order->order->order_number) }}" class="text-blue-500 hover:underline">Show</a>
-                            </td>
-                        </tr>
-                    @endforeach
-                @else
-                    <tr>
-                        <td colspan="5" class="text-red-500 text-center py-3 px-6 text-2xl font-bold">No Commands Yet</td>
-                    </tr>
-                @endif
-            </tbody>
-        </table>
+    <!-- Charts -->
+    <h2 class="text-2xl font-bold mt-8 mb-4">Charts</h2>
+    <div class="grid grid-cols-2 gap-6">
+        <div id="incomes_chart_div" class="h-[50vh] bg-white p-6 rounded-lg shadow-lg overflow-hidden col-span-2"></div>
+        <h3 class="text-xl font-bold mt-8 mb-4 col-span-2">Best saled books charts</h3>
+        <div id="best_saled_books_chart_div" class="h-[50vh] bg-white p-6 rounded-lg shadow-lg overflow-hidden"></div>
+        <div id="best_saled_books_of_the_month_chart_div" class="h-[50vh] bg-white p-6 rounded-lg shadow-lg overflow-hidden"></div>
+        <h3 class="text-xl font-bold mt-8 mb-4 col-span-2">Best saled categories charts</h3>
+        <div id="best_saled_categories_chart_div" class="h-[50vh] bg-white p-6 rounded-lg shadow-lg overflow-hidden"></div>
+        <div id="best_saled_categories_of_the_month_chart_div" class="h-[50vh] bg-white p-6 rounded-lg shadow-lg overflow-hidden"></div>
+        <h3 class="text-xl font-bold mt-8 mb-4 col-span-2">Best rated books charts</h3>
+        <div id="best_rated_books_chart_div" class="h-[50vh] bg-white p-6 rounded-lg shadow-lg overflow-hidden"></div>
+        <div id="best_rated_books_of_the_month_chart_div" class="h-[50vh] bg-white p-6 rounded-lg shadow-lg overflow-hidden"></div>
     </div>
 </div>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+        /* Incomes chart */
+        @if ($incomes_chart_data->count() > 0)
+            let incomes_chart_data = google.visualization.arrayToDataTable([
+                ['Time', 'Incomes'],
+                ...@json($incomes_chart_data)
+            ]);
+
+            let incomes_chart_options = {
+                title: 'Hourly Incomes',
+                hAxis: {title: 'Time',  titleTextStyle: {color: '#333'}},
+                vAxis: {minValue: 0}
+            };
+
+            let incomes_chart = new google.visualization.AreaChart(document.getElementById('incomes_chart_div'));
+            incomes_chart.draw(incomes_chart_data, incomes_chart_options);
+        @else
+            $('#incomes_chart_div').html(`
+                <p class="w-full h-full m-0 p-0 flex justify-center items-center text-red-500 font-bold text-3xl text-center">No Data To Show</p>
+            `);
+        @endif
+
+
+        /* Best Saled Books chart */
+        @if ($best_saled_books_chart_data->count() > 0)
+            let best_saled_books_chart_data = google.visualization.arrayToDataTable([
+                ["Title", "Incomes", { role: 'style' }],
+                ...@json($best_saled_books_chart_data)
+            ]);
+
+            let best_saled_books_chart_view = new google.visualization.DataView(best_saled_books_chart_data);
+            best_saled_books_chart_view.setColumns([0, 1,
+                            { calc: "stringify",
+                                sourceColumn: 1,
+                                type: "string",
+                                role: "annotation" },
+                            2]);
+
+            let best_saled_books_chart_options = {
+                title: "Best Saled Books",
+                bar: {groupWidth: "95%"},
+                legend: { position: "none" },
+            };
+
+            let best_saled_books_chart = new google.visualization.ColumnChart(document.getElementById("best_saled_books_chart_div"));
+            best_saled_books_chart.draw(best_saled_books_chart_view, best_saled_books_chart_options);
+            
+        @else
+            $("#best_saled_books_chart_div").html(`
+                <p class="w-full h-full m-0 p-0 flex justify-center items-center text-red-500 font-bold text-3xl text-center">No Data To Show</p>
+            `);
+        @endif
+
+
+        /* Best Saled Books of the Month chart */
+        @if ($best_saled_books_of_the_month_chart_data->count() > 0)
+            let best_saled_books_of_the_month_chart_data = google.visualization.arrayToDataTable([
+                ["Title", "Incomes", { role: 'style' }],
+                ...@json($best_saled_books_of_the_month_chart_data)
+            ]);
+
+            let best_saled_books_of_the_month_chart_view = new google.visualization.DataView(best_saled_books_of_the_month_chart_data);
+            best_saled_books_of_the_month_chart_view.setColumns([0, 1,
+                            { calc: "stringify",
+                                sourceColumn: 1,
+                                type: "string",
+                                role: "annotation" },
+                            2]);
+
+            let best_saled_books_of_the_month_chart_options = {
+                title: "Best Saled Books of the Month",
+                bar: {groupWidth: "95%"},
+                legend: { position: "none" },
+            };
+
+            let best_saled_books_of_the_month_chart = new google.visualization.ColumnChart(document.getElementById("best_saled_books_of_the_month_chart_div"));
+            best_saled_books_of_the_month_chart.draw(best_saled_books_of_the_month_chart_view, best_saled_books_of_the_month_chart_options);
+        @else
+            $("#best_saled_books_of_the_month_chart_div").html(`
+                <p class="w-full h-full m-0 p-0 flex justify-center items-center text-red-500 font-bold text-3xl text-center">No Data To Show</p>
+            `);
+        @endif
+
+
+        /* Best Saled Categories chart */
+        @if ($best_saled_categories_chart_data->count() > 0)
+            let best_saled_categories_chart_data = google.visualization.arrayToDataTable([
+                ["Category", "Incomes", { role: 'style' }],
+                ...@json($best_saled_categories_chart_data)
+            ]);
+
+            let best_saled_categories_chart_view = new google.visualization.DataView(best_saled_categories_chart_data);
+            best_saled_categories_chart_view.setColumns([0, 1,
+                            { calc: "stringify",
+                                sourceColumn: 1,
+                                type: "string",
+                                role: "annotation" },
+                            2]);
+
+            let best_saled_categories_chart_options = {
+                title: "Best Saled Categories",
+                bar: {groupWidth: "95%"},
+                legend: { position: "none" },
+            };
+
+            let best_saled_categories_chart = new google.visualization.ColumnChart(document.getElementById("best_saled_categories_chart_div"));
+            best_saled_categories_chart.draw(best_saled_categories_chart_view, best_saled_categories_chart_options);
+        @else
+            $("#best_saled_categories_chart_div").html(`
+                <p class="w-full h-full m-0 p-0 flex justify-center items-center text-red-500 font-bold text-3xl text-center">No Data To Show</p>
+            `);
+        @endif
+
+
+        /* Best Saled Categories of the Month chart */
+        @if ($best_saled_categories_of_the_month_chart_data->count() > 0)
+            let best_saled_categories_of_the_month_chart_data = google.visualization.arrayToDataTable([
+                ["Category", "Incomes", { role: 'style' }],
+                ...@json($best_saled_categories_of_the_month_chart_data)
+            ]);
+
+            let best_saled_categories_of_the_month_chart_view = new google.visualization.DataView(best_saled_categories_of_the_month_chart_data);
+            best_saled_categories_of_the_month_chart_view.setColumns([0, 1,
+                            { calc: "stringify",
+                                sourceColumn: 1,
+                                type: "string",
+                                role: "annotation" },
+                            2]);
+
+            let best_saled_categories_of_the_month_chart_options = {
+                title: "Best Saled Categories of the Month",
+                bar: {groupWidth: "95%"},
+                legend: { position: "none" },
+            };
+
+            let best_saled_categories_of_the_month_chart = new google.visualization.ColumnChart(document.getElementById("best_saled_categories_of_the_month_chart_div"));
+            best_saled_categories_of_the_month_chart.draw(best_saled_categories_of_the_month_chart_view, best_saled_categories_of_the_month_chart_options);
+        @else
+            $("#best_saled_categories_of_the_month_chart_div").html(`
+                <p class="w-full h-full m-0 p-0 flex justify-center items-center text-red-500 font-bold text-3xl text-center">No Data To Show</p>
+            `);
+        @endif
+
+
+        /* Best Rated Books chart */
+        @if ($best_rated_books_chart_data->count() > 0)
+            let best_rated_books_chart_data = google.visualization.arrayToDataTable([
+                ["Title", "Rating", { role: 'style' }],
+                ...@json($best_rated_books_chart_data)
+            ]);
+
+            let best_rated_books_chart_view = new google.visualization.DataView(best_rated_books_chart_data);
+            best_rated_books_chart_view.setColumns([0, 1,
+                            { calc: "stringify",
+                                sourceColumn: 1,
+                                type: "string",
+                                role: "annotation" },
+                            2]);
+
+            let best_rated_books_chart_options = {
+                title: "Best Rated Books",
+                bar: {groupWidth: "95%"},
+                legend: { position: "none" },
+            };
+
+            let best_rated_books_chart = new google.visualization.ColumnChart(document.getElementById("best_rated_books_chart_div"));
+            best_rated_books_chart.draw(best_rated_books_chart_view, best_rated_books_chart_options);
+        @else
+            $("#best_rated_books_chart_div").html(`
+                <p class="w-full h-full m-0 p-0 flex justify-center items-center text-red-500 font-bold text-3xl text-center">No Rated Books Yet</p>
+            `);
+        @endif
+
+
+        /* Best Rated Books of the Month chart */
+        @if ($best_rated_books_of_the_month_chart_data->count() > 0)
+            let best_rated_books_of_the_month_chart_data = google.visualization.arrayToDataTable([
+                ["Title", "Rating", { role: 'style' }],
+                ...@json($best_rated_books_of_the_month_chart_data)
+            ]);
+
+            let best_rated_books_of_the_month_chart_view = new google.visualization.DataView(best_rated_books_of_the_month_chart_data);
+            best_rated_books_of_the_month_chart_view.setColumns([0, 1,
+                            { calc: "stringify",
+                                sourceColumn: 1,
+                                type: "string",
+                                role: "annotation" },
+                            2]);
+
+            let best_rated_books_of_the_month_chart_options = {
+                title: "Best Rated Books of the Month",
+                bar: {groupWidth: "95%"},
+                legend: { position: "none" },
+            };
+
+            let best_rated_books_of_the_month_chart = new google.visualization.ColumnChart(document.getElementById("best_rated_books_of_the_month_chart_div"));
+            best_rated_books_of_the_month_chart.draw(best_rated_books_of_the_month_chart_view, best_rated_books_of_the_month_chart_options);
+        @else
+            $('#best_rated_books_of_the_month_chart_div').html(`
+                <p class="w-full h-full m-0 p-0 flex justify-center items-center text-red-500 font-bold text-3xl text-center">No Rated Books Yet</p>
+            `);
+        @endif
+    }
+</script>
 
 @endsection

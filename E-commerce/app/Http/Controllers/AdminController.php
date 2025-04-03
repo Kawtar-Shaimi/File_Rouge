@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Order;
-use App\Models\Payment;
 use App\Models\Book;
 use App\Models\User;
+use App\Models\Visit;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -20,13 +20,160 @@ class AdminController extends Controller
 
     public function index()
     {
-        $user_count = User::count();
-        $book_count = Book::count();
-        $order_count = Order::count();
-        $category_count = Category::count();
-        $payments = Payment::with( 'order.client')->get();
+        $colors = ['green', 'brown', 'yellow', 'blue', 'orange', 'red', 'pink', 'purple', 'indigo', 'teal'];
 
-        return view('admin.index', compact('user_count', 'book_count', 'order_count', 'category_count', 'payments'));
+        $users_count = User::count();
+        $books_count = Book::count();
+        $orders_count = Order::count();
+        $categories_count = Category::count();
+        $visits_count = Visit::count();
+        $incomes = number_format(Order::selectRaw("SUM(total_amount * 0.3) as amount")
+        ->where('status', 'completed')
+        ->first()->amount, 2);
+
+        $users_distribution_chart_data = User::selectRaw("role, COUNT(*) as count")
+        ->groupBy('role')
+        ->orderBy('count', 'desc')
+        ->get()
+        ->map(fn ($item) =>  [
+                $item->role , (int) $item->count
+        ]);
+
+        $visits_chart_data = Visit::selectRaw("DATE_FORMAT(last_visit, '%Y-%m-%d %H:00') as full_date, TIME_Format(last_visit, '%H:00') as time, COUNT(*) as count")
+        ->groupBy('full_date', 'time')
+        ->orderBy('full_date', 'desc')
+        ->get()
+        ->map(fn ($item) =>  [
+                $item->time , $item->count
+            ]
+        );
+
+        $incomes_chart_data = Order::selectRaw("DATE_FORMAT(updated_at, '%Y-%m-%d %H:00') as full_date, TIME_Format(updated_at, '%H:00') as time, SUM(total_amount * 0.3) as amount")
+        ->where('status', 'completed')
+        ->groupBy('full_date', 'time')
+        ->orderBy('full_date', 'desc')
+        ->get()
+        ->map(fn ($item) =>  [
+                $item->time , (float) number_format($item->amount, 2)
+            ]
+        );
+
+        shuffle($colors);
+        $best_saled_books_chart_data = Order::selectRaw('books.name, SUM(orders_books.total * 0.3) as income')
+        ->join('orders_books', 'orders.id', '=', 'orders_books.order_id')
+        ->join('books', 'orders_books.book_id', '=', 'books.id')
+        ->where('orders.status', 'completed')
+        ->groupBy('books.id', 'books.name') 
+        ->orderByDesc('income')
+        ->limit(5)
+        ->get()
+        ->map(fn($item, $key) =>  [
+                $item->name, (float) number_format($item->income, 2), $colors[$key]
+        ]);
+
+        shuffle($colors);
+        $best_saled_books_of_the_month_chart_data = Order::selectRaw('books.name, SUM(orders_books.total * 0.3) as income')
+        ->join('orders_books', 'orders.id', '=', 'orders_books.order_id')
+        ->join('books', 'orders_books.book_id', '=', 'books.id')
+        ->where('orders.status', 'completed')
+        ->whereMonth('orders.updated_at', now()->month)
+        ->groupBy('books.id', 'books.name') 
+        ->orderByDesc('income')
+        ->limit(5)
+        ->get()
+        ->map(fn ($item, $key) =>  [
+                $item->name, (float) number_format($item->income, 2), $colors[$key]
+        ]);
+
+        shuffle($colors);
+        $best_saled_categories_chart_data = Order::selectRaw('categories.name, SUM(orders_books.total * 0.3) as income')
+        ->join('orders_books', 'orders.id', '=', 'orders_books.order_id')
+        ->join('books', 'orders_books.book_id', '=', 'books.id')
+        ->join('categories', 'books.category_id', '=', 'categories.id')
+        ->where('orders.status', 'completed')
+        ->groupBy('categories.id', 'categories.name') 
+        ->orderByDesc('income')
+        ->limit(5)
+        ->get()
+        ->map(fn($item, $key) =>  [
+                $item->name, (float) number_format($item->income, 2), $colors[$key]
+        ]);
+
+        shuffle($colors);
+        $best_saled_categories_of_the_month_chart_data = Order::selectRaw('categories.name, SUM(orders_books.total * 0.3) as income')
+        ->join('orders_books', 'orders.id', '=', 'orders_books.order_id')
+        ->join('books', 'orders_books.book_id', '=', 'books.id')
+        ->join('categories', 'books.category_id', '=', 'categories.id')
+        ->where('orders.status', 'completed')
+        ->whereMonth('orders.updated_at', now()->month)
+        ->groupBy('categories.id', 'categories.name') 
+        ->orderByDesc('income')
+        ->limit(5)
+        ->get()
+        ->map(fn ($item, $key) =>  [
+                $item->name, (float) number_format($item->income, 2), $colors[$key]
+        ]);
+
+        shuffle($colors);
+        $best_saled_publishers_chart_data = Order::selectRaw('users.name, SUM(orders_books.total * 0.3) as income')
+        ->join('orders_books', 'orders.id', '=', 'orders_books.order_id')
+        ->join('books', 'orders_books.book_id', '=', 'books.id')
+        ->join('users', 'books.publisher_id', '=', 'users.id')
+        ->where('orders.status', 'completed')
+        ->groupBy('users.id', 'users.name') 
+        ->orderByDesc('income')
+        ->limit(5)
+        ->get()
+        ->map(fn($item, $key) =>  [
+                $item->name, (float) number_format($item->income, 2), $colors[$key]
+        ]);
+
+        shuffle($colors);
+        $best_saled_publishers_of_the_month_chart_data = Order::selectRaw('users.name, SUM(orders_books.total * 0.3) as income')
+        ->join('orders_books', 'orders.id', '=', 'orders_books.order_id')
+        ->join('books', 'orders_books.book_id', '=', 'books.id')
+        ->join('users', 'books.publisher_id', '=', 'users.id')
+        ->where('orders.status', 'completed')
+        ->whereMonth('orders.updated_at', now()->month)
+        ->groupBy('users.id', 'users.name') 
+        ->orderByDesc('income')
+        ->limit(5)
+        ->get()
+        ->map(fn ($item, $key) =>  [
+                $item->name, (float) number_format($item->income, 2), $colors[$key]
+        ]);
+
+        shuffle($colors);
+        $best_rated_books_chart_data = Book::selectRaw('books.name, AVG(reviews.rate) as rating')
+        ->join('reviews', 'reviews.book_id', '=', 'books.id')
+        ->groupBy('books.id', 'books.name') 
+        ->orderByDesc('rating')
+        ->limit(5)
+        ->get()
+        ->map(fn($item, $key) =>  [
+                $item->name, (float) number_format($item->rating, 1), $colors[$key]
+        ]);
+
+        shuffle($colors);
+        $best_rated_books_of_the_month_chart_data = Book::selectRaw('books.name, AVG(reviews.rate) as rating')
+        ->join('reviews', 'reviews.book_id', '=', 'books.id')
+        ->whereMonth('reviews.updated_at', now()->month)
+        ->groupBy('books.id', 'books.name') 
+        ->orderByDesc('rating')
+        ->limit(5)
+        ->get()
+        ->map(fn($item, $key) =>  [
+                $item->name, (float) number_format($item->rating, 1), $colors[$key]
+        ]);
+
+        return view('admin.index', 
+            compact('users_count', 'books_count', 'orders_count', 'categories_count', 'visits_count', 'incomes',
+                'users_distribution_chart_data', 'visits_chart_data', 'incomes_chart_data', 'best_saled_books_chart_data',
+                'best_saled_books_of_the_month_chart_data','best_saled_categories_chart_data', 
+                'best_saled_categories_of_the_month_chart_data', 'best_saled_publishers_chart_data', 
+                'best_saled_publishers_of_the_month_chart_data', 'best_rated_books_chart_data', 
+                'best_rated_books_of_the_month_chart_data'
+            ));
     }
 
     public function books()

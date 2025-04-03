@@ -14,6 +14,17 @@ class PaymentController extends Controller
         $this->middleware('auth:admin');
     }
 
+    public function index()
+    {
+        try {
+            $payments = Payment::with( 'order.client')->get();
+
+            return view('admin.payments.index', compact('payments'));
+        }catch (Exception $e) {
+            return redirect()->back()->with('error', 'Error while getting payments try again later.');
+        }
+    }
+
     public function show(Payment $payment)
     {
         try {
@@ -44,7 +55,7 @@ class PaymentController extends Controller
                 return back()->with('error', 'Payment status not updated.');
             }
 
-            return redirect()->route('admin.index')->with('success', 'Payment status updated successfully.');
+            return redirect()->route('admin.payments.index')->with('success', 'Payment status updated successfully.');
         }catch (Exception $e) {
             return redirect()->back()->with('error', 'Error while updating payment status try again later.');
         }
@@ -60,7 +71,7 @@ class PaymentController extends Controller
                 return back()->with('error', 'Payment not deleted.');
             }
 
-            return redirect()->route('admin.index')->with('success', 'Payment deleted successfully.');
+            return redirect()->route('admin.payments.index')->with('success', 'Payment deleted successfully.');
         }catch (Exception $e) {
             return redirect()->back()->with('error', 'Error while deleting payment try again later.');
         }
