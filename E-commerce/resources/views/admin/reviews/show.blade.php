@@ -40,7 +40,7 @@
                             <form action="{{ route('admin.reviews.delete', $review) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Supprimer</button>
+                                <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
                             </form>
                         </td>
                     </tr>

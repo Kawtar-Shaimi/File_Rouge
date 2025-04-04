@@ -4,16 +4,14 @@
 
 @include('layouts.admin-sidebar')
 
-<!-- Contenu principal -->
 <main class="ml-64 p-6">
-
     <!-- Dashboard -->
-    <h1 class="text-3xl font-bold mb-6">Tableau de Bord</h1>
+    <h1 class="text-3xl font-bold mb-6">Dashboard</h1>
     
     <!-- Statistiques -->
     <div class="grid grid-cols-6 gap-6">
         <div class="bg-white p-6 rounded-lg shadow-lg text-center">
-            <h3 class="text-xl font-bold">Utilisateurs</h3>
+            <h3 class="text-xl font-bold">Users</h3>
             <p class="text-3xl text-blue-500 font-bold">{{ $users_count }}</p>
         </div>
         <div class="bg-white p-6 rounded-lg shadow-lg text-center">
@@ -21,11 +19,11 @@
             <p class="text-3xl text-orange-500 font-bold">{{ $books_count }}</p>
         </div>
         <div class="bg-white p-6 rounded-lg shadow-lg text-center">
-            <h3 class="text-xl font-bold">Commandes</h3>
+            <h3 class="text-xl font-bold">Orders</h3>
             <p class="text-3xl text-red-500 font-bold">{{ $orders_count }}</p>
         </div>
         <div class="bg-white p-6 rounded-lg shadow-lg text-center">
-            <h3 class="text-xl font-bold">Catégories</h3>
+            <h3 class="text-xl font-bold">Categories</h3>
             <p class="text-3xl text-yellow-500 font-bold">{{ $categories_count }}</p>
         </div>
         <div class="bg-white p-6 rounded-lg shadow-lg text-center">

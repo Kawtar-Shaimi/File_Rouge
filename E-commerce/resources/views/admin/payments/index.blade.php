@@ -4,59 +4,82 @@
 
 @include('layouts.admin-sidebar')
 
-<!-- Contenu principal -->
 <main class="ml-64 p-6">
 
-    <!-- Tableau des Payments -->
-    <h2 class="text-2xl font-bold mt-8 mb-4">Liste des Payments</h2>
+    <!-- Payments Table -->
+    <h2 class="text-2xl font-bold mt-8 mb-4">Payments Table</h2>
     <div class="bg-white p-6 rounded-lg shadow-lg overflow-x-auto">
-        <table class="w-full border-collapse">
-            <thead>
-                <tr class="bg-gray-200">
-                    <th class="p-3 border">ID</th>
-                    <th class="p-3 border">Client</th>
-                    <th class="p-3 border">Email</th>
-                    <th class="p-3 border">Montant Total</th>
-                    <th class="p-3 border">Statut</th>
-                    <th class="p-3 border">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if ($payments->count() > 0)
-                    @foreach ($payments as $payment)
-                        <tr class="text-center">
-                            <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.payments.show', $payment) }}">#{{ $payment->id }}</a></td>
-                            <td class="p-3 border">{{ $payment->order->client->name }}</td>
-                            <td class="p-3 border">{{ $payment->order->client->email }}</td>
-                            <td class="p-3 border font-bold {{ $payment->status == "paid" ? "text-green-600" : ($payment->status == "failed" ? "text-red-600" : "text-black") }}">${{ $payment->amount }}</td>
-                            <td class="p-3 border">
-                                @if ($payment->status == 'pending')
-                                    <span class="bg-yellow-400 text-white px-3 py-1 rounded">{{ $payment->status }}</span>
-                                @elseif ($payment->status == 'paid')
-                                    <span class="bg-green-400 text-white px-3 py-1 rounded">{{ $payment->status }}</span>
-                                @else
-                                    <span class="bg-red-400 text-white px-3 py-1 rounded">{{ $payment->status }}</span>
-                                @endif
-                            </td>
-                            <td class="p-3 border">
-                                <button class="bg-blue-500 text-white px-3 py-1 rounded"><a href="{{ route('admin.payments.edit', $payment) }}">Modifier</a></button>
-                                <form action="{{ route('admin.payments.delete', $payment) }}" method="POST" class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Supprimer</button>
-                                </form>
-                            </td>
-                        </tr>
-                    @endforeach
-                @else
-                    <tr>
-                        <td colspan="6" class="text-red-500 text-center py-3 px-6 text-2xl font-bold">No Payments Yet</td>
-                    </tr>
-                @endif
-            </tbody>
-        </table>
+        <div class="mb-4 flex items-center space-x-5">
+            <input type="text" id="search" placeholder="Search by order number, status, client name, or email" class="border border-gray-300 rounded-lg p-2 w-1/3">
+            <div>
+                <label for="sort" class="ml-2 text-gray-600">Sort By:</label>
+                <select id="sort" class="border border-gray-300 rounded-lg p-2">
+                    <option value="id" selected>ID</option>
+                    <option value="order_number">Order Number</option>
+                    <option value="client_name">Client Name</option>
+                    <option value="client_email">Email</option>
+                    <option value="total_amount">Total Amount</option>
+                    <option value="status">Status</option>
+                    <option value="created_at">Creation Date</option>
+                    <option value="updated_at">Last Update</option>
+                </select>
+            </div>
+            <div>
+                <label for="order" class="ml-2 text-gray-600">Order:</label>
+                <select id="order" class="border border-gray-300 rounded-lg p-2">
+                    <option value="asc" selected>Ascending</option>
+                    <option value="desc">Descending</option>
+                </select>
+            </div>
+        </div>
+        <div id="payments-table">
+            @include('admin.payments.partial.payments-list', ['payments' => $payments])
+        </div>
     </div>
 
 </main>
+
+<script>
+    $(document).ready(function() {
+
+        function fetchPayments(query, page = 1, sort = 'id', order = 'asc') {
+            $.ajax({
+                url: "/admin/filter/payments?page=" + page,
+                method: 'GET',
+                data: {
+                    query,
+                    sort,
+                    order
+                },
+                success: function(response) {
+                    $('#payments-table').html(response.data.html);
+                }
+            });
+        }
+
+        $('#search').on('keyup', function() {
+            let query = $(this).val();
+            let sort = $('#sort').val();
+            let order = $('#order').val();
+            fetchPayments(query, 1, sort, order);
+        });
+
+        $('#sort, #order').on('change', function() {
+            let order = $('#order').val();
+            let query = $('#search').val();
+            let sort = $('#sort').val();
+            fetchPayments(query, 1, sort, order);
+        });
+
+        $(document).on('click', '#pagination a', function(event) {
+            event.preventDefault();
+            let page = $(this).attr('href').split('page=')[1];
+            let query = $('#search').val();
+            let sort = $('#sort').val();
+            let order = $('#order').val();
+            fetchPayments(query, page, sort, order);
+        });
+    })
+</script>
 
 @endsection

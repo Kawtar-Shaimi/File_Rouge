@@ -20,7 +20,7 @@ class ReviewController extends Controller
     public function index()
     {
         try {
-            $reviews = Review::with('client')->get();
+            $reviews = Review::with(['client', 'book'])->paginate(10);
 
             return view('admin.reviews.index', compact('reviews'));
         }catch (Exception $e) {

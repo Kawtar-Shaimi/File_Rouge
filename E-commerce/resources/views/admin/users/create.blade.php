@@ -71,7 +71,7 @@
                         <p class="text-red-500 text-sm">{{ $message }}</p>
                     @enderror
 
-                    <!-- Bouton de soumission -->
+                    <!-- Submit -->
                     <button type="submit"
                         class="w-full bg-purple-400 text-white p-3 rounded-lg hover:bg-blue-700 transition">Create User</button>
                 </form>

@@ -4,52 +4,83 @@
 
 @include('layouts.publisher-sidebar')
 
-<div class="container w-5/6 ms-auto p-6">
-
-    <h2 class="text-3xl font-extrabold mb-6 text-center text-gray-800">📦 Mes Books Publiés</h2>
-
-
-
-    <!-- Bouton Ajouter un Book -->
-    <div class="text-center my-10">
-        <a href="{{ route('publisher.books.create') }}" class="bg-purple-400 border border-black text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-blue-600 transition duration-300 shadow-md">
-            ➕ Ajouter un book
-        </a>
+<main class="ml-64 p-6">
+    <!-- Books Table -->
+    <div class="flex justify-between items-center">
+        <h2 class="text-2xl font-bold mt-8 mb-4">Books Table</h2>
+        <button class="bg-blue-500 text-white px-3 py-2 rounded"><a href="{{ route('publisher.books.create') }}">Add Book</a></button>
+    </div>
+    <div class="bg-white p-6 rounded-lg shadow-lg overflow-x-auto">
+        <div class="mb-4 flex items-center space-x-5">
+            <input type="text" id="search" placeholder="Search by name, description, category, or publisher" class="border border-gray-300 rounded-lg p-2 w-1/3">
+            <div>
+                <label for="sort" class="ml-2 text-gray-600">Sort By:</label>
+                <select id="sort" class="border border-gray-300 rounded-lg p-2">
+                    <option value="name" selected>Name</option>
+                    <option value="price">Price</option>
+                    <option value="stock">Stock</option>
+                    <option value="category_name">Category</option>
+                    <option value="created_at">Creation Date</option>
+                    <option value="updated_at">Last Update</option>
+                </select>
+            </div>
+            <div>
+                <label for="order" class="ml-2 text-gray-600">Order:</label>
+                <select id="order" class="border border-gray-300 rounded-lg p-2">
+                    <option value="asc" selected>Ascending</option>
+                    <option value="desc">Descending</option>
+                </select>
+            </div>
+        </div>
+        <div id="books-table">
+            @include('publisher.books.partial.books-list', ['books' => $books])
+        </div>
     </div>
 
-    <!-- Grille des books -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+</main>
 
-        @if ($books->count() > 0)
-            @foreach ($books as $book)
-                <!-- Book -->
-                <div class="bg-white p-4 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
-                    <img src="{{ asset('storage/' . $book->image) }}" alt="{{ $book->name }}" class="w-full h-48 object-cover rounded-md">
-                    <div class="mt-4">
-                        <h3 class="text-xl font-semibold">{{ $book->name }}</h3>
-                        <p class="text-green-600 font-bold text-lg">{{ $book->price }} $</p>
-                        <div class="mt-4 flex justify-between">
-                            <a href="{{ route('publisher.books.edit', $book->id) }}" class="text-blue-500 hover:bg-blue-100 p-2 rounded-lg transition duration-300">
-                                ✏️ Modifier
-                            </a>
-                            <form action="{{ route('publisher.books.delete', $book->id) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="text-red-500 hover:bg-red-100 p-2 rounded-lg transition duration-300">
-                                    🗑️ Supprimer
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-        @else
-            <!-- Message si aucun book -->
-            <p class="col-span-1 sm:col-span-2 md:col-span-3 text-center text-red-500 mt-6 text-3xl font-bold">Aucun book publié pour le moment.</p>
-        @endif
+<script>
+    $(document).ready(function() {
 
-    </div>
+        function fetchBooks(query, page = 1, sort = 'name', order = 'asc') {
+            $.ajax({
+                url: "/publisher/filter/books?page=" + page,
+                method: 'GET',
+                data: {
+                    query,
+                    sort,
+                    order
+                },
+                success: function(response) {
+                    $('#books-table').html(response.data.html);
+                }
+            });
+        }
 
-</div>
+        $('#search').on('keyup', function() {
+            let query = $(this).val();
+            let sort = $('#sort').val();
+            let order = $('#order').val();
+
+            fetchBooks(query, 1, sort, order);
+        });
+
+        $('#sort, #order').on('change', function() {
+            let query = $('#search').val();
+            let order = $('#order').val();
+            let sort = $('#sort').val();
+            fetchBooks(query, 1, sort, order);
+        });
+
+        $(document).on('click', '#pagination a', function(event) {
+            event.preventDefault();
+            let page = $(this).attr('href').split('page=')[1];
+            let query = $('#search').val();
+            let sort = $('#sort').val();
+            let order = $('#order').val();
+            fetchBooks(query, page, sort, order);
+        });
+    });
+</script>
 
 @endsection

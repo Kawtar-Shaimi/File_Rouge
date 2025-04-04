@@ -13,7 +13,7 @@
                 <form action="{{ route('admin.categories.store')  }}" method="POST">
                     @csrf
 
-                    <!-- Nom de la catégorie -->
+                    <!-- Name -->
                     <div class="mb-4">
                         <label for="name" class="block text-lg font-semibold">Name</label>
                         <input type="text" id="name" name="name" required value="{{ old('name') }}"
@@ -33,7 +33,7 @@
                         <p class="text-red-500">{{ $message }}</p>
                     @enderror
 
-                    <!-- Bouton de soumission -->
+                    <!-- Submit -->
                     <button type="submit"
                         class="w-full bg-purple-400 text-white p-3 rounded-lg hover:bg-blue-700 transition">Create Category</button>
                 </form>

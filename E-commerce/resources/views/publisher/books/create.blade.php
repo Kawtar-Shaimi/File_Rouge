@@ -4,38 +4,38 @@
 
 @include('layouts.publisher-sidebar')
 
-<!-- Formulaire d'ajout -->
+<!-- Create Book Form -->
 <div class="container w-5/6 ms-auto p-6">
     <div class="max-w-lg mx-auto">
-        <h2 class="text-3xl font-bold text-center mb-6 text-gray-800">🛍️ Ajouter un Book</h2>
+        <h2 class="text-3xl font-bold text-center mb-6 text-gray-800">Create Book</h2>
 
         <div class="bg-white p-6 rounded-lg shadow-lg">
             <form action="{{ route('publisher.books.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
-                <!-- Nom du book -->
+                <!-- Book Name -->
                 <div class="mb-4">
-                    <label for="name" class="block text-sm font-medium text-gray-700">Nom du book</label>
+                    <label for="name" class="block text-sm font-medium text-gray-700">Book Name</label>
                     <input type="text" id="name" name="name" class="w-full p-3 border rounded-lg mt-1" value="{{ old('name') }}" required>
                 </div>
                 @error('name')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
 
-                <!-- Prix -->
+                <!-- Price -->
                 <div class="mb-4">
-                    <label for="price" class="block text-sm font-medium text-gray-700">Prix ($)</label>
+                    <label for="price" class="block text-sm font-medium text-gray-700">Price ($)</label>
                     <input type="number" id="price" name="price" step="0.01" min="0" class="w-full p-3 border rounded-lg mt-1" value="{{ old('price') }}" required>
                 </div>
                 @error('price')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
 
-                <!-- Catégorie -->
+                <!-- Category -->
                 <div class="mb-4">
-                    <label for="category_id" class="block text-sm font-medium text-gray-700">Catégorie</label>
+                    <label for="category_id" class="block text-sm font-medium text-gray-700">Category</label>
                     <select id="category_id" name="category_id" class="w-full p-3 border rounded-lg mt-1" required>
-                        <option value="">Sélectionner une catégorie</option>
+                        <option value="">Select Category</option>
                         @foreach ($categories as $category)
                             <option value="{{ $category->id }}">{{ $category->name }}</option>
                         @endforeach
@@ -65,13 +65,16 @@
 
                 <!-- Image -->
                 <div class="mb-4">
-                    <label for="image" class="block text-sm font-medium text-gray-700">Image du book</label>
+                    <label for="image" class="block text-sm font-medium text-gray-700">Image</label>
                     <input type="file" id="image" name="image" accept="image/*" class="w-full p-3 border rounded-lg mt-1" required>
                 </div>
+                @error('image')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                @enderror
 
-                <!-- Bouton Ajouter -->
+                <!-- Add Book -->
                 <button type="submit" class="w-full bg-purple-400 text-white font-bold py-3 rounded-lg mt-6 hover:bg-blue-600 transition duration-300 shadow-md">
-                    ➕ Ajouter le book
+                    Add Book
                 </button>
 
             </form>

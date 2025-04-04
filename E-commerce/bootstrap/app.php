@@ -15,11 +15,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->append(TrackVisit::class);
         $middleware->alias([
             'authAll' => Auth::class,
             'guestAll' => Guest::class,
-            'guestAuth' => GuestAuth::class
+            'guestAuth' => GuestAuth::class,
+            'trackVisit' => TrackVisit::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

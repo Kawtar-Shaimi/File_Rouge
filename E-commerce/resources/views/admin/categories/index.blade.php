@@ -4,54 +4,84 @@
 
 @include('layouts.admin-sidebar')
 
-<!-- Contenu principal -->
 <main class="ml-64 p-6">
-
-
-
-    <!-- Tableau des Catégories -->
+    <!-- Categories Table -->
     <div class="flex justify-between items-center">
-        <h2 class="text-2xl font-bold mt-8 mb-4">Liste des Catégories</h2>
-        <button class="bg-blue-500 text-white px-3 py-2 rounded"><a href="{{ route('admin.categories.create') }}">Ajouter un Catégorie</a></button>
+        <h2 class="text-2xl font-bold mt-8 mb-4">Categories Table</h2>
+        <button class="bg-blue-500 text-white px-3 py-2 rounded"><a href="{{ route('admin.categories.create') }}">Add Category</a></button>
     </div>
-    <div class="bg-white p-6 rounded-lg shadow-lg">
-        <table class="w-full border-collapse">
-            <thead>
-                <tr class="bg-gray-200">
-                    <th class="p-3 border">ID</th>
-                    <th class="p-3 border">Nom</th>
-                    <th class="p-3 border">Description</th>
-                    <th class="p-3 border">Created By</th>
-                    <th class="p-3 border">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if ($categories->count() > 0)
-                    @foreach ($categories as $category)
-                        <tr class="text-center">
-                            <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.categories.show', $category) }}">#{{ $category->id }}</a></td>
-                            <td class="p-3 border">{{ $category->name }}</td>
-                            <td class="p-3 border">{{ Str::limit($category->description, 15) }}</td>
-                            <td class="p-3 border">{{ $category->admin->name }}</td>
-                            <td class="p-3 border">
-                                <button class="bg-blue-500 text-white px-3 py-1 rounded"><a href="{{ route('admin.categories.edit', $category) }}">Modifier</a></button>
-                                <form action="{{ route('admin.categories.delete', $category) }}" method="POST" class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Supprimer</button>
-                                </form>
-                            </td>
-                        </tr>
-                    @endforeach
-                @else
-                    <tr>
-                        <td colspan="4" class="text-red-500 text-center py-3 px-6 text-2xl font-bold">No Categories Yet</td>
-                    </tr>
-                @endif
-            </tbody>
-        </table>
+    <div class="bg-white p-6 rounded-lg shadow-lg overflow-x-auto">
+        <div class="mb-4 flex items-center space-x-5">
+            <input type="text" id="search" placeholder="Search by name, description, or admin name" class="border border-gray-300 rounded-lg p-2 w-1/3">
+            <div>
+                <label for="sort" class="ml-2 text-gray-600">Sort By:</label>
+                <select id="sort" class="border border-gray-300 rounded-lg p-2">
+                    <option value="id" selected>ID</option>
+                    <option value="name">Name</option>
+                    <option value="description">Description</option>
+                    <option value="admin_name">Admin Name</option>
+                    <option value="created_at">Creation Date</option>
+                    <option value="updated_at">Last Update</option>
+                </select>
+            </div>
+            <div>
+                <label for="order" class="ml-2 text-gray-600">Order:</label>
+                <select id="order" class="border border-gray-300 rounded-lg p-2">
+                    <option value="asc" selected>Ascending</option>
+                    <option value="desc">Descending</option>
+                </select>
+            </div>
+        </div>
+        <div id="categories-table">
+            @include('admin.categories.partial.categories-list', ['categories' => $categories])
+        </div>
     </div>
 
 </main>
 
+<script>
+    $(document).ready(function() {
+
+        function fetchCategories(query, page = 1, sort = 'id', order = 'asc') {
+            $.ajax({
+                url: "/admin/filter/categories?page=" + page,
+                method: 'GET',
+                data: {
+                    query,
+                    sort,
+                    order
+                },
+                success: function(response) {
+                    $('#categories-table').html(response.data.html);
+                }
+            });
+        }
+
+        $('#search').on('keyup', function() {
+            let query = $(this).val();
+            let sort = $('#sort').val();
+            let order = $('#order').val();
+
+            fetchCategories(query, 1, sort, order);
+        });
+
+        $('#sort, #order').on('change', function() {
+            let query = $('#search').val();
+            let order = $('#order').val();
+            let sort = $('#sort').val();
+            fetchCategories(query, 1, sort, order);
+        });
+
+        $(document).on('click', '#pagination a', function(event) {
+            event.preventDefault();
+            let page = $(this).attr('href').split('page=')[1];
+            let query = $('#search').val();
+            let sort = $('#sort').val();
+            let order = $('#order').val();
+            fetchCategories(query, page, sort, order);
+        });
+    });
+</script>
+
 @endsection
+

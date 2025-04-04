@@ -27,8 +27,14 @@
     <h2 class="text-4xl font-bold text-center mb-12 text-blue-600">Nos Meilleurs Books</h2>
 
     <!-- Filter Bar -->
-    <div class="flex justify-end mb-6">
-        <input type="text" id="bookFilter" class="p-2 rounded-lg border border-gray-300" placeholder="Rechercher un book...">
+    <div class="w-1/3 mb-6">
+        <input type="text" id="search" class="w-full p-2 bg-white rounded-lg border border-gray-300" placeholder="Rechercher un book...">
+        <div class="w-full relative hidden" id="results">
+            <div class="absolute bg-white shadow-lg shadow-gray-400 mt-2 w-full z-10">
+                <ul id="search-results" class="max-h-60 overflow-y-auto">
+                </ul>
+            </div>
+        </div>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -121,5 +127,34 @@
         </div>
     </div>
 </section>
+
+<script>
+    $(document).ready(function() {
+        $('#search').on('input', function() {
+            var query = $(this).val();
+            if (query.length > 0) {
+                $.ajax({
+                    url: '/client/filter/searchTerms',
+                    method: 'GET',
+                    data: { query },
+                    success: function(res) {
+                        $('#search-results').empty();
+                        if (res.data.searchTerms.length === 0) {
+                            $('#search-results').append('<li class="py-2 px-4 text-gray-500">Aucun résultat trouvé</li>');
+                        } else {
+                            $.each(res.data.searchTerms, function(index, searchTerm) {
+                                $('#search-results').append(`<li><a class="block py-2 px-4 border-b border-gray-200 hover:bg-gray-100" href="/books?query=${searchTerm}">${searchTerm}</a></li>`);
+                            });
+                        }
+                        $('#results').removeClass('hidden');
+                    }
+                });
+            } else {
+                $('#search-results').empty();
+                $('#results').addClass('hidden');
+            }
+        });
+    })
+</script>
 
 @endsection

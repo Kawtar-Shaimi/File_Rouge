@@ -53,11 +53,11 @@
                     <tr>
                         <td class="p-3 border">Actions</td>
                         <td class="p-3 border">
-                            <button class="bg-blue-500 text-white px-3 py-1 rounded"><a href="{{ route('admin.users.edit', $user) }}">Modifier</a></button>
+                            <button class="bg-blue-500 text-white px-3 py-1 rounded"><a href="{{ route('admin.users.edit', $user) }}">Update</a></button>
                             <form action="{{ route('admin.users.delete', $user) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Supprimer</button>
+                                <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
                             </form>
                         </td>
                     </tr>

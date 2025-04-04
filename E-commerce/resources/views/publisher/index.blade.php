@@ -7,7 +7,7 @@
 <div class="container w-5/6 ms-auto p-6">
 
     <!-- Dashboard -->
-    <h1 class="text-3xl font-bold mb-6">Tableau de Bord</h1>
+    <h1 class="text-3xl font-bold mb-6">Dashboard</h1>
     
     <!-- Statistiques -->
     <div class="grid grid-cols-4 gap-6">
@@ -16,7 +16,7 @@
             <p class="text-3xl text-orange-500 font-bold">{{ $books_count }}</p>
         </div>
         <div class="bg-white p-6 rounded-lg shadow-lg text-center">
-            <h3 class="text-xl font-bold">Commandes</h3>
+            <h3 class="text-xl font-bold">Orders</h3>
             <p class="text-3xl text-red-500 font-bold">{{ $orders_count }}</p>
         </div>
         <div class="bg-white p-6 rounded-lg shadow-lg text-center">

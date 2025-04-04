@@ -17,7 +17,7 @@ class VisitController extends Controller
     public function index()
     {
         try {
-            $visits = Visit::all();
+            $visits = Visit::paginate(10);
 
             return view('admin.visits.index', compact('visits'));
         }catch (Exception $e) {

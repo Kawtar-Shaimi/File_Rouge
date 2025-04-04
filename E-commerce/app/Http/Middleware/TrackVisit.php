@@ -17,7 +17,7 @@ class TrackVisit
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!$request->is('admin/*')) {
+        if (!Auth::guard('admin')->check()) {
             $ip_address = $request->ip();
             $user_agent = $request->header('User-Agent');
             $last_visited_url = $request->url();

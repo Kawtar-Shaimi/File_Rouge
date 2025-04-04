@@ -17,8 +17,15 @@ class BookController extends Controller
         $this->middleware('auth:publisher')->except(['index', 'show']);
     }
 
-    public function index(){
-        $books = Book::where('stock', '>', 0)->where('stock', '>', 0)->paginate(10);
+    public function index(Request $request){
+
+        $search = $request->input('query');
+
+        $books = $search ? Book::where('name', 'LIKE', "%{$search}%")
+                ->orWhere('description', 'LIKE', "%{$search}%")
+                ->where('stock', '>', 0)
+                ->paginate(12)
+        : Book::where('stock', '>', 0)->paginate(12);
 
         if (Auth::guard('client')->check()) {
             foreach ($books as $book) {
@@ -40,7 +47,9 @@ class BookController extends Controller
             }
         }
 
-        return view('books.index', compact('books'));
+        $categories = Category::all();
+
+        return view('books.index', compact('books', 'search', 'categories'));
     }
 
     public function show(Book $book){

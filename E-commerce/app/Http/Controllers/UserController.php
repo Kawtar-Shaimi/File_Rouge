@@ -18,7 +18,7 @@ class UserController extends Controller
     public function index()
     {
         try {
-            $users = User::all();
+            $users = User::paginate(10);
             return view('admin.users.index', compact('users'));
         }catch (Exception $e) {
             return redirect()->back()->with('error', value: 'Error while getting users try again later.');

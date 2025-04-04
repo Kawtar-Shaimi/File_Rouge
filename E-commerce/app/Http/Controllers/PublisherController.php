@@ -45,7 +45,7 @@ class PublisherController extends Controller
         ->where('books.publisher_id', Auth::guard('publisher')->id())
         ->where('status', 'completed')
         ->groupBy('full_date', 'time')
-        ->orderBy('full_date', 'desc')
+        ->orderBy('full_date')
         ->get()
         ->map(fn ($item) =>  [
                 $item->time , (float) number_format($item->amount, 2)
@@ -150,7 +150,7 @@ class PublisherController extends Controller
     {
         $orders = OrderBook::with(['order', 'book', 'order.client'])->whereHas('book', function ($query) {
             $query->where('publisher_id', Auth::guard('publisher')->id());
-        })->get();
+        })->paginate(10);
 
         return view('publisher.orders.index', compact('orders'));
     }
@@ -169,7 +169,7 @@ class PublisherController extends Controller
     public function books()
     {
         try {
-            $books = Book::where('publisher_id', Auth::guard('publisher')->id())->get();
+            $books = Book::where('publisher_id', Auth::guard('publisher')->id())->paginate(10);
             return view('publisher.books.index', compact('books'));
         }catch (Exception $e) {
             return redirect()->back()->with('error', 'Error while getting books try again later.');
@@ -188,10 +188,10 @@ class PublisherController extends Controller
     public function reviews()
     {
         try {
-            $reviews = Review::with('client')
+            $reviews = Review::with(['client', 'book'])
             ->whereHas('book', function ($query) {
                 $query->where('publisher_id', Auth::guard('publisher')->id());
-            })->get();
+            })->paginate(10);
 
             return view('publisher.reviews.index', compact('reviews'));
         }catch (Exception $e) {

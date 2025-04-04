@@ -49,7 +49,7 @@
                                 <form action="{{ route('admin.orders.delete', $order) }}" method="POST" class="inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Supprimer</button>
+                                    <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
                                 </form>
                             </td>
                         </tr>
@@ -110,8 +110,8 @@
                                 <th class="p-3 border">ID</th>
                                 <th class="p-3 border">Nom</th>
                                 <th class="p-3 border">Description</th>
-                                <th class="p-3 border">Prix</th>
-                                <th class="p-3 border">Catégorie</th>
+                                <th class="p-3 border">Price</th>
+                                <th class="p-3 border">Category</th>
                                 <th class="p-3 border">Quantity</th>
                                 <th class="p-3 border">Total</th>
                             </tr>
