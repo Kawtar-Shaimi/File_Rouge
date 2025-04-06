@@ -26,9 +26,18 @@ Route::middleware('trackVisit')->group(function () {
         Route::get('/register', 'registerView')->name('registerView');
         Route::post('/register', 'register')->name('register');
     });
-
-    /* Logout route */
-    Route::post('logout/{guard}', [AuthController::class, 'logout'])->name('logout')->middleware('authAll');
+    
+    Route::controller(AuthController::class)->middleware('authAll')->group(function () {
+        /* Logout route */
+        Route::post('logout/{guard}', 'logout')->name('logout');
+        /* Verify Email routes */
+        Route::prefix('/verify')->as('verify.')->group(function () {
+            Route::get('/{user}/notice', 'verifyNotice')->name('notice');
+            Route::get('/{id}/{token}', 'verifyEmail')->name('email');
+            Route::post('/{user}/resend', 'resendVerificationEmail')->name('resend')->middleware('throttle:5,1');
+        });
+    });
+    
 
     /* Home routes */
     Route::prefix('/')->middleware('guestAuth')->group(function () {
@@ -38,12 +47,18 @@ Route::middleware('trackVisit')->group(function () {
     });
 
     /* Clients routes */
-    Route::prefix('/client')->as('client.')->middleware('auth:client')->group(function () {
+    Route::prefix('/client')->as('client.')->middleware(['auth:client', 'ensureEmailIsVerified:client'])->group(function () {
         /* Client Home */
-        Route::controller(ClientController::class)->group(function () {
+        Route::controller(ClientController::class)->withoutMiddleware(['ensureEmailIsVerified:client'])->group(function () {
             Route::get('/',   'index')->name('index');
             Route::get('/edit', 'edit')->name('edit');
             Route::put('/update/{client}', 'update')->name('update');
+
+            /* Client Filters routes */
+            Route::controller(FilterController::class)->prefix('/filter')->as('filter.')->withoutMiddleware(['auth:client', 'trackVisit'])->group(function () {
+                Route::get('/searchTerms', 'getBooksSearchTerms')->name('searchTerms');
+                Route::get('/books', 'filterClientBooks')->name('books');
+            });
         });
 
         /* Client Cart routes */
@@ -73,20 +88,16 @@ Route::middleware('trackVisit')->group(function () {
         Route::controller(OrderController::class)->prefix('/order')->as('order.')->group(function () {
             Route::post('/makeOrder', 'makeOrder')->name('makeOrder');
             Route::get('/success', 'successOrder')->name('success');
-            Route::get('/track', 'trackOrder')->name('track');
-            Route::post('/status', 'getOrderStatus')->name('status');
+            Route::withoutMiddleware(['auth:client', 'ensureEmailIsVerified:client'])->group(function () {
+                Route::get('/track', 'trackOrder')->name('track');
+                Route::post('/status', 'getOrderStatus')->name('status');
+            });
             Route::get('/{order}', 'show')->name('show');
-        });
-
-        /* Client Filters routes */
-        Route::controller(FilterController::class)->prefix('/filter')->as('filter.')->withoutMiddleware('trackVisit')->group(function () {
-            Route::get('/searchTerms', 'getBooksSearchTerms')->name('searchTerms');
-            Route::get('/books', 'filterClientBooks')->name('books');
         });
     });
 
     /* Publisher routes */
-    Route::prefix('/publisher')->as('publisher.')->middleware('auth:publisher')->group(function () {
+    Route::prefix('/publisher')->as('publisher.')->middleware(['auth:publisher', 'ensureEmailIsVerified:publisher'])->group(function () {
         /* Publisher Home */
         Route::get('/', [PublisherController::class,  'index'])->name('index');
 

@@ -1,5 +1,12 @@
 @extends('layouts.front-office')
 
+@section('head')
+    @vite([
+        'resources/css/app.css',
+        'resources/js/app.js'
+    ])
+@endsection
+
 @section('content')
 
 <div class="container mx-auto p-6">

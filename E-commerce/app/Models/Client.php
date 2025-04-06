@@ -33,4 +33,8 @@ class Client extends User
     public function reviews(){
         return $this->hasMany(Review::class);
     }
+
+    public function emailVerificationTokens(){
+        return $this->hasMany(EmailVerificationToken::class, 'user_id');
+    }
 }
