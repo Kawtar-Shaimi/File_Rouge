@@ -299,4 +299,11 @@ class AdminController extends Controller
             return redirect()->back()->with('error', 'Error while updating order status try again later.');
         }
     }
+
+    public function profile()
+    {
+        $orders = Order::with('client')->limit(5)->orderBy('created_at', 'desc')->get();
+
+        return view('admin.profile.index', compact('orders'));
+    }
 }

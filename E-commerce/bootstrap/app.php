@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\AlreadyVerified;
 use App\Http\Middleware\Auth;
 use App\Http\Middleware\EnsureEmailIsVerified;
 use App\Http\Middleware\Guest;
@@ -22,6 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'guestAuth' => GuestAuth::class,
             'trackVisit' => TrackVisit::class,
             'ensureEmailIsVerified' => EnsureEmailIsVerified::class,
+            'alreadyVerified' => AlreadyVerified::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -204,4 +204,13 @@ class PublisherController extends Controller
         $review->load('client');
         return view('publisher.reviews.show', compact('review'));
     }
+
+    public function profile()
+    {
+        $orders = OrderBook::with(['order', 'book', 'order.client'])->whereHas('book', function ($query) {
+            $query->where('publisher_id', Auth::guard('publisher')->id());
+        })->limit(5)->orderBy('created_at', 'desc')->get();
+
+        return view('publisher.profile.index', compact('orders'));
+    }
 }

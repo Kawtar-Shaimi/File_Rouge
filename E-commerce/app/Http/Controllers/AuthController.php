@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ResetPasswordToken;
 use App\Mail\VerifyEmailLink;
 use App\Models\Client;
 use App\Models\EmailVerificationToken;
+use App\Models\PasswordResetToken;
 use App\Models\Publisher;
+use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -18,8 +21,8 @@ class AuthController extends Controller
 
     public function __construct()
     {
-        $this->middleware('guestAll')->except('logout', 'verifyEmail', 'verifyNotice', 'resendVerificationEmail');
-        $this->middleware('authAll')->only('logout', 'verifyEmail', 'verifyNotice', 'resendVerificationEmail');
+        $this->middleware('guestAll')->except('logout', 'verifyEmail', 'verifyNotice', 'resendVerificationEmail', 'generateEmailVerificationToken');
+        $this->middleware('authAll')->only('logout', 'verifyEmail', 'verifyNotice', 'resendVerificationEmail', 'generateEmailVerificationToken');
     }
 
     public function loginView()
@@ -101,16 +104,18 @@ class AuthController extends Controller
                 }
             }
 
+
             $token = $this->generateEmailVerificationToken($user);
 
+
             $url = route('verify.email', [
-                'id' => $user->id,
+                'user' => $user,
                 'token' => $token,
             ]);
 
             Mail::to($user->email)->send(new VerifyEmailLink($url));
 
-            return redirect()->route('verify.notice', $user->id)->with('success', 'Registration successful.');
+            return redirect()->route('verify.notice', $user)->with('success', 'Registration successful.');
 
         }catch (Exception $e) {
             return redirect()->back()->with('error', 'Error while register try again later.');
@@ -132,18 +137,14 @@ class AuthController extends Controller
         }
     }
 
-    public static function generateEmailVerificationToken($userId)
+    public static function generateEmailVerificationToken(User $user)
     {
-
-        $user = Client::find($userId) ?? Publisher::find($userId);
-
         EmailVerificationToken::where('user_id', $user->id)->delete();
-
 
         $token = Str::random(64);
         $expiresAt = now()->addMinutes(15);
 
-        $user->emailVerificationTokens()->create([
+        EmailVerificationToken::create([
             'user_id' => $user->id,
             'token' => hash('sha256', $token),
             'expires_at' => $expiresAt,
@@ -152,12 +153,9 @@ class AuthController extends Controller
         return $token;
     }
 
-    public function verifyEmail($id, $token)
-    {
-        $user = Client::find($id) ?? Publisher::find($id);
-
+    public function verifyEmail(User $user, $token){
         if (!$user) {
-            return redirect()->route('verify.notice', $user->id)->with('error', 'User not found.');
+            return redirect()->route('verify.notice', $user)->with('error', 'User not found.');
         }
 
         $hash = EmailVerificationToken::where('user_id', $user->id)
@@ -165,7 +163,7 @@ class AuthController extends Controller
         ->first();
 
         if (!$token || !hash_equals($hash->token, hash('sha256', $token))) {
-            return redirect()->route('verify.notice', $user->id)->with('error', 'Invalid or expired token.');
+            return redirect()->route('verify.notice', $user)->with('error', 'Invalid or expired token.');
         }
 
         $isUpdated = $user->update([
@@ -173,22 +171,19 @@ class AuthController extends Controller
         ]);
 
         if (!$isUpdated) {
-            return redirect()->route('verify.notice', $user->id)->with('error', 'Error while verifying email, try again later.');
+            return redirect()->route('verify.notice', $user)->with('error', 'Error while verifying email, try again later.');
         }
 
         $isDeleted = $hash->delete();
 
         if (!$isDeleted) {
-            return redirect()->route('verify.notice', $user->id)->with('error', 'Error while deleting token, try again later.');
+            return redirect()->route('verify.notice', $user)->with('error', 'Error while deleting token, try again later.');
         }
 
         return redirect()->route('home')->with('success', 'Email verified successfully.');
     }
 
-    public function verifyNotice($userId)
-    {
-        $user = Client::find($userId) ?? Publisher::find($userId);
-
+    public function verifyNotice(User $user){
         if (!$user) {
             return redirect()->back()->with('error', 'User not found.');
         }
@@ -199,11 +194,8 @@ class AuthController extends Controller
 
         return view('auth.verify-notice', compact('user'));
     }
-    
-    public function resendVerificationEmail($userId)
-    {
-        $user = Client::find($userId) ?? Publisher::find($userId);
 
+    public function resendVerificationEmail(User $user){
         if (!$user) {
             return redirect()->back()->with('error', 'User not found.');
         }
@@ -212,10 +204,10 @@ class AuthController extends Controller
             return redirect()->route('home')->with('success', 'Email already verified.');
         }
 
-        $token = $this->generateEmailVerificationToken($user->id);
+        $token = $this->generateEmailVerificationToken($user);
 
         $url = route('verify.email', [
-            'id' => $user->id,
+            'user' => $user,
             'token' => $token,
         ]);
 
@@ -223,5 +215,114 @@ class AuthController extends Controller
 
         return redirect()->back()->with('success', 'Verification email resent successfully.');
     }
-}
 
+    public function forgetPassword()
+    {
+        return view('auth.forget-password');
+    }
+
+    public static function generateResetPasswordToken(User $user)
+    {
+
+        PasswordResetToken::where('user_id', $user->id)->delete();
+
+
+        $token = Str::random(64);
+        $expiresAt = now()->addMinutes(15);
+
+        PasswordResetToken::create([
+            'user_id' => $user->id,
+            'token' => hash('sha256', $token),
+            'expires_at' => $expiresAt,
+        ]);
+
+        return $token;
+    }
+
+    public function sendResetPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return redirect()->back()->with('error', 'Email not found.');
+        }
+
+        $token = $this->generateResetPasswordToken($user);
+
+        $url = route('reset.password', [
+            'user' => $user,
+            'token' => $token,
+        ]);
+
+        Mail::to($user->email)->send(new ResetPasswordToken($url));
+
+        return redirect()->route('reset.notice', $user)->with('success', 'Reset password email sent successfully.');
+    }
+
+    public function resetNotice(User $user)
+    {
+        if (!$user) {
+            return redirect()->back()->with('error', 'User not found.');
+        }
+
+        return view('auth.reset-notice', compact('user'));
+    }
+
+    public function resendResetPasswordEmail(User $user)
+    {
+        if (!$user) {
+            return redirect()->back()->with('error', 'User not found.');
+        }
+
+        $token = $this->generateResetPasswordToken($user);
+
+        $url = route('reset.password', [
+            'user' => $user,
+            'token' => $token,
+        ]);
+
+        Mail::to($user->email)->send(new ResetPasswordToken($url));
+
+        return redirect()->back()->with('success', 'Reset password email resent successfully.');
+    }
+
+    public function verifyResetPassword(User $user, $token)
+    {
+        if (!$user) {
+            return redirect()->route('reset.notice', $user)->with('error', 'User not found.');
+        }
+
+        $hash = PasswordResetToken::where('user_id', $user->id)
+        ->where('expires_at', '>', now())
+        ->first();
+
+        if (!$token || !hash_equals($hash->token, hash('sha256', $token))) {
+            return redirect()->route('reset.notice', $user)->with('error', 'Invalid or expired token.');
+        }
+
+        return view('auth.reset-password', compact('user'));
+    }
+
+    public function resetPassword(Request $request, User $user)
+    {
+        $request->validate([
+            'password' => 'required|confirmed',
+        ]);
+
+        if (!$user) {
+            return redirect()->back()->with('error', 'User not found.');
+        }
+
+        $user->update([
+            'password' => Hash::make($request->password),
+        ]);
+
+        PasswordResetToken::where('user_id', $user->id)->delete();
+
+        return redirect()->route('loginView')->with('success', 'Password reset successfully.');
+    }
+}

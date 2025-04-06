@@ -16,7 +16,7 @@
                     <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('publisher.orders.show', $order->order->order_number) }}">#{{ $order->order->order_number }}</a></td>
                     <td class="p-3 border">{{ $order->order->client->name }}</td>
                     <td class="p-3 border">{{ $order->order->client->email }}</td>
-                    <td class="p-3 border font-bold {{ $order->order->payment->status === 'paid' ? 'text-green-600' : ($order->order->payment->status === 'failed' ? 'text-red-600': 'text-black') }}">${{ $order->order->total_amount }}</td>
+                    <td class="p-3 border font-bold {{ $order->order->payment->status === 'paid' ? 'text-green-600' : ($order->order->payment->status === 'failed' ? 'text-red-600' : 'text-black') }}">${{ $order->order->total_amount }}</td>
                     <td class="p-3 border">
                         @if ($order->order->status == 'pending')
                             <span class="bg-yellow-400 text-white px-3 py-1 rounded">{{ $order->order->status }}</span>
@@ -29,12 +29,8 @@
                         @endif
                     </td>
                     <td class="p-3 border">
-                        <a href="{{ route('admin.orders.edit', $order) }}" class="bg-blue-500 text-white px-3 py-1 rounded">Update</a>
-                        <form action="{{ route('admin.orders.delete', $order) }}" method="POST" class="inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
-                        </form>
+                        <a href="{{ route('publisher.orders.show', $order->order->order_number) }}"
+                            class="px-4 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition duration-300">Voir</a>
                     </td>
                 </tr>
             @endforeach

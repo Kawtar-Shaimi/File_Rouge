@@ -13,12 +13,6 @@
         <div class="max-w-xl mx-auto bg-white p-8 rounded-xl shadow-lg">
             <h2 class="text-3xl font-semibold text-gray-800 text-center mb-6">Verify Your Email</h2>
 
-            @if (session('resent'))
-                <div class="bg-green-100 text-green-700 p-4 rounded-md border border-green-300 mb-6">
-                    A fresh verification link has been sent to your email address.
-                </div>
-            @endif
-
             <p class="text-gray-700 text-base mb-6 leading-relaxed">
                 Before proceeding, please check your email for a verification link.
                 If you did not receive the email,

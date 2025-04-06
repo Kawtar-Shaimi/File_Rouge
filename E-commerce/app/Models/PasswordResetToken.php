@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class EmailVerificationToken extends Model
+class PasswordResetToken extends Model
 {
-    protected $table = 'email_verification_tokens';
+    protected $table = 'password_reset_tokens';
 
     protected $fillable = [
         'user_id',

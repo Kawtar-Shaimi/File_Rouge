@@ -47,7 +47,7 @@
                 </div>
 
                 <div class="text-center mt-4">
-                    <p class="text-sm text-gray-700">Forgot your password? <a class="text-blue-500">Reset Password</a></p>
+                    <p class="text-sm text-gray-700">Forgot your password? <a href="{{ route('reset.forget-password') }}" class="text-blue-500">Reset Password</a></p>
                 </div>
 
             </div>

@@ -27,7 +27,9 @@
         <main class="min-h-screen bg-purple-400">
             @include('layouts.header')
             @yield('content')
-            @include('layouts.footer')
+            @if (!Auth::guard('publisher')->check() && !Auth::guard('admin')->check())
+                @include('layouts.footer')
+            @endif
         </main>
     </body>
 </html>

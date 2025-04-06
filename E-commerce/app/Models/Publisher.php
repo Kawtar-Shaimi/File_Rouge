@@ -20,8 +20,4 @@ class Publisher extends User
     {
         return $this->hasMany(Book::class);
     }
-
-    public function emailVerificationTokens(){
-        return $this->hasMany(EmailVerificationToken::class, 'user_id');
-    }
 }

@@ -25,19 +25,42 @@ Route::middleware('trackVisit')->group(function () {
         Route::post('/login', 'login')->name('login');
         Route::get('/register', 'registerView')->name('registerView');
         Route::post('/register', 'register')->name('register');
+        
+        /* Reset Password routes */
+        Route::prefix('/reset')->as('reset.')->group(function () {
+            Route::get('/forget-password', 'forgetPassword')->name('forget-password');
+            Route::post('/send-token', 'sendResetPassword')->name('send-token');
+            Route::get('/{user}/notice', 'resetNotice')->name('notice');
+            Route::get('/{user}/{token}', 'verifyResetPassword')->name('password');
+            Route::post('/{user}/resend', 'resendResetPasswordEmail')->name('resend')->middleware('throttle:5,1');
+            Route::post('/{user}/reset-password', 'resetPassword')->name('reset-password');
+        });
     });
     
     Route::controller(AuthController::class)->middleware('authAll')->group(function () {
         /* Logout route */
         Route::post('logout/{guard}', 'logout')->name('logout');
+        
         /* Verify Email routes */
-        Route::prefix('/verify')->as('verify.')->group(function () {
+        Route::prefix('/verify')->as('verify.')->middleware('alreadyVerified')->group(function () {
             Route::get('/{user}/notice', 'verifyNotice')->name('notice');
-            Route::get('/{id}/{token}', 'verifyEmail')->name('email');
+            Route::get('/{user}/{token}', 'verifyEmail')->name('email');
             Route::post('/{user}/resend', 'resendVerificationEmail')->name('resend')->middleware('throttle:5,1');
         });
     });
     
+    /* Users routes */
+    Route::controller(UserController::class)->prefix('/users')->middleware('authAll')->as('users.')->group(function () {
+        /* Change Password routes */
+        Route::prefix('/change-password')->as('change-password.')->group(function () {
+            Route::get('/{user}', 'changePasswordView')->name('view');
+            Route::post('/{user}', 'changePassword')->name('update');
+        });
+
+        /* Profile routes */
+        Route::get('/{user}/edit', 'editProfile')->name('edit');
+        Route::put('/update/{user}', 'updateProfile')->name('update');
+    });
 
     /* Home routes */
     Route::prefix('/')->middleware('guestAuth')->group(function () {
@@ -51,8 +74,6 @@ Route::middleware('trackVisit')->group(function () {
         /* Client Home */
         Route::controller(ClientController::class)->withoutMiddleware(['ensureEmailIsVerified:client'])->group(function () {
             Route::get('/',   'index')->name('index');
-            Route::get('/edit', 'edit')->name('edit');
-            Route::put('/update/{client}', 'update')->name('update');
 
             /* Client Filters routes */
             Route::controller(FilterController::class)->prefix('/filter')->as('filter.')->withoutMiddleware(['auth:client', 'trackVisit'])->group(function () {
@@ -100,6 +121,7 @@ Route::middleware('trackVisit')->group(function () {
     Route::prefix('/publisher')->as('publisher.')->middleware(['auth:publisher', 'ensureEmailIsVerified:publisher'])->group(function () {
         /* Publisher Home */
         Route::get('/', [PublisherController::class,  'index'])->name('index');
+        Route::get('/profile', [PublisherController::class,  'profile'])->name('profile')->withoutMiddleware('ensureEmailIsVerified:publisher');
 
         /* Publisher Books routes */
         Route::controller(BookController::class)->prefix('/books')->as('books.')->group(function () {
@@ -134,9 +156,10 @@ Route::middleware('trackVisit')->group(function () {
 });
 
 /* Admin routes */
-Route::prefix('/admin')->as('admin.')->middleware('auth:admin')->group(function () {
+Route::prefix('/admin')->as('admin.')->middleware(['auth:admin', 'ensureEmailIsVerified:admin'])->group(function () {
     /* Admin Home */
     Route::get('/', [AdminController::class,  'index'])->name('index');
+    Route::get('/profile', [AdminController::class,  'profile'])->name('profile')->withoutMiddleware('ensureEmailIsVerified:admin');
 
     /* Admin Categories routes */
     Route::controller(CategoryController::class)->prefix('/categories')->as('categories.')->group(function () {
@@ -209,4 +232,3 @@ Route::prefix('/admin')->as('admin.')->middleware('auth:admin')->group(function 
         Route::get('/payments', 'filterPayments')->name('payments');
     });
 });
-

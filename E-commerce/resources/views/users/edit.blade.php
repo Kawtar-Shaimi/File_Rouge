@@ -12,14 +12,14 @@
 <div class="container mx-auto p-8">
     <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-xl space-y-6">
         <h2 class="text-2xl font-bold mb-4 text-center">Update Profile</h2>
-        <form action="{{ route('client.update', Auth::guard('client')->user()) }}" method="POST">
+        <form action="{{ route('users.update', $user) }}" method="POST">
             @csrf
             @method('PUT')
 
             <!-- Name -->
             <div class="mb-4">
                 <label for="name" class="block text-lg font-semibold">Name</label>
-                <input type="text" id="name" name="name" required value="{{ old('name', Auth::guard('client')->user()->name ) }}"
+                <input type="text" id="name" name="name" required value="{{ old('name', $user->name ) }}"
                     class="w-full mt-2 p-2 border rounded-lg focus:ring focus:ring-blue-300" >
             </div>
             @error('name')
@@ -29,7 +29,7 @@
             <!-- Email -->
             <div class="mb-4">
                 <label for="email" class="block text-lg font-semibold">Email</label>
-                <input type="email" id="email" name="email" required value="{{ old('email', Auth::guard('client')->user()->email) }}"
+                <input type="email" id="email" name="email" required value="{{ old('email', $user->email) }}"
                     class="w-full mt-2 p-2 border rounded-lg focus:ring focus:ring-blue-300">
             </div>
             @error('email')
@@ -39,7 +39,7 @@
             <!-- Phone -->
             <div class="mb-4">
                 <label for="phone" class="block text-lg font-semibold">Phone</label>
-                <input type="text" id="phone" name="phone" required value="{{ old('phone', Auth::guard('client')->user()->phone) }}"
+                <input type="text" id="phone" name="phone" required value="{{ old('phone', $user->phone) }}"
                     class="w-full mt-2 p-2 border rounded-lg focus:ring focus:ring-blue-300">
             </div>
 
