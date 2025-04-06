@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\EmailVerified;
+use App\Mail\PasswordReseted;
 use App\Mail\ResetPasswordToken;
 use App\Mail\VerifyEmailLink;
 use App\Models\Client;
@@ -180,6 +182,8 @@ class AuthController extends Controller
             return redirect()->route('verify.notice', $user)->with('error', 'Error while deleting token, try again later.');
         }
 
+        Mail::to($user->email)->send(new EmailVerified($user, $user->role));
+
         return redirect()->route('home')->with('success', 'Email verified successfully.');
     }
 
@@ -322,6 +326,8 @@ class AuthController extends Controller
         ]);
 
         PasswordResetToken::where('user_id', $user->id)->delete();
+
+        Mail::to($user->email)->send(new PasswordReseted($user));
 
         return redirect()->route('loginView')->with('success', 'Password reset successfully.');
     }

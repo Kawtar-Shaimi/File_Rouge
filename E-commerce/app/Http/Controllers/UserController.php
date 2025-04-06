@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\VerifyEmailLink;
+use App\Mail\PasswordUpdated;
+use App\Mail\VerifyNewEmail;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -133,6 +134,8 @@ class UserController extends Controller
                 return back()->with('error', 'Password not updated.');
             }
 
+            Mail::to($user->email)->send(new PasswordUpdated($user, $user->role));
+
             return match ($user->role) {
                 'admin' => redirect()->route('admin.profile')->with('success', 'Password updated successfully.'),
                 'publisher' => redirect()->route('publisher.profile')->with('success', 'Password updated successfully.'),
@@ -150,48 +153,43 @@ class UserController extends Controller
 
     public function updateProfile(Request $request, User $user)
     {
-        try {
+        $request->validate([
+            "name" => "required",
+            "email" => "required|email|unique:users,email," .  $user->id,
+            "phone" => "required|unique:users,phone," .  $user->id,
+        ]);
 
-            $request->validate([
-                'name' => 'required',
-                'email' => 'required|email|unique:users,email,' .  $user->id,
-                'phone' => 'required|unique:users,phone,' .  $user->id,
-            ]);
+        $isEmailUpdated = $request->email !== $user->email;
 
-            $isEmailUpdated = $request->email !== $user->email;
+        $isUpdated = $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+        ]);
 
-            $isUpdated = $user->update([
-                'name' => $request->name,
-                'email' => $request->email,
-                'phone' => $request->phone,
-            ]);
-
-            if (!$isUpdated) {
-                return redirect()->back()->with('error', 'Error while updating profile try again later.');
-            }
-
-            if ($isEmailUpdated) {
-
-                $user->email_verified_at = null;
-                $user->save();
-                $token = AuthController::generateEmailVerificationToken($user);
-                $url = route('verify.email', [
-                    'user' => $user,
-                    'token' => $token,
-                ]);
-
-                Mail::to($request->email)->send(new VerifyEmailLink($url));
-
-                return redirect()->route('verify.notice', $user)->with('success', 'Profile updated successfully, please verify your new email address.');
-            }
-
-            return match ($user->role) {
-                'admin' => redirect()->route('admin.profile')->with('success', 'Profile updated successfully'),
-                'publisher' => redirect()->route('publisher.profile')->with('success', 'Profile updated successfully'),
-                default => redirect()->route('client.index')->with('success', 'Profile updated successfully')
-            };
-        } catch (Exception $e) {
+        if (!$isUpdated) {
             return redirect()->back()->with('error', 'Error while updating profile try again later.');
         }
+
+        if ($isEmailUpdated) {
+
+            $user->email_verified_at = null;
+            $user->save();
+            $token = AuthController::generateEmailVerificationToken($user);
+            $url = route('verify.email', [
+                'user' => $user,
+                'token' => $token,
+            ]);
+
+            Mail::to($request->email)->send(new VerifyNewEmail($url));
+
+            return redirect()->route('verify.notice', $user)->with('success', 'Profile updated successfully, please verify your new email address.');
+        }
+
+        return match ($user->role) {
+            'admin' => redirect()->route('admin.profile')->with('success', 'Profile updated successfully'),
+            'publisher' => redirect()->route('publisher.profile')->with('success', 'Profile updated successfully'),
+            default => redirect()->route('client.index')->with('success', 'Profile updated successfully')
+        };
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\OrderConfirmation;
 use App\Models\Cart;
 use App\Models\CartBook;
 use App\Models\Order;
@@ -10,6 +11,7 @@ use App\Models\Book;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -100,6 +102,8 @@ class OrderController extends Controller
                 $order->delete();
                 return redirect()->back()->with('error', 'Error while ordering try again later.');
             }
+
+            Mail::to($order->shipping_email)->send(new OrderConfirmation($order));
 
             return redirect()->route('client.order.success')
             ->with('order_number', $order->order_number)

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\OrderCancelled;
+use App\Mail\OrderStatusUpdated;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Book;
@@ -9,6 +11,7 @@ use App\Models\User;
 use App\Models\Visit;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class AdminController extends Controller
 {
@@ -290,9 +293,13 @@ class AdminController extends Controller
                     "status" => "failed"
                 ]);
                 foreach ($order->orderBooks as $orderBook) {
-                    $orderBook->book()->increment('quantity', $orderBook->quantity);
+                    $orderBook->book()->increment('stock', $orderBook->quantity);
                 }
+
+                Mail::to($order->client->email)->send(new OrderCancelled($order));
             }
+
+            Mail::to($order->client->email)->send(new OrderStatusUpdated($order));
 
             return redirect()->route('admin.orders.index', $order)->with('success', 'Order status updated successfully.');
         }catch (Exception $e) {
