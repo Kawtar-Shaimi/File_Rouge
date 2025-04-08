@@ -25,7 +25,7 @@ Route::middleware('trackVisit')->group(function () {
         Route::post('/login', 'login')->name('login');
         Route::get('/register', 'registerView')->name('registerView');
         Route::post('/register', 'register')->name('register');
-        
+
         /* Reset Password routes */
         Route::prefix('/reset')->as('reset.')->group(function () {
             Route::get('/forget-password', 'forgetPassword')->name('forget-password');
@@ -36,11 +36,11 @@ Route::middleware('trackVisit')->group(function () {
             Route::post('/{user}/reset-password', 'resetPassword')->name('reset-password');
         });
     });
-    
+
     Route::controller(AuthController::class)->middleware('authAll')->group(function () {
         /* Logout route */
         Route::post('logout/{guard}', 'logout')->name('logout');
-        
+
         /* Verify Email routes */
         Route::prefix('/verify')->as('verify.')->middleware('alreadyVerified')->group(function () {
             Route::get('/{user}/notice', 'verifyNotice')->name('notice');
@@ -48,7 +48,7 @@ Route::middleware('trackVisit')->group(function () {
             Route::post('/{user}/resend', 'resendVerificationEmail')->name('resend')->middleware('throttle:5,1');
         });
     });
-    
+
     /* Users routes */
     Route::controller(UserController::class)->prefix('/users')->middleware('authAll')->as('users.')->group(function () {
         /* Change Password routes */
@@ -114,6 +114,23 @@ Route::middleware('trackVisit')->group(function () {
                 Route::post('/status', 'getOrderStatus')->name('status');
             });
             Route::get('/{order}', 'show')->name('show');
+        });
+
+        /* Client Payment routes */
+        Route::controller(PaymentController::class)->prefix('/payment')->as('payment.')->group(function () {
+            /* Stripe route */
+            Route::get('/stripe/confirm-card', 'confirmCardPayment')->name('stripe.confirm-card');
+
+            /* Paypal route */
+            Route::get('/paypal/confirm-paypal', 'confirmPaypalPayment')->name('paypal.confirm-paypal');
+
+            /* Common routes */
+            Route::prefix('/online')->as('online.')->group(function () {
+                Route::get('/success', 'paymentSuccess')->name('success');
+                Route::get('/cancel', 'paymentCancel')->name('cancel');
+                Route::get('/failed', 'paymentFailed')->name('failed');
+                Route::get('/try-again', 'paymentTryAgain')->name('try-again');
+            });
         });
     });
 

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('shipping_phone');
             $table->string('shipping_email');
             $table->string('shipping_name');
-            $table->enum('payment_method', ['paypal', 'in shipping']);
+            $table->enum('payment_method', ['credit_card', 'paypal', 'cash_on_delivery'])->default('cash_on_delivery');
             $table->decimal('total_amount');
             $table->enum('status', ['pending', 'in shipping', 'completed', 'cancelled'])->default('pending');
             $table->unsignedBigInteger('client_id');
