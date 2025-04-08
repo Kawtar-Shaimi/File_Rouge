@@ -12,11 +12,11 @@
                 <table class="w-full border-collapse">
                     <tr>
                         <td class="p-3 border">Payment ID</td>
-                        <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.payments.show', $payment) }}">#{{ $payment->id }}</a></td>
+                        <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.payments.show', $payment->uuid) }}">#{{ $payment->uuid }}</a></td>
                     </tr>
                     <tr>
                         <td class="p-3 border">Order ID</td>
-                        <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.orders.show', $payment->order) }}">#{{ $payment->order->id }}</a></td>
+                        <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.orders.show', $payment->order->uuid) }}">#{{ $payment->order->uuid }}</a></td>
                     </tr>
                     <tr>
                         <td class="p-3 border">Order Number</td>
@@ -38,7 +38,7 @@
                     </tr>
                     <tr>
                         <td class="p-3 border">Client ID</td>
-                        <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.users.show', $payment->order->client) }}">#{{ $payment->order->client->id }}</a></td>
+                        <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.users.show', $payment->order->client->uuid) }}">#{{ $payment->order->client->uuid }}</a></td>
                     </tr>
                     <tr>
                         <td class="p-3 border">Client Name</td>
@@ -83,8 +83,8 @@
                     <tr>
                         <td class="p-3 border">Actions</td>
                         <td class="p-3 border">
-                            <button class="bg-blue-500 text-white px-3 py-1 rounded"><a href="{{ route('admin.payments.edit', $payment) }}">Update</a></button>
-                            <form action="{{ route('admin.payments.delete', $payment) }}" method="POST" class="inline">
+                            <button class="bg-blue-500 text-white px-3 py-1 rounded"><a href="{{ route('admin.payments.edit', $payment->uuid) }}">Update</a></button>
+                            <form action="{{ route('admin.payments.delete', $payment->uuid) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>

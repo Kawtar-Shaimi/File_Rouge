@@ -18,7 +18,7 @@ class EnsureEmailIsVerified
     {
         $user = Auth::guard($guard)->user();
 
-        
+
         if ($user && !$user->email_verified_at) {
 
             if ($request->expectsJson()) {
@@ -28,7 +28,7 @@ class EnsureEmailIsVerified
                 ], 403)->header('Content-Type', 'application/json');
             }
 
-            return redirect()->route('verify.notice', $user->id)
+            return redirect()->route('verify.notice', $user->uuid)
                 ->with('error', 'Please verify your email address to access this page.');
         }
 

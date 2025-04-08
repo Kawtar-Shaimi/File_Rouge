@@ -25,9 +25,11 @@ class VisitController extends Controller
         }
     }
 
-    public function destroy(Visit $visit)
+    public function destroy(string $uuid)
     {
         try {
+            $visit = Visit::where('uuid', $uuid)->firstOrFail();
+            
             $isDeleted = $visit->delete();
 
             if (!$isDeleted) {

@@ -37,7 +37,7 @@
         </div>
 
         <div style="margin: 30px 0; text-align: center;">
-            <a href="{{ route('client.order.show', $order) }}"
+            <a href="{{ route('client.order.show', $order->uuid) }}"
                 style="background-color: #c084fc; color: white; text-decoration: none; padding: 12px 24px; border-radius: 8px; display: inline-block; font-weight: bold;">
                 View Your Order
             </a>

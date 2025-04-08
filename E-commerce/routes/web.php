@@ -30,10 +30,10 @@ Route::middleware('trackVisit')->group(function () {
         Route::prefix('/reset')->as('reset.')->group(function () {
             Route::get('/forget-password', 'forgetPassword')->name('forget-password');
             Route::post('/send-token', 'sendResetPassword')->name('send-token');
-            Route::get('/{user}/notice', 'resetNotice')->name('notice');
-            Route::get('/{user}/{token}', 'verifyResetPassword')->name('password');
-            Route::post('/{user}/resend', 'resendResetPasswordEmail')->name('resend')->middleware('throttle:5,1');
-            Route::post('/{user}/reset-password', 'resetPassword')->name('reset-password');
+            Route::get('/{uuid}/notice', 'resetNotice')->name('notice');
+            Route::get('/{uuid}/{token}', 'verifyResetPassword')->name('password');
+            Route::post('/{uuid}/resend', 'resendResetPasswordEmail')->name('resend')->middleware('throttle:5,1');
+            Route::post('/{uuid}/reset-password', 'resetPassword')->name('reset-password');
         });
     });
 
@@ -43,9 +43,9 @@ Route::middleware('trackVisit')->group(function () {
 
         /* Verify Email routes */
         Route::prefix('/verify')->as('verify.')->middleware('alreadyVerified')->group(function () {
-            Route::get('/{user}/notice', 'verifyNotice')->name('notice');
-            Route::get('/{user}/{token}', 'verifyEmail')->name('email');
-            Route::post('/{user}/resend', 'resendVerificationEmail')->name('resend')->middleware('throttle:5,1');
+            Route::get('/{uuid}/notice', 'verifyNotice')->name('notice');
+            Route::get('/{uuid}/{token}', 'verifyEmail')->name('email');
+            Route::post('/{uuid}/resend', 'resendVerificationEmail')->name('resend')->middleware('throttle:5,1');
         });
     });
 
@@ -53,20 +53,20 @@ Route::middleware('trackVisit')->group(function () {
     Route::controller(UserController::class)->prefix('/users')->middleware('authAll')->as('users.')->group(function () {
         /* Change Password routes */
         Route::prefix('/change-password')->as('change-password.')->group(function () {
-            Route::get('/{user}', 'changePasswordView')->name('view');
-            Route::post('/{user}', 'changePassword')->name('update');
+            Route::get('/{uuid}', 'changePasswordView')->name('view');
+            Route::post('/{uuid}', 'changePassword')->name('update');
         });
 
         /* Profile routes */
-        Route::get('/{user}/edit', 'editProfile')->name('edit');
-        Route::put('/update/{user}', 'updateProfile')->name('update');
+        Route::get('/{uuid}/edit', 'editProfile')->name('edit');
+        Route::put('/update/{uuid}', 'updateProfile')->name('update');
     });
 
     /* Home routes */
     Route::prefix('/')->middleware('guestAuth')->group(function () {
         Route::get('/', [HomeController::class, 'index'])->name('home');
         Route::get('books', [BookController::class, 'index'])->name('books');
-        Route::get('books/{book}', [BookController::class, 'show'])->name('books.show');
+        Route::get('books/{uuid}', [BookController::class, 'show'])->name('books.show');
     });
 
     /* Clients routes */
@@ -85,23 +85,23 @@ Route::middleware('trackVisit')->group(function () {
         /* Client Cart routes */
         Route::controller(CartController::class)->prefix('/cart')->as('cart.')->group(function () {
             Route::get('/', 'index')->name('index');
-            Route::post('/add/{book}', 'addToCart')->name('add');
-            Route::delete('/remove/{book}', 'removeFromCart')->name('remove');
-            Route::delete('/delete/{book}', 'deleteFromCart')->name('delete');
+            Route::post('/add/{uuid}', 'addToCart')->name('add');
+            Route::delete('/remove/{uuid}', 'removeFromCart')->name('remove');
+            Route::delete('/delete/{uuid}', 'deleteFromCart')->name('delete');
         });
 
         /* Client Wishlist routes */
         Route::controller(WishlistController::class)->prefix('/wishlist')->as('wishlist.')->group(function () {
             Route::get('/', 'index')->name('index');
-            Route::post('/add/{book}', 'addToWishlist')->name('add');
-            Route::delete('/remove/{book}', 'removeFromWishlist')->name('remove');
+            Route::post('/add/{uuid}', 'addToWishlist')->name('add');
+            Route::delete('/remove/{uuid}', 'removeFromWishlist')->name('remove');
         });
 
         /* Client Review routes */
         Route::controller(ReviewController::class)->prefix('/review')->as('review.')->group(function () {
-            Route::post('/{book}', 'store')->name('store');
-            Route::put('/edit/{review}', 'update')->name('update');
-            Route::delete('/delete/{review}', 'destroy')->name('destroy');
+            Route::post('/{uuid}', 'store')->name('store');
+            Route::put('/edit/{uuid}', 'update')->name('update');
+            Route::delete('/delete/{uuid}', 'destroy')->name('destroy');
         });
 
         /* Client Order routes */
@@ -113,7 +113,7 @@ Route::middleware('trackVisit')->group(function () {
                 Route::get('/track', 'trackOrder')->name('track');
                 Route::post('/status', 'getOrderStatus')->name('status');
             });
-            Route::get('/{order}', 'show')->name('show');
+            Route::get('/{uuid}', 'show')->name('show');
         });
 
         /* Client Payment routes */
@@ -145,22 +145,22 @@ Route::middleware('trackVisit')->group(function () {
             Route::get('/', [PublisherController::class, 'books'])->name('index');
             Route::get('/create', 'create')->name('create');
             Route::post('/store', 'store')->name('store');
-            Route::get('/{book}', [PublisherController::class, 'book'])->name('show');
-            Route::get('/edit/{book}', 'edit')->name('edit');
-            Route::put('/update/{book}', 'update')->name('update');
-            Route::delete('/delete/{book}', 'destroy')->name('delete');
+            Route::get('/{uuid}', [PublisherController::class, 'book'])->name('show');
+            Route::get('/edit/{uuid}', 'edit')->name('edit');
+            Route::put('/update/{uuid}', 'update')->name('update');
+            Route::delete('/delete/{uuid}', 'destroy')->name('delete');
         });
 
         /* Publisher Reviews routes */
         Route::controller(PublisherController::class)->prefix('/reviews')->as('reviews.')->group(function () {
             Route::get('/', 'reviews')->name('index');
-            Route::get('/{review}', 'review')->name('show');
+            Route::get('/{uuid}', 'review')->name('show');
         });
 
         /* Publisher Orders routes */
         Route::controller(PublisherController::class)->prefix('/orders')->as('orders.')->group(function () {
             Route::get('/', 'orders')->name('index');
-            Route::get('/{order_number}', 'order')->name('show');
+            Route::get('/{uuid}', 'order')->name('show');
         });
 
         /* Publisher Filters routes */
@@ -182,60 +182,60 @@ Route::prefix('/admin')->as('admin.')->middleware(['auth:admin', 'ensureEmailIsV
     Route::controller(CategoryController::class)->prefix('/categories')->as('categories.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/create', 'create')->name('create');
-        Route::get('/{category}', 'show')->name('show');
+        Route::get('/{uuid}', 'show')->name('show');
         Route::post('/store', 'store')->name('store');
-        Route::get('/edit/{category}', 'edit')->name('edit');
-        Route::put('/update/{category}', 'update')->name('update');
-        Route::delete('/delete/{category}', 'destroy')->name('delete');
+        Route::get('/edit/{uuid}', 'edit')->name('edit');
+        Route::put('/update/{uuid}', 'update')->name('update');
+        Route::delete('/delete/{uuid}', 'destroy')->name('delete');
     });
 
     /* Admin Books routes */
     Route::controller(AdminController::class)->prefix('/books')->as('books.')->group(function () {
         Route::get('/', 'books')->name('index');
-        Route::get('/{book}', 'book')->name('show');
-        Route::delete('/delete/{book}', 'destroyBook')->name('delete');
+        Route::get('/{uuid}', 'book')->name('show');
+        Route::delete('/delete/{uuid}', 'destroyBook')->name('delete');
     });
 
     /* Admin Reviews routes */
     Route::controller(ReviewController::class)->prefix('/reviews')->as('reviews.')->group(function () {
         Route::get('/', 'index')->name('index');
-        Route::get('/{review}', 'show')->name('show');
-        Route::delete('/delete/{review}', 'delete')->name('delete');
+        Route::get('/{uuid}', 'show')->name('show');
+        Route::delete('/delete/{uuid}', 'delete')->name('delete');
     });
 
     /* Admin Orders routes */
     Route::controller(AdminController::class)->prefix('/orders')->as('orders.')->group(function () {
         Route::get('/', 'orders')->name('index');
-        Route::get('/{order}', 'order')->name('show');
-        Route::delete('/delete/{order}', 'destroyOrder')->name('delete');
-        Route::get('{order}/change-status', 'changeOrderStatusView')->name('edit');
-        Route::put('{order}/change-status', 'changeOrderStatus')->name('update');
+        Route::get('/{uuid}', 'order')->name('show');
+        Route::delete('/delete/{uuid}', 'destroyOrder')->name('delete');
+        Route::get('{uuid}/change-status', 'changeOrderStatusView')->name('edit');
+        Route::put('{uuid}/change-status', 'changeOrderStatus')->name('update');
     });
 
     /* Admin Payments routes */
     Route::controller(PaymentController::class)->prefix('/payments')->as('payments.')->group(function () {
         Route::get('/', 'index')->name('index');
-        Route::get('/{payment}', 'show')->name('show');
-        Route::delete('/delete/{payment}', 'destroy')->name('delete');
-        Route::get('/edit/{payment}', 'edit')->name('edit');
-        Route::put('/update/{payment}', 'update')->name('update');
+        Route::get('/{uuid}', 'show')->name('show');
+        Route::delete('/delete/{uuid}', 'destroy')->name('delete');
+        Route::get('/edit/{uuid}', 'edit')->name('edit');
+        Route::put('/update/{uuid}', 'update')->name('update');
     });
 
     /* Admin Users routes */
     Route::controller(UserController::class)->prefix('/users')->as('users.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/create', 'create')->name('create');
-        Route::get('/{user}', 'show')->name('show');
+        Route::get('/{uuid}', 'show')->name('show');
         Route::post('/store', 'store')->name('store');
-        Route::get('/edit/{user}', 'edit')->name('edit');
-        Route::put('/update/{user}', 'update')->name('update');
-        Route::delete('/delete/{user}', 'destroy')->name('delete');
+        Route::get('/edit/{uuid}', 'edit')->name('edit');
+        Route::put('/update/{uuid}', 'update')->name('update');
+        Route::delete('/delete/{uuid}', 'destroy')->name('delete');
     });
 
     /* Admin Visits routes */
     Route::controller(VisitController::class)->prefix('/visits')->as('visits.')->group(function () {
         Route::get('/', 'index')->name('index');
-        Route::delete('/delete/{visit}', 'destroy')->name('delete');
+        Route::delete('/delete/{uuid}', 'destroy')->name('delete');
     });
 
     /* Admin Filters routes */

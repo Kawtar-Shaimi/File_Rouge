@@ -9,7 +9,7 @@
         <tr>
             <td align="center" style="padding: 40px 0;">
                 <table width="700" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); overflow: hidden;">
-                    
+
                     <!-- Header -->
                     <tr>
                         <td style="background-color: #c084fc; padding: 20px 40px; color: white; text-align: center;">
@@ -29,7 +29,7 @@
                             </p>
 
                             <div style="margin: 30px 0; text-align: center;">
-                                <a href="{{ route('client.order.show', $order) }}" style="background-color: #c084fc; color: white; text-decoration: none; padding: 12px 24px; border-radius: 8px; display: inline-block; font-weight: bold;">
+                                <a href="{{ route('client.order.show', $order->uuid) }}" style="background-color: #c084fc; color: white; text-decoration: none; padding: 12px 24px; border-radius: 8px; display: inline-block; font-weight: bold;">
                                     View Your Order
                                 </a>
                             </div>
@@ -73,7 +73,7 @@
                                         @foreach ($order->orderBooks as $orderBook)
                                             <tr>
                                                 <td style="padding: 8px; border: 1px solid #e5e7eb;">
-                                                    <a href="{{ route('books.show', $orderBook->book) }}" style="text-decoration: underline; color: #4f46e5;">
+                                                    <a href="{{ route('books.show', $orderBook->book->uuid) }}" style="text-decoration: underline; color: #4f46e5;">
                                                         {{ $orderBook->book->name }}
                                                     </a>
                                                 </td>

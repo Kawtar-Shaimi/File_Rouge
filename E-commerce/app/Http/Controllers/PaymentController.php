@@ -12,6 +12,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class PaymentController extends Controller
 {
@@ -33,9 +34,10 @@ class PaymentController extends Controller
         }
     }
 
-    public function show(Payment $payment)
+    public function show(string $uuid)
     {
         try {
+            $payment = Payment::where('uuid', $uuid)->firstOrFail();
             $payment->load('order', 'order.client');
             return view('admin.payments.show', compact('payment'));
         }catch (Exception $e) {
@@ -43,14 +45,17 @@ class PaymentController extends Controller
         }
     }
 
-    public function edit(Payment $payment)
+    public function edit(string $uuid)
     {
+        $payment = Payment::where('uuid', $uuid)->firstOrFail();
         return view('admin.payments.edit', compact('payment'));
     }
 
-    public function update(Request $request, Payment $payment)
+    public function update(Request $request, string $uuid)
     {
         try {
+            $payment = Payment::where('uuid', $uuid)->firstOrFail();
+
             $request->validate([
                 'status' => 'required|string|in:pending,paid,failed'
             ]);
@@ -69,10 +74,12 @@ class PaymentController extends Controller
         }
     }
 
-    public function destroy(Payment $payment)
+    public function destroy(string $uuid)
     {
 
         try {
+            $payment = Payment::where('uuid', $uuid)->firstOrFail();
+
             $isDeleted = $payment->delete();
 
             if (!$isDeleted) {
@@ -98,7 +105,7 @@ class PaymentController extends Controller
         if (!session()->has('client_id') || !session()->has('order')) {
             return redirect()->route('client.checkout')->with('error', 'You didnt make any order');
         }
-        
+
         return view('client.payment.paypal.confirm-paypal-payment');
     }
 
@@ -113,6 +120,7 @@ class PaymentController extends Controller
         $order = Order::create(session()->get('order'));
 
         Payment::create([
+            'uuid' => Str::uuid(),
             'order_id' => $order->id,
             'order_number' => $order->order_number,
             'method' => $order->payment_method,

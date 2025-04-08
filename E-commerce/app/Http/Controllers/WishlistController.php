@@ -8,6 +8,7 @@ use App\Models\WishlistBook;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class WishlistController extends Controller
 {
@@ -32,14 +33,17 @@ class WishlistController extends Controller
         }
     }
 
-    public function addToWishlist(Book $book)
+    public function addToWishlist(string $uuid)
     {
         try{
+            $book = Book::where('uuid', $uuid)->firstOrFail();
+
             $wishlist = Wishlist::where('client_id' , Auth::guard('client')->id())->first();
 
             if (!$wishlist) {
 
                 $wishlist = Wishlist::create([
+                    'uuid' => Str::uuid(),
                     'client_id' => Auth::guard('client')->id(),
                 ]);
 
@@ -70,9 +74,11 @@ class WishlistController extends Controller
         }
     }
 
-    public function removeFromWishlist(Book $book)
+    public function removeFromWishlist(string $uuid)
     {
         try {
+            $book = Book::where('uuid', $uuid)->firstOrFail();
+
             $count = 0;
             $wishlist = Wishlist::where('client_id', Auth::guard('client')->id())->first();
 

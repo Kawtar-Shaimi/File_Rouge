@@ -8,6 +8,7 @@ use App\Models\Book;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class CartController extends Controller
 {
@@ -32,14 +33,17 @@ class CartController extends Controller
         }
     }
 
-    public function addToCart(Request $request, Book $book)
+    public function addToCart(Request $request, string $uuid)
     {
         try{
+            $book = Book::where('uuid', $uuid)->firstOrFail();
+
             $cart = Cart::where('client_id' , Auth::guard('client')->id())->first();
 
             if (!$cart) {
 
                 $cart = Cart::create([
+                    'uuid' => Str::uuid(),
                     'client_id' => Auth::guard('client')->id(),
                     'total_price' => 0,
                 ]);
@@ -89,9 +93,11 @@ class CartController extends Controller
         }
     }
 
-    public function removeFromCart(Request $request, Book $book)
+    public function removeFromCart(Request $request, string $uuid)
     {
         try {
+            $book = Book::where('uuid', $uuid)->firstOrFail();
+
             $cart = Cart::where('client_id', Auth::guard('client')->id())->first();
 
             if (!$cart) {
@@ -127,9 +133,11 @@ class CartController extends Controller
         }
     }
 
-    public function deleteFromCart(Book $book)
+    public function deleteFromCart(string $uuid)
     {
         try {
+            $book = Book::where('uuid', $uuid)->firstOrFail();
+
             $count = 0;
             $cart = Cart::where('client_id', Auth::guard('client')->id())->first();
 

@@ -13,7 +13,7 @@
                     <table class="w-full border-collapse">
                         <tr>
                             <td class="p-3 border">Order ID</td>
-                            <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.orders.show', $order) }}">#{{ $order->id }}</a></td>
+                            <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.orders.show', $order->uuid) }}">#{{ $order->uuid }}</a></td>
                         </tr>
                         <tr>
                             <td class="p-3 border">Order Number</td>
@@ -29,7 +29,7 @@
                         </tr>
                         <tr>
                             <td class="p-3 border">Order Payment ID</td>
-                            <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.payments.show', $order->payment) }}">#{{ $order->payment->id }}</td>
+                            <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.payments.show', $order->payment->uuid) }}">#{{ $order->payment->uuid }}</td>
                         </tr>
                         <tr>
                             <td class="p-3 border">Order Payment Status</td>
@@ -46,7 +46,7 @@
                         <tr>
                             <td class="p-3 border">Actions</td>
                             <td class="p-3 border">
-                                <form action="{{ route('admin.orders.delete', $order) }}" method="POST" class="inline">
+                                <form action="{{ route('admin.orders.delete', $order->uuid) }}" method="POST" class="inline">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
@@ -62,7 +62,7 @@
                     <table class="w-full border-collapse">
                         <tr>
                             <td class="p-3 border">Client ID</td>
-                            <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.users.show', $order->client->id ) }}">#{{ $order->client->id }}</td>
+                            <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.users.show', $order->client->uuid ) }}">#{{ $order->client->uuid }}</td>
                         </tr>
                         <tr>
                             <td class="p-3 border">Client Name</td>
@@ -120,7 +120,7 @@
                             @if ($order->orderBooks->count() > 0)
                                 @foreach ($order->orderBooks as $orderBook)
                                     <tr class="text-center">
-                                        <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.books.show', $orderBook->book) }}">#{{ $orderBook->book->id }}</a></td>
+                                        <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.books.show', $orderBook->book->uuid) }}">#{{ $orderBook->book->uuid }}</a></td>
                                         <td class="p-3 border">{{ $orderBook->book->name }}</td>
                                         <td class="p-3 border truncate w-40">{{ Str::limit($orderBook->book->description, 15) }}</td>
                                         <td class="p-3 border text-green-600 font-bold">${{ $orderBook->book->price }}</td>

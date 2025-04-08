@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class BookController extends Controller
 {
@@ -52,8 +53,10 @@ class BookController extends Controller
         return view('books.index', compact('books', 'search', 'categories'));
     }
 
-    public function show(Book $book){
+    public function show(string $uuid){
         try {
+            $book = Book::where('uuid', $uuid)->firstOrFail();
+
             $book->load(['reviews', 'reviews.client']);
             $book->loadCount('reviews');
             $book->loadAvg('reviews', 'rate');
@@ -94,20 +97,23 @@ class BookController extends Controller
             $request->validate([
                 'name' => 'required|string|max:255',
                 'price' => 'required|numeric',
-                'category_id' => 'required|exists:categories,id',
+                'category_id' => 'required|exists:categories,uuid',
                 'stock' => 'required|numeric',
                 'description' => 'required|string',
                 'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ]);
+
+            $category = Category::where('uuid', $request->category_id)->firstOrFail();
 
             $image = $request->file('image');
             $image_name = uniqid("book_") ."_". time() .".". $image->extension();
             $image_path = $image->storeAs('books_images', $image_name, 'public');
 
             $book = Book::create([
+                'uuid' => Str::uuid(),
                 'name' => $request->name,
                 'price' => $request->price,
-                'category_id' => $request->category_id,
+                'category_id' => $category->id,
                 'stock' => $request->stock,
                 'description' => $request->description,
                 'image' => $image_path,
@@ -124,26 +130,31 @@ class BookController extends Controller
         }
     }
 
-    public function edit(Book $book){
+    public function edit(string $uuid){
+        $book = Book::where('uuid', $uuid)->firstOrFail();
         $categories = Category::all();
         return view('publisher.books.edit', compact('book', 'categories'));
     }
 
-    public function update(Request $request, Book $book){
+    public function update(Request $request, string $uuid){
         try {
             $request->validate([
                 'name' => 'required|string|max:255',
                 'price' => 'required|numeric',
-                'category_id' => 'required|exists:categories,id',
+                'category_id' => 'required|exists:categories,uuid',
                 'stock' => 'required|numeric',
                 'description' => 'required|string',
                 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ]);
 
+            $book = Book::where('uuid', $uuid)->firstOrFail();
+
+            $category = Category::where('uuid', $request->category_id)->firstOrFail();
+
             $isUpdated = $book->update([
                 'name' => $request->name,
                 'price' => $request->price,
-                'category_id' => $request->category_id,
+                'category_id' => $category->id,
                 'stock' => $request->stock,
                 'description' => $request->description,
             ]);
@@ -178,8 +189,10 @@ class BookController extends Controller
         }
     }
 
-    public function destroy(Book $book){
+    public function destroy(string $uuid){
         try {
+
+            $book = Book::where('uuid', $uuid)->firstOrFail();
 
             if($book->image){
                 $isImageDeleted = Storage::disk('public')->delete($book->image);

@@ -13,7 +13,7 @@
                     <table class="w-full border-collapse">
                         <tr>
                             <td class="p-3 border">Order Number</td>
-                            <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('publisher.orders.show', $order->order->order_number) }}">#{{ $order->order->order_number }}</a></td>
+                            <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('publisher.orders.show', $order->order->uuid) }}">#{{ $order->order->order_number }}</a></td>
                         </tr>
                         <tr>
                             <td class="p-3 border">Order Total</td>
@@ -85,7 +85,6 @@
                     <table class="w-full border-collapse">
                         <thead>
                             <tr class="bg-gray-200">
-                                <th class="p-3 border">ID</th>
                                 <th class="p-3 border">Nom</th>
                                 <th class="p-3 border">Description</th>
                                 <th class="p-3 border">Prix</th>
@@ -96,8 +95,7 @@
                         </thead>
                         <tbody>
                             <tr class="text-center">
-                                <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('publisher.books.show', $order->book) }}">#{{ $order->book->id }}</a></td>
-                                <td class="p-3 border">{{ $order->book->name }}</td>
+                                <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('publisher.books.show', $order->book->uuid) }}">#{{ $order->book->name }}</a></td>
                                 <td class="p-3 border truncate w-40">{{ Str::limit($order->book->description, 15) }}</td>
                                 <td class="p-3 border text-green-600 font-bold">${{ $order->book->price }}</td>
                                 <td class="p-3 border">{{ $order->book->category->name }}</td>

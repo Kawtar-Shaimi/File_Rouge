@@ -12,7 +12,7 @@
                 <table class="w-full border-collapse">
                     <tr>
                         <td class="p-3 border">User ID</td>
-                        <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.users.show', $user) }}">#{{ $user->id }}</a></td>
+                        <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.users.show', $user->uuid) }}">#{{ $user->uuid }}</a></td>
                     </tr>
                     <tr>
                         <td class="p-3 border">User Name</td>
@@ -53,8 +53,8 @@
                     <tr>
                         <td class="p-3 border">Actions</td>
                         <td class="p-3 border">
-                            <button class="bg-blue-500 text-white px-3 py-1 rounded"><a href="{{ route('admin.users.edit', $user) }}">Update</a></button>
-                            <form action="{{ route('admin.users.delete', $user) }}" method="POST" class="inline">
+                            <button class="bg-blue-500 text-white px-3 py-1 rounded"><a href="{{ route('admin.users.edit', $user->uuid) }}">Update</a></button>
+                            <form action="{{ route('admin.users.delete', $user->uuid) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>

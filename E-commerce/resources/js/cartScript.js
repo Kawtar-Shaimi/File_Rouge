@@ -21,8 +21,8 @@ function addOneToCart(bookId, stock) {
             data: data,
             success: function(response, _, xhr) {
                 if (xhr.status === 200) {
-                    $(`#total_price`).text(`$${response.data.total_price}`);
-                    $(`#total_book_price_${bookId}`).text(`$${response.data.total_book_price}`);
+                    $(`#total_price`).text(`$${response.data.total_price.toFixed(2)}`);
+                    $(`#total_book_price_${bookId}`).text(`$${response.data.total_book_price.toFixed(2)}`);
                     $(`#quantity-${bookId}`).val(quantity);
                     showAlert("success", response.message)
                 }
@@ -62,8 +62,8 @@ function removeFromCart(bookId) {
             data: data,
             success: function(response, _, xhr) {
                 if (xhr.status === 200) {
-                    $(`#total_price`).text(`$${response.data.total_price}`);
-                    $(`#total_book_price_${bookId}`).text(`$${response.data.total_book_price}`);
+                    $(`#total_price`).text(`$${response.data.total_price.toFixed(2)}`);
+                    $(`#total_book_price_${bookId}`).text(`$${response.data.total_book_price.toFixed(2)}`);
                     if (quantity === 1) {
                         $(`#removeFromCartBtn-${bookId}`).prop('disabled', true);
                     }
@@ -114,7 +114,7 @@ function deleteFromCart(bookId) {
                         </div>
                     `)
                 } else {
-                    $(`#total_price`).text(`$${response.data.total_price}`);
+                    $(`#total_price`).text(`$${response.data.total_price.toFixed(2)}`);
                 }
                 showAlert("success", response.message)
             }

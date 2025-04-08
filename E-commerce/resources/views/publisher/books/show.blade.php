@@ -12,7 +12,7 @@
                 <table class="w-full border-collapse">
                     <tr>
                         <td class="p-3 border">Book Name</td>
-                        <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('publisher.books.show', $book) }}">#{{ $book->name }}</a></td>
+                        <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('publisher.books.show', $book->uuid) }}">#{{ $book->name }}</a></td>
                     </tr>
                     <tr>
                         <td class="p-3 border">Book Description</td>
@@ -53,8 +53,8 @@
                     <tr>
                         <td class="p-3 border">Actions</td>
                         <td class="p-3 border">
-                            <a class="bg-blue-500 text-white px-3 py-1 rounded" href="{{ route('publisher.books.edit', $book->id) }}">Update</a>
-                            <form action="{{ route('publisher.books.delete', $book) }}" method="POST" class="inline">
+                            <a class="bg-blue-500 text-white px-3 py-1 rounded" href="{{ route('publisher.books.edit', $book->uuid) }}">Update</a>
+                            <form action="{{ route('publisher.books.delete', $book->uuid) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>

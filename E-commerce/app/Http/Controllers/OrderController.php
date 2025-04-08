@@ -14,6 +14,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Stripe\Exception\ApiErrorException;
 use Stripe\PaymentIntent;
 use Stripe\Stripe;
@@ -51,6 +52,7 @@ class OrderController extends Controller
         ]);
 
         session()->put('order', [
+            'uuid' => Str::uuid(),
             'order_number' => uniqid('ORDER-'),
             'shipping_name' => $request->shipping_name,
             'shipping_email' => $request->shipping_email,
@@ -72,6 +74,7 @@ class OrderController extends Controller
     private function handlePayPalPayment(Request $request, $total_price)
     {
         session()->put('order', [
+            'uuid' => Str::uuid(),
             'order_number' => uniqid('ORDER-'),
             'shipping_name' => $request->shipping_name,
             'shipping_email' => $request->shipping_email,
@@ -95,6 +98,7 @@ class OrderController extends Controller
     private function createOrder(Request $request, $total_price)
     {
         $order = Order::create([
+            'uuid' => Str::uuid(),
             'order_number' => uniqid('ORDER-'),
             'shipping_name' => $request->shipping_name,
             'shipping_email' => $request->shipping_email,
@@ -150,6 +154,7 @@ class OrderController extends Controller
         }
 
         $payment = Payment::create([
+            'uuid' => Str::uuid(),
             'order_id' => $order->id,
             'order_number' => $order->order_number,
             'method' => $request->payment_method,
@@ -214,8 +219,9 @@ class OrderController extends Controller
         }
     }
 
-    public function show(Order $order)
+    public function show(string $uuid)
     {
+        $order = Order::where('uuid', $uuid)->firstOrFail();
         return view('client.order.show', compact('order'));
     }
 

@@ -54,7 +54,7 @@
             <select id="category" class="border bg-white border-gray-300 rounded-lg p-2">
                 <option value="">All Categories</option>
                 @foreach ($categories as $category)
-                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    <option value="{{ $category->uuid}}">{{ $category->name }}</option>
                 @endforeach
             </select>
         </div>
@@ -98,9 +98,8 @@
                 $('#results').addClass('hidden');
             }
         });
-        
+
         function fetchBooks(query, page = 1, sort = '', order = '', category = '') {
-            console.log(query, page, sort, order, category);
             $.ajax({
                 url: "/client/filter/books?page=" + page,
                 method: 'GET',

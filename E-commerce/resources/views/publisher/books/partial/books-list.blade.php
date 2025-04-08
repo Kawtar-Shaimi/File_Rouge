@@ -13,13 +13,14 @@
         @if ($books->count() > 0)
             @foreach ($books as $book)
                 <tr class="text-center">
-                    <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.books.show', $book) }}">{{ $book->name }}</a></td>
+                    <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('publisher.books.show', $book->uuid) }}">{{ $book->name }}</a></td>
                     <td class="p-3 border truncate w-40">{{ Str::limit($book->description, 15) }}</td>
                     <td class="p-3 border text-green-600 font-bold">${{ $book->price }}</td>
                     <td class="p-3 border text-blue-500 font-semibold">{{ $book->stock }}</td>
                     <td class="p-3 border">{{ $book->category->name }}</td>
                     <td class="p-3 border">
-                        <form action="{{ route('admin.books.delete', $book) }}" method="POST" class="inline">
+                        <a class="bg-blue-500 text-white px-3 py-1 rounded" href="{{ route('publisher.books.edit', $book->uuid) }}">Update</a>
+                        <form action="{{ route('publisher.books.delete', $book->uuid) }}" method="POST" class="inline">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>

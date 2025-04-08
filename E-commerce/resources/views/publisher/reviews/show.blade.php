@@ -12,7 +12,7 @@
                 <table class="w-full border-collapse">
                     <tr>
                         <td class="p-3 border">Review ID</td>
-                        <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('publisher.reviews.show', $review) }}">#{{ $review->id }}</a></td>
+                        <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('publisher.reviews.show', $review->uuid) }}">#{{ $review-> }}</a></td>
                     </tr>
                     <tr>
                         <td class="p-3 border">Review Content</td>

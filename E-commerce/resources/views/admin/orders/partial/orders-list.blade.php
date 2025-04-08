@@ -14,8 +14,8 @@
         @if ($orders->count() > 0)
             @foreach ($orders as $order)
                 <tr class="text-center">
-                    <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.orders.show', $order) }}">#{{ $order->id }}</a></td>
-                    <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.orders.show', $order) }}">#{{ $order->order_number }}</a></td>
+                    <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.orders.show', $order->uuid) }}">#{{ $order->uuid }}</a></td>
+                    <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.orders.show', $order->uuid) }}">#{{ $order->order_number }}</a></td>
                     <td class="p-3 border">{{ $order->client->name }}</td>
                     <td class="p-3 border">{{ $order->client->email }}</td>
                     <td class="p-3 border font-bold {{ $order->payment->status === 'paid' ? 'text-green-600' : ($order->payment->status === 'failed' ? 'text-red-600': 'text-black') }}">${{ $order->total_amount }}</td>
@@ -31,8 +31,8 @@
                         @endif
                     </td>
                     <td class="p-3 border">
-                        <a href="{{ route('admin.orders.edit', $order) }}" class="bg-blue-500 text-white px-3 py-1 rounded">Update</a>
-                        <form action="{{ route('admin.orders.delete', $order) }}" method="POST" class="inline">
+                        <a href="{{ route('admin.orders.edit', $order->uuid) }}" class="bg-blue-500 text-white px-3 py-1 rounded">Update</a>
+                        <form action="{{ route('admin.orders.delete', $order->uuid) }}" method="POST" class="inline">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>

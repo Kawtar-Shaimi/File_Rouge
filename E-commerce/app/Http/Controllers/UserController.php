@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -29,8 +30,9 @@ class UserController extends Controller
         }
     }
 
-    public function show(User $user)
+    public function show(string $uuid)
     {
+        $user = User::where('uuid', $uuid)->firstOrFail();
         return view('admin.users.show', compact('user'));
     }
 
@@ -41,7 +43,7 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        try {
+        /* try { */
             $request->validate([
                 'name' => 'required',
                 'email' => 'required|email|unique:users,email',
@@ -51,6 +53,7 @@ class UserController extends Controller
             ]);
 
             $user = User::create([
+                'uuid' => Str::uuid(),
                 'name' => $request->name,
                 'email' => $request->email,
                 'phone' => $request->phone,
@@ -64,19 +67,22 @@ class UserController extends Controller
             }
 
             return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
-        }catch (Exception $e) {
+        /* }catch (Exception $e) {
             return redirect()->back()->with('error', value: 'Error while creating user try again later.');
-        }
+        } */
     }
 
-    public function edit(User $user)
+    public function edit(string $uuid)
     {
+        $user = User::where('uuid', $uuid)->firstOrFail();
         return view('admin.users.edit', compact('user'));
     }
 
-    public function update(Request $request, User $user)
+    public function update(Request $request, string $uuid)
     {
         try {
+            $user = User::where('uuid', $uuid)->firstOrFail();
+
             $request->validate([
                 'role' => 'required|string|in:admin,publisher,client'
             ]);
@@ -95,9 +101,11 @@ class UserController extends Controller
         }
     }
 
-    public function destroy(User $user)
+    public function destroy(string $uuid)
     {
         try {
+            $user = User::where('uuid', $uuid)->firstOrFail();
+
             $isDeleted = $user->delete();
 
             if (!$isDeleted) {
@@ -110,13 +118,16 @@ class UserController extends Controller
         }
     }
 
-    public function changePasswordView(User $user){
+    public function changePasswordView(string $uuid){
+        $user = User::where('uuid', $uuid)->firstOrFail();
         return view('users.change-password', compact('user'));
     }
 
-    public function changePassword(Request $request, User $user)
+    public function changePassword(Request $request, string $uuid)
     {
         try {
+            $user = User::where('uuid', $uuid)->firstOrFail();
+
             $request->validate([
                 'old_password' => 'required',
                 'new_password' => 'required|confirmed'
@@ -146,13 +157,16 @@ class UserController extends Controller
         }
     }
 
-    public function editProfile(User $user)
+    public function editProfile(string $uuid)
     {
+        $user = User::where('uuid', $uuid)->firstOrFail();
         return view('users.edit', compact('user'));
     }
 
-    public function updateProfile(Request $request, User $user)
+    public function updateProfile(Request $request, string $uuid)
     {
+        $user = User::where('uuid', $uuid)->firstOrFail();
+
         $request->validate([
             "name" => "required",
             "email" => "required|email|unique:users,email," .  $user->id,
@@ -177,13 +191,13 @@ class UserController extends Controller
             $user->save();
             $token = AuthController::generateEmailVerificationToken($user);
             $url = route('verify.email', [
-                'user' => $user,
+                'uuid' => $user->uuid,
                 'token' => $token,
             ]);
 
             Mail::to($request->email)->send(new VerifyNewEmail($url));
 
-            return redirect()->route('verify.notice', $user)->with('success', 'Profile updated successfully, please verify your new email address.');
+            return redirect()->route('verify.notice', $user->uuid)->with('success', 'Profile updated successfully, please verify your new email address.');
         }
 
         return match ($user->role) {

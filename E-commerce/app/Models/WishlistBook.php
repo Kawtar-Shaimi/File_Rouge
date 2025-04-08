@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class WishlistBook extends Model
 {
+    use HasFactory;
+    
     protected $table = "wishlists_books";
 
     protected $fillable = ['wishlist_id', 'book_id'];

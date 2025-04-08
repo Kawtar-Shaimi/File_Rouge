@@ -18,11 +18,11 @@
                         </div>
                     </div>
 
-                    <a href="{{ route('users.edit', Auth::guard('admin')->user()) }}" class="px-6 py-2 bg-purple-400 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition-all duration-300">
+                    <a href="{{ route('users.edit', Auth::guard('admin')->user()->uuid) }}" class="px-6 py-2 bg-purple-400 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition-all duration-300">
                         Modifier le Profil
                     </a>
 
-                    <a href="{{ route('users.change-password.view', Auth::guard('admin')->user()) }}" class="px-6 py-2 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition-all duration-300">
+                    <a href="{{ route('users.change-password.view', Auth::guard('admin')->user()->uuid) }}" class="px-6 py-2 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition-all duration-300">
                         Reset password
                     </a>
                 </div>
@@ -77,9 +77,9 @@
                                     @foreach ($orders as $order)
                                         <tr class="border-t hover:bg-indigo-50 text-gray-600">
                                             <td class="py-3 px-4 underline italic hover:text-blue-400"><a
-                                                    href="{{ route('admin.orders.show', $order) }}">#{{ $order->id }}</a></td>
+                                                    href="{{ route('admin.orders.show', $order->uuid) }}">#{{ $order->uuid }}</a></td>
                                             <td class="py-3 px-4 underline italic hover:text-blue-400"><a
-                                                    href="{{ route('admin.orders.show', $order) }}">#{{ $order->order_number }}</a></td>
+                                                    href="{{ route('admin.orders.show', $order->uuid) }}">#{{ $order->order_number }}</a></td>
                                             <td class="py-3 px-4">{{ $order->client->name }}</td>
                                             <td class="py-3 px-4">{{ $order->client->email }}</td>
                                             <td
@@ -97,9 +97,9 @@
                                                 @endif
                                             </td>
                                             <td class="py-3 px-4">
-                                                <a href="{{ route('admin.orders.edit', $order) }}"
+                                                <a href="{{ route('admin.orders.edit', $order->uuid) }}"
                                                     class="bg-blue-500 text-white px-3 py-1 rounded">Update</a>
-                                                <form action="{{ route('admin.orders.delete', $order) }}" method="POST" class="inline">
+                                                <form action="{{ route('admin.orders.delete', $order->uuid) }}" method="POST" class="inline">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>

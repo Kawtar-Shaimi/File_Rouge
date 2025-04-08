@@ -10,7 +10,7 @@
             <h2 class="text-3xl font-bold text-center mb-6 text-gray-800">Change Order Status</h2>
             <div class="bg-white p-6 rounded-lg shadow-md">
 
-                <form action="{{ route('admin.orders.update', $order) }}" method="POST">
+                <form action="{{ route('admin.orders.update', $order->uuid) }}" method="POST">
                     @csrf
                     @method('PUT')
 

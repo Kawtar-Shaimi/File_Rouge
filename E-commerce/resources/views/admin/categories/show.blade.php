@@ -12,7 +12,7 @@
                 <table class="w-full border-collapse">
                     <tr>
                         <td class="p-3 border">Category ID</td>
-                        <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.categories.show', $category) }}">#{{ $category->id }}</a></td>
+                        <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.categories.show', $category->uuid) }}">#{{ $category->uuid }}</a></td>
                     </tr>
                     <tr>
                         <td class="p-3 border">Category Name</td>
@@ -37,8 +37,8 @@
                     <tr>
                         <td class="p-3 border">Actions</td>
                         <td class="p-3 border">
-                            <button class="bg-blue-500 text-white px-3 py-1 rounded"><a href="{{ route('admin.categories.edit', $category) }}">Update</a></button>
-                            <form action="{{ route('admin.categories.delete', $category) }}" method="POST" class="inline">
+                            <button class="bg-blue-500 text-white px-3 py-1 rounded"><a href="{{ route('admin.categories.edit', $category->uuid) }}">Update</a></button>
+                            <form action="{{ route('admin.categories.delete', $category->uuid) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>

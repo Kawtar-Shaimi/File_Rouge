@@ -13,7 +13,7 @@
         <div class="bg-white p-8 rounded-lg shadow-lg max-w-2xl mx-auto">
             <!-- Formulaire d'adresse -->
             <h3 class="text-xl font-semibold mb-4">Change Password</h3>
-            <form action="{{ route('users.change-password.update', $user) }}" method="POST">
+            <form action="{{ route('users.change-password.update', $user->uuid) }}" method="POST">
                 <div class="space-y-4">
                     @csrf
 

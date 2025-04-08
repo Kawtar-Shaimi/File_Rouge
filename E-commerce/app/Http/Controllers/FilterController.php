@@ -272,7 +272,7 @@ class FilterController extends Controller
     public function filterPublishersOrders(Request $request)
     {
         $this->middleware('auth:publisher');
-        
+
         $searchQuery = $request->input('query', '');
         $sortBy = $request->input('sort', 'id');
         $sortOrder = $request->input('order', 'asc');
@@ -340,17 +340,20 @@ class FilterController extends Controller
         $sortOrder = $request->input('order');
         $category = $request->input('category');
 
-        $query = Book::where('stock', '>', 0);
+        $query = Book::selectRaw('books.*, categories.name as category_name')
+        ->join('categories', 'books.category_id', '=', 'categories.id')
+        ->where('stock', '>', 0);
 
         if ($search) {
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'LIKE', "%{$search}%")
-                  ->orWhere('description', 'LIKE', "%{$search}%");
+                $q->where('books.name', 'LIKE', "%{$search}%")
+                  ->orWhere('books.description', 'LIKE', "%{$search}%");
             });
         }
 
         if ($category) {
-            $query->where('category_id', $category);
+            $category = Category::where('uuid', $category)->firstOrFail();
+            $query->where('books.category_id', $category->id);
         }
 
         if ($sortBy) {
@@ -358,7 +361,7 @@ class FilterController extends Controller
         }
 
         $books = $query->paginate(12);
-        
+
         if (Auth::guard('client')->check()) {
             foreach ($books as $book) {
                 $query = $book->join('carts_books', 'books.id', '=', 'carts_books.book_id')

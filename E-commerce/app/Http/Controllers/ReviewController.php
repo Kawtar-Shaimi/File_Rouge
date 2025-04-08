@@ -7,6 +7,7 @@ use App\Models\Review;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class ReviewController extends Controller
 {
@@ -28,21 +29,25 @@ class ReviewController extends Controller
         }
     }
 
-    public function show(Review $review)
+    public function show(string $uuid)
     {
+        $review = Review::where('uuid', $uuid)->firstOrFail();
         $review->load('client');
         return view('admin.reviews.show', compact('review'));
     }
 
-    public function store(Request $request, Book $book)
+    public function store(Request $request, string $uuid)
     {
         try{
+            $book = Book::where('uuid', $uuid)->firstOrFail();
+
             $request->validate([
                 'rate' => 'required|numeric',
                 'content' => 'required'
             ]);
 
             $review = Review::create([
+                'uuid' => Str::uuid(),
                 'rate' => $request->rate,
                 'content' => $request->content,
                 'client_id' =>  Auth::guard('client')->id(),
@@ -60,7 +65,7 @@ class ReviewController extends Controller
                 'status' => 'success',
                 'message' => 'Review added successfully',
                 'data' => [
-                    'review_id' => $review->id,
+                    'review_id' => $review->uuid,
                     'name' => Auth::guard('client')->user()->name
                 ]
             ], 200)->header('Content-Type', 'application/json');
@@ -73,9 +78,11 @@ class ReviewController extends Controller
         }
     }
 
-    public function update(Request $request, Review $review)
+    public function update(Request $request, string $uuid)
     {
         try{
+            $review = Review::where('uuid', $uuid)->firstOrFail();
+
             $request->validate([
                 'rate' => 'required|numeric',
                 'content' => 'required'
@@ -112,9 +119,10 @@ class ReviewController extends Controller
         }
     }
 
-    public function destroy(Review $review)
+    public function destroy(string $uuid)
     {
         try{
+            $review = Review::where('uuid', $uuid)->firstOrFail();
 
             $oldRating = $review->rate;
 
@@ -145,9 +153,11 @@ class ReviewController extends Controller
         }
     }
 
-    public function delete(Review $review)
+    public function delete(string $uuid)
     {
         try {
+            $review = Review::where('uuid', $uuid)->firstOrFail();
+
             $isDeleted = $review->delete();
 
             if (!$isDeleted) {

@@ -190,9 +190,10 @@ class AdminController extends Controller
 
     }
 
-    public function book(Book $book)
+    public function book(string $uuid)
     {
         try {
+            $book = Book::where('uuid', $uuid)->firstOrFail();
             $book->load('category', 'publisher');
             return view('admin.books.show', compact('book'));
         }catch (Exception $e) {
@@ -200,9 +201,11 @@ class AdminController extends Controller
         }
     }
 
-    public function destroyBook(Book $book)
+    public function destroyBook(string $uuid)
     {
         try {
+            $book = Book::where('uuid', $uuid)->firstOrFail();
+
             $isDeleted = $book->delete();
 
             if (!$isDeleted) {
@@ -226,9 +229,10 @@ class AdminController extends Controller
         }
     }
 
-    public function order(Order $order)
+    public function order(string $uuid)
     {
         try {
+            $order = Order::where('uuid', $uuid)->firstOrFail();
             $order->load('client', 'orderBooks.book', 'payment');
             return view('admin.orders.show', compact('order'));
         }catch (Exception $e) {
@@ -236,9 +240,11 @@ class AdminController extends Controller
         }
     }
 
-    public function destroyOrder(Order $order)
+    public function destroyOrder(string $uuid)
     {
         try {
+            $order = Order::where('uuid', $uuid)->firstOrFail();
+
             $isDeleted = $order->delete();
 
             if (!$isDeleted) {
@@ -251,14 +257,18 @@ class AdminController extends Controller
         }
     }
 
-    public function changeOrderStatusView(Order $order)
+    public function changeOrderStatusView(string $uuid)
     {
+        $order = Order::where('uuid', $uuid)->firstOrFail();
+
         return view('admin.orders.change-status', compact('order'));
     }
 
-    public function changeOrderStatus(Order $order, Request $request)
+    public function changeOrderStatus(Request $request, string $uuid)
     {
         try {
+            $order = Order::where('uuid', $uuid)->firstOrFail();
+
             $revertedStatusArr = [
                 'pending' => ["in shipping","completed","cancelled"],
                 'in shipping' => ["completed","cancelled"],

@@ -12,7 +12,7 @@
                 <table class="w-full border-collapse">
                     <tr>
                         <td class="p-3 border">Book ID</td>
-                        <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.books.show', $book) }}">#{{ $book->id }}</a></td>
+                        <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.books.show', $book->uuid) }}">#{{ $book->uuid }}</a></td>
                     </tr>
                     <tr>
                         <td class="p-3 border">Book Name</td>
@@ -24,7 +24,7 @@
                     </tr>
                     <tr>
                         <td class="p-3 border">Book Category ID</td>
-                        <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.categories.show', $book->category) }}">#{{ $book->category->id }}</a></td>
+                        <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.categories.show', $book->category->uuid) }}">#{{ $book->category->uuid }}</a></td>
                     </tr>
                     <tr>
                         <td class="p-3 border">Book Category Name</td>
@@ -48,7 +48,7 @@
                     </tr>
                     <tr>
                         <td class="p-3 border">Book Publisher ID</td>
-                        <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.users.show', $book->publisher) }}">#{{ $book->publisher->id }}</a></td>
+                        <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.users.show', $book->publisher->uuid) }}">#{{ $book->publisher->uuid }}</a></td>
                     </tr>
                     <tr>
                         <td class="p-3 border">Book Publisher Name</td>
@@ -65,7 +65,7 @@
                     <tr>
                         <td class="p-3 border">Actions</td>
                         <td class="p-3 border">
-                            <form action="{{ route('admin.books.delete', $book) }}" method="POST" class="inline">
+                            <form action="{{ route('admin.books.delete', $book->uuid) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>

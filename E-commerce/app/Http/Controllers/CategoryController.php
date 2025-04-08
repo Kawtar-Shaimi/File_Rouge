@@ -6,6 +6,7 @@ use App\Models\Category;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -26,8 +27,9 @@ class CategoryController extends Controller
         }
     }
 
-    public function show(Category $category)
+    public function show(string $uuid)
     {
+        $category = Category::where('uuid', $uuid)->firstOrFail();
         $category->load('admin');
         return view('admin.categories.show', compact('category'));
     }
@@ -46,6 +48,7 @@ class CategoryController extends Controller
             ]);
 
             $category = Category::create([
+                'uuid' => Str::uuid(),
                 'name' => $request->name,
                 'description' => $request->description,
                 'admin_id' => Auth::guard('admin')->id()
@@ -61,14 +64,17 @@ class CategoryController extends Controller
         }
     }
 
-    public function edit(Category $category)
+    public function edit(string $uuid)
     {
+        $category = Category::where('uuid', $uuid)->firstOrFail();
         return view('admin.categories.edit', compact('category'));
     }
 
-    public function update(Request $request, Category $category)
+    public function update(Request $request, string $uuid)
     {
         try {
+            $category = Category::where('uuid', $uuid)->firstOrFail();
+
             $request->validate([
                 'name' => 'required|string|max:255',
                 'description' => 'required|string'
@@ -89,9 +95,11 @@ class CategoryController extends Controller
         }
     }
 
-    public function destroy(Category $category)
+    public function destroy(string $uuid)
     {
         try {
+            $category = Category::where('uuid', $uuid)->firstOrFail();
+
             $isDeleted = $category->delete();
 
             if (!$isDeleted) {

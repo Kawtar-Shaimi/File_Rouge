@@ -18,11 +18,11 @@
                     </div>
                 </div>
 
-                <a href="{{ route('users.edit', Auth::guard('publisher')->user()) }}" class="px-6 py-2 bg-purple-400 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition-all duration-300">
+                <a href="{{ route('users.edit', Auth::guard('publisher')->user()->uuid) }}" class="px-6 py-2 bg-purple-400 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition-all duration-300">
                     Modifier le Profil
                 </a>
 
-                <a href="{{ route('users.change-password.view', Auth::guard('publisher')->user()) }}" class="px-6 py-2 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition-all duration-300">
+                <a href="{{ route('users.change-password.view', Auth::guard('publisher')->user()->uuid) }}" class="px-6 py-2 bg-gray-400 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition-all duration-300">
                     Reset password
                 </a>
             </div>
@@ -76,7 +76,7 @@
                                 @foreach ($orders as $order)
                                     <tr class="border-t hover:bg-indigo-50 text-gray-600">
                                         <td class="py-3 px-4 underline italic hover:text-blue-400"><a
-                                                href="{{ route('publisher.orders.show', $order->order->order_number) }}">#{{ $order->order->order_number }}</a>
+                                                href="{{ route('publisher.orders.show', $order->order->uuid) }}">#{{ $order->order->order_number }}</a>
                                         </td>
                                         <td class="py-3 px-4">{{ $order->order->client->name }}</td>
                                         <td class="py-3 px-4">{{ $order->order->client->email }}</td>
@@ -95,7 +95,7 @@
                                             @endif
                                         </td>
                                         <td class="py-3 px-4">
-                                            <a href="{{ route('publisher.orders.show', $order->order->order_number) }}" class="px-4 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition duration-300">Voir</a>
+                                            <a href="{{ route('publisher.orders.show', $order->order->uuid) }}" class="px-4 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition duration-300">Voir</a>
                                         </td>
                                     </tr>
                                 @endforeach

@@ -13,7 +13,7 @@
         @if ($orders->count() > 0)
             @foreach ($orders as $order)
                 <tr class="text-center">
-                    <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('publisher.orders.show', $order->order->order_number) }}">#{{ $order->order->order_number }}</a></td>
+                    <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('publisher.orders.show', $order->order->uuid) }}">#{{ $order->order->order_number }}</a></td>
                     <td class="p-3 border">{{ $order->order->client->name }}</td>
                     <td class="p-3 border">{{ $order->order->client->email }}</td>
                     <td class="p-3 border font-bold {{ $order->order->payment->status === 'paid' ? 'text-green-600' : ($order->order->payment->status === 'failed' ? 'text-red-600' : 'text-black') }}">${{ $order->order->total_amount }}</td>
@@ -29,7 +29,7 @@
                         @endif
                     </td>
                     <td class="p-3 border">
-                        <a href="{{ route('publisher.orders.show', $order->order->order_number) }}"
+                        <a href="{{ route('publisher.orders.show', $order->order->uuid) }}"
                             class="px-4 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition duration-300">Voir</a>
                     </td>
                 </tr>

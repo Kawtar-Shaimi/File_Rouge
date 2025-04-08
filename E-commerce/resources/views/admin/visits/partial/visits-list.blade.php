@@ -13,13 +13,13 @@
         @if ($visits->count() > 0)
             @foreach ($visits as $visit)
                 <tr class="text-center">
-                    <td class="p-3 border underline italic hover:text-blue-400">#{{ $visit->id }}</td>
+                    <td class="p-3 border underline italic hover:text-blue-400">#{{ $visit->uuid }}</td>
                     <td class="p-3 border">{{ $visit->ip_address }}</td>
                     <td class="p-3 border">{{ $visit->user_agent }}</td>
                     <td class="p-3 border">{{ $visit->last_visited_url }}</td>
                     <td class="p-3 border">{{ $visit->last_visit }}</td>
                     <td class="p-3 border">
-                        <form action="{{ route('admin.visits.delete', $visit) }}" method="POST" class="inline">
+                        <form action="{{ route('admin.visits.delete', $visit->uuid) }}" method="POST" class="inline">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>

@@ -16,7 +16,7 @@
                 <p class="text-gray-700 text-base mb-6 leading-relaxed">
                     Please check your email for the password reset link.
                     If you did not receive the email,
-                    <form method="POST" action="{{ route('reset.resend', $user) }}" class="inline">
+                    <form method="POST" action="{{ route('reset.resend', $user->uuid) }}" class="inline">
                         @csrf
                         <button type="submit" class="text-purple-600 font-medium hover:underline">click here to request another</button>.
                     </form>

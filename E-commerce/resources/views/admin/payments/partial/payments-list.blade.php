@@ -14,8 +14,8 @@
         @if ($payments->count() > 0)
             @foreach ($payments as $payment)
                 <tr class="text-center">
-                    <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.payments.show', $payment) }}">#{{ $payment->id }}</a></td>
-                    <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.orders.show', $payment->order) }}">#{{ $payment->order->order_number }}</a></td>
+                    <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.payments.show', $payment->uuid) }}">#{{ $payment->uuid }}</a></td>
+                    <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.orders.show', $payment->order->uuid) }}">#{{ $payment->order->order_number }}</a></td>
                     <td class="p-3 border">{{ $payment->order->client->name }}</td>
                     <td class="p-3 border">{{ $payment->order->client->email }}</td>
                     <td class="p-3 border font-bold {{ $payment->status == "paid" ? "text-green-600" : ($payment->status == "failed" ? "text-red-600" : "text-black") }}">${{ $payment->amount }}</td>
@@ -29,8 +29,8 @@
                         @endif
                     </td>
                     <td class="p-3 border">
-                        <button class="bg-blue-500 text-white px-3 py-1 rounded"><a href="{{ route('admin.payments.edit', $payment) }}">Update</a></button>
-                        <form action="{{ route('admin.payments.delete', $payment) }}" method="POST" class="inline">
+                        <button class="bg-blue-500 text-white px-3 py-1 rounded"><a href="{{ route('admin.payments.edit', $payment->uuid) }}">Update</a></button>
+                        <form action="{{ route('admin.payments.delete', $payment->uuid) }}" method="POST" class="inline">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>

@@ -37,7 +37,7 @@
                     <select id="category_id" name="category_id" class="w-full p-3 border rounded-lg mt-1" required>
                         <option value="">Select Category</option>
                         @foreach ($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            <option value="{{ $category->uuid }}">{{ $category->name }}</option>
                         @endforeach
                     </select>
                 </div>

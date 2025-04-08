@@ -58,7 +58,7 @@ class PublisherController extends Controller
         ->join('books', 'orders_books.book_id', '=', 'books.id')
         ->where('books.publisher_id', Auth::guard('publisher')->id())
         ->where('orders.status', 'completed')
-        ->groupBy('books.id', 'books.name') 
+        ->groupBy('books.id', 'books.name')
         ->orderByDesc('income')
         ->limit(5)
         ->get()
@@ -73,7 +73,7 @@ class PublisherController extends Controller
         ->where('books.publisher_id', Auth::guard('publisher')->id())
         ->where('orders.status', 'completed')
         ->whereMonth('orders.updated_at', now()->month)
-        ->groupBy('books.id', 'books.name') 
+        ->groupBy('books.id', 'books.name')
         ->orderByDesc('income')
         ->limit(5)
         ->get()
@@ -88,7 +88,7 @@ class PublisherController extends Controller
         ->join('categories', 'books.category_id', '=', 'categories.id')
         ->where('books.publisher_id', Auth::guard('publisher')->id())
         ->where('orders.status', 'completed')
-        ->groupBy('categories.id', 'categories.name') 
+        ->groupBy('categories.id', 'categories.name')
         ->orderByDesc('income')
         ->limit(5)
         ->get()
@@ -104,7 +104,7 @@ class PublisherController extends Controller
         ->where('books.publisher_id', Auth::guard('publisher')->id())
         ->where('orders.status', 'completed')
         ->whereMonth('orders.updated_at', now()->month)
-        ->groupBy('categories.id', 'categories.name') 
+        ->groupBy('categories.id', 'categories.name')
         ->orderByDesc('income')
         ->limit(5)
         ->get()
@@ -116,7 +116,7 @@ class PublisherController extends Controller
         $best_rated_books_chart_data = Book::selectRaw('books.name, AVG(reviews.rate) as rating')
         ->join('reviews', 'reviews.book_id', '=', 'books.id')
         ->where('books.publisher_id', Auth::guard('publisher')->id())
-        ->groupBy('books.id', 'books.name') 
+        ->groupBy('books.id', 'books.name')
         ->orderByDesc('rating')
         ->limit(5)
         ->get()
@@ -129,7 +129,7 @@ class PublisherController extends Controller
         ->join('reviews', 'reviews.book_id', '=', 'books.id')
         ->where('books.publisher_id', Auth::guard('publisher')->id())
         ->whereMonth('reviews.updated_at', now()->month)
-        ->groupBy('books.id', 'books.name') 
+        ->groupBy('books.id', 'books.name')
         ->orderByDesc('rating')
         ->limit(5)
         ->get()
@@ -138,7 +138,7 @@ class PublisherController extends Controller
         ]);
 
 
-        return view('publisher.index', 
+        return view('publisher.index',
             compact('books_count', 'orders_count', 'reviews_count', 'incomes',
                 'incomes_chart_data', 'best_saled_books_chart_data', 'best_saled_books_of_the_month_chart_data',
                 'best_saled_categories_chart_data', 'best_saled_categories_of_the_month_chart_data', 'best_rated_books_chart_data',
@@ -155,12 +155,12 @@ class PublisherController extends Controller
         return view('publisher.orders.index', compact('orders'));
     }
 
-    public function order($order_number)
+    public function order(string $uuid)
     {
         $order = OrderBook::with(['order', 'book', 'order.client'])->whereHas('book', function ($query) {
             $query->where('publisher_id', Auth::guard('publisher')->id());
-        })->whereHas('order', function ($query) use ($order_number) {
-            $query->where('order_number', $order_number);
+        })->whereHas('order', function ($query) use ($uuid) {
+            $query->where('uuid', $uuid);
         })->first();
 
         return view('publisher.orders.show', compact('order'));
@@ -175,10 +175,11 @@ class PublisherController extends Controller
             return redirect()->back()->with('error', 'Error while getting books try again later.');
         }
     }
-    
-    public function book(Book $book)
+
+    public function book(string $uuid)
     {
         try {
+            $book = Book::where('uuid', $uuid)->firstOrFail();
             return view('publisher.books.show', compact('book'));
         }catch (Exception $e) {
             return redirect()->back()->with('error', 'Error while getting book try again later.');
@@ -199,8 +200,9 @@ class PublisherController extends Controller
         }
     }
 
-    public function review(Review $review)
+    public function review(string $uuid)
     {
+        $review = Review::where('uuid', $uuid)->firstOrFail();
         $review->load('client');
         return view('publisher.reviews.show', compact('review'));
     }

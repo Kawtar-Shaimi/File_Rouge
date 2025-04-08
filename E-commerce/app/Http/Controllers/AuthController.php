@@ -82,6 +82,7 @@ class AuthController extends Controller
             ]);
 
             $validatedData['password'] = Hash::make($validatedData['password']);
+            $validatedData['uuid'] = Str::uuid();
 
             $remember = $request->has('remember');
 
@@ -107,17 +108,17 @@ class AuthController extends Controller
             }
 
 
-            $token = $this->generateEmailVerificationToken($user);
+            $token = $this->generateEmailVerificationToken($user->uuid);
 
 
             $url = route('verify.email', [
-                'user' => $user,
+                'uuid' => $user->uuid,
                 'token' => $token,
             ]);
 
             Mail::to($user->email)->send(new VerifyEmailLink($url));
 
-            return redirect()->route('verify.notice', $user)->with('success', 'Registration successful.');
+            return redirect()->route('verify.notice', $user->uuid)->with('success', 'Registration successful.');
 
         }catch (Exception $e) {
             return redirect()->back()->with('error', 'Error while register try again later.');
@@ -139,8 +140,10 @@ class AuthController extends Controller
         }
     }
 
-    public static function generateEmailVerificationToken(User $user)
+    public static function generateEmailVerificationToken(string $uuid)
     {
+        $user = User::where('uuid', $uuid)->firstOrFail();
+
         EmailVerificationToken::where('user_id', $user->id)->delete();
 
         $token = Str::random(64);
@@ -155,9 +158,11 @@ class AuthController extends Controller
         return $token;
     }
 
-    public function verifyEmail(User $user, $token){
+    public function verifyEmail(string $uuid, $token){
+        $user = User::where('uuid', $uuid)->firstOrFail();
+
         if (!$user) {
-            return redirect()->route('verify.notice', $user)->with('error', 'User not found.');
+            return redirect()->route('verify.notice', $user->uuid)->with('error', 'User not found.');
         }
 
         $hash = EmailVerificationToken::where('user_id', $user->id)
@@ -165,7 +170,7 @@ class AuthController extends Controller
         ->first();
 
         if (!$token || !hash_equals($hash->token, hash('sha256', $token))) {
-            return redirect()->route('verify.notice', $user)->with('error', 'Invalid or expired token.');
+            return redirect()->route('verify.notice', $user->uuid)->with('error', 'Invalid or expired token.');
         }
 
         $isUpdated = $user->update([
@@ -173,13 +178,13 @@ class AuthController extends Controller
         ]);
 
         if (!$isUpdated) {
-            return redirect()->route('verify.notice', $user)->with('error', 'Error while verifying email, try again later.');
+            return redirect()->route('verify.notice', $user->uuid)->with('error', 'Error while verifying email, try again later.');
         }
 
         $isDeleted = $hash->delete();
 
         if (!$isDeleted) {
-            return redirect()->route('verify.notice', $user)->with('error', 'Error while deleting token, try again later.');
+            return redirect()->route('verify.notice', $user->uuid)->with('error', 'Error while deleting token, try again later.');
         }
 
         Mail::to($user->email)->send(new EmailVerified($user, $user->role));
@@ -187,7 +192,9 @@ class AuthController extends Controller
         return redirect()->route('home')->with('success', 'Email verified successfully.');
     }
 
-    public function verifyNotice(User $user){
+    public function verifyNotice(string $uuid){
+        $user = User::where('uuid', $uuid)->firstOrFail();
+
         if (!$user) {
             return redirect()->back()->with('error', 'User not found.');
         }
@@ -199,7 +206,9 @@ class AuthController extends Controller
         return view('auth.verify-notice', compact('user'));
     }
 
-    public function resendVerificationEmail(User $user){
+    public function resendVerificationEmail(string $uuid){
+        $user = User::where('uuid', $uuid)->firstOrFail();
+
         if (!$user) {
             return redirect()->back()->with('error', 'User not found.');
         }
@@ -208,10 +217,10 @@ class AuthController extends Controller
             return redirect()->route('home')->with('success', 'Email already verified.');
         }
 
-        $token = $this->generateEmailVerificationToken($user);
+        $token = $this->generateEmailVerificationToken($user->uuid);
 
         $url = route('verify.email', [
-            'user' => $user,
+            'uuid' => $user->uuid,
             'token' => $token,
         ]);
 
@@ -225,8 +234,9 @@ class AuthController extends Controller
         return view('auth.forget-password');
     }
 
-    public static function generateResetPasswordToken(User $user)
+    public static function generateResetPasswordToken(string $uuid)
     {
+        $user = User::where('uuid', $uuid)->firstOrFail();
 
         PasswordResetToken::where('user_id', $user->id)->delete();
 
@@ -255,20 +265,22 @@ class AuthController extends Controller
             return redirect()->back()->with('error', 'Email not found.');
         }
 
-        $token = $this->generateResetPasswordToken($user);
+        $token = $this->generateResetPasswordToken($user->uuid);
 
         $url = route('reset.password', [
-            'user' => $user,
+            'uuid' => $user->uuid,
             'token' => $token,
         ]);
 
         Mail::to($user->email)->send(new ResetPasswordToken($url));
 
-        return redirect()->route('reset.notice', $user)->with('success', 'Reset password email sent successfully.');
+        return redirect()->route('reset.notice', $user->uuid)->with('success', 'Reset password email sent successfully.');
     }
 
-    public function resetNotice(User $user)
+    public function resetNotice(string $uuid)
     {
+        $user = User::where('uuid', $uuid)->firstOrFail();
+
         if (!$user) {
             return redirect()->back()->with('error', 'User not found.');
         }
@@ -276,16 +288,18 @@ class AuthController extends Controller
         return view('auth.reset-notice', compact('user'));
     }
 
-    public function resendResetPasswordEmail(User $user)
+    public function resendResetPasswordEmail(string $uuid)
     {
+        $user = User::where('uuid', $uuid)->firstOrFail();
+
         if (!$user) {
             return redirect()->back()->with('error', 'User not found.');
         }
 
-        $token = $this->generateResetPasswordToken($user);
+        $token = $this->generateResetPasswordToken($user->uuid);
 
         $url = route('reset.password', [
-            'user' => $user,
+            'uuid' => $user->uuid,
             'token' => $token,
         ]);
 
@@ -294,10 +308,12 @@ class AuthController extends Controller
         return redirect()->back()->with('success', 'Reset password email resent successfully.');
     }
 
-    public function verifyResetPassword(User $user, $token)
+    public function verifyResetPassword(string $uuid, $token)
     {
+        $user = User::where('uuid', $uuid)->firstOrFail();
+
         if (!$user) {
-            return redirect()->route('reset.notice', $user)->with('error', 'User not found.');
+            return redirect()->route('reset.notice', $user->uuid)->with('error', 'User not found.');
         }
 
         $hash = PasswordResetToken::where('user_id', $user->id)
@@ -305,17 +321,19 @@ class AuthController extends Controller
         ->first();
 
         if (!$token || !hash_equals($hash->token, hash('sha256', $token))) {
-            return redirect()->route('reset.notice', $user)->with('error', 'Invalid or expired token.');
+            return redirect()->route('reset.notice', $user->uuid)->with('error', 'Invalid or expired token.');
         }
 
         return view('auth.reset-password', compact('user'));
     }
 
-    public function resetPassword(Request $request, User $user)
+    public function resetPassword(Request $request, string $uuid)
     {
         $request->validate([
             'password' => 'required|confirmed',
         ]);
+
+        $user = User::where('uuid', $uuid)->firstOrFail();
 
         if (!$user) {
             return redirect()->back()->with('error', 'User not found.');

@@ -12,13 +12,13 @@
         @if ($categories->count() > 0)
             @foreach ($categories as $category)
                 <tr class="text-center">
-                    <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.categories.show', $category) }}">#{{ $category->id }}</a></td>
+                    <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.categories.show', $category->uuid) }}">#{{ $category->uuid }}</a></td>
                     <td class="p-3 border">{{ $category->name }}</td>
                     <td class="p-3 border">{{ Str::limit($category->description, 15) }}</td>
-                    <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.users.show', $category->admin) }}">{{ $category->admin->name }}</td>
+                    <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.users.show', $category->admin->uuid) }}">{{ $category->admin->name }}</td>
                     <td class="p-3 border">
-                        <button class="bg-blue-500 text-white px-3 py-1 rounded"><a href="{{ route('admin.categories.edit', $category) }}">Update</a></button>
-                        <form action="{{ route('admin.categories.delete', $category) }}" method="POST" class="inline">
+                        <button class="bg-blue-500 text-white px-3 py-1 rounded"><a href="{{ route('admin.categories.edit', $category->uuid) }}">Update</a></button>
+                        <form action="{{ route('admin.categories.delete', $category->uuid) }}" method="POST" class="inline">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>

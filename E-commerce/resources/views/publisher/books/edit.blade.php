@@ -10,7 +10,7 @@
         <h2 class="text-3xl font-bold text-center mb-6 text-gray-800">Update Book</h2>
 
         <div class="bg-white p-6 rounded-lg shadow-lg">
-            <form action="{{ route('publisher.books.update', $book->id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('publisher.books.update', $book->uuid) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
@@ -38,7 +38,7 @@
                     <select id="category_id" name="category_id" class="w-full p-3 border rounded-lg mt-1" required>
                         <option value="">Select Category</option>
                         @foreach ($categories as $category)
-                            <option @if ($category->id === $book->category_id) selected @endif value="{{ $category->id }}">{{ $category->name }}</option>
+                            <option @if ($category->id === $book->category_id) selected @endif value="{{ $category->uuid }}">{{ $category->name }}</option>
                         @endforeach
                     </select>
                 </div>

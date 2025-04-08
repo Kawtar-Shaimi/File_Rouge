@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreign('book_id')->references('id')->on('books')->onDelete('cascade');
             $table->integer('quantity');
             $table->decimal('total');
+            $table->boolean('is_cancelled')->default(false);
             $table->timestamps();
         });
     }

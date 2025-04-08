@@ -6,6 +6,7 @@ use App\Models\Visit;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
 class TrackVisit
@@ -26,9 +27,10 @@ class TrackVisit
             $last_visit = Visit::where('ip_address', $ip_address)
                 ->where('last_visit', '>', $visitTimout)
                 ->first();
-            
+
             if (!$last_visit) {
                 Visit::create([
+                    'uuid' => Str::uuid(),
                     'ip_address' => $ip_address,
                     'user_agent' => $user_agent,
                     'last_visited_url' => $last_visited_url,

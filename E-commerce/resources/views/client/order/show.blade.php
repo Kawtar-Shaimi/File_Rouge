@@ -102,7 +102,7 @@
                             @if ($order->orderBooks->count() > 0)
                                 @foreach ($order->orderBooks as $orderBook)
                                     <tr class="text-center">
-                                        <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('books.show', $orderBook->book) }}">{{ $orderBook->book->name }}</a></td>
+                                        <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('books.show', $orderBook->book->uuid) }}">{{ $orderBook->book->name }}</a></td>
                                         <td class="p-3 border truncate w-40">{{ Str::limit($orderBook->book->description, 15) }}</td>
                                         <td class="p-3 border text-green-600 font-bold">${{ $orderBook->book->price }}</td>
                                         <td class="p-3 border">{{ $orderBook->book->category->name }}</td>

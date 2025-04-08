@@ -12,7 +12,7 @@
                 <table class="w-full border-collapse">
                     <tr>
                         <td class="p-3 border">Review ID</td>
-                        <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.reviews.show', $review) }}">#{{ $review->id }}</a></td>
+                        <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.reviews.show', $review->uuid) }}">#{{ $review->uuid }}</a></td>
                     </tr>
                     <tr>
                         <td class="p-3 border">Review Content</td>
@@ -24,7 +24,7 @@
                     </tr>
                     <tr>
                         <td class="p-3 border">Reviewed By</td>
-                        <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.users.show', $review->client) }}">#{{ $review->client->name }}</a></td>
+                        <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.users.show', $review->client->uuid) }}">#{{ $review->client->name }}</a></td>
                     </tr>
                     <tr>
                         <td class="p-3 border">Creationt Date</td>
@@ -37,7 +37,7 @@
                     <tr>
                         <td class="p-3 border">Actions</td>
                         <td class="p-3 border">
-                            <form action="{{ route('admin.reviews.delete', $review) }}" method="POST" class="inline">
+                            <form action="{{ route('admin.reviews.delete', $review->uuid) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>

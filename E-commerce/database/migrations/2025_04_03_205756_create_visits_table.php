@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('visits', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique();
             $table->string('ip_address');
             $table->string('user_agent');
             $table->string('last_visited_url');

@@ -17,8 +17,8 @@
             <h2 class="text-2xl font-bold mb-4">Mon Panier</h2>
             @if ($cart)
                 @foreach ( $cart->cartBooks as $cartBook)
-                    <div id="book-{{ $cartBook->book->id }}" class="border-b pb-4 mb-4 flex items-center justify-between">
-                        <a href="{{ route('books.show', $cartBook->book) }}">
+                    <div id="book-{{ $cartBook->book->uuid }}" class="border-b pb-4 mb-4 flex items-center justify-between">
+                        <a href="{{ route('books.show', $cartBook->book->uuid) }}">
                             <div class="flex items-center">
                                 <img src="{{ asset('storage/' . $cartBook->book->image) }}" alt="{{ $cartBook->book->name }}" class="w-24 h-24 rounded-md mr-4">
                                 <div>
@@ -30,10 +30,10 @@
                         </a>
                         <div id="actions">
                             <div class="mt-4 flex items-center justify-end">
-                                <button id="removeFromCartBtn-{{ $cartBook->book->id }}" class="w-1/5 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white font-bold py-2 px-4 rounded-s-lg" onclick="removeFromCart({{ $cartBook->book->id }})" {{ $cartBook->quantity === 1 ? "disabled" : "" }}>-</button>
-                                <input type="text" id="quantity-{{ $cartBook->book->id }}" name="quantity" value="{{ $cartBook->quantity }}" class="w-1/5 text-center p-2 bg-gray-100 text-gray-900" readonly disabled>
-                                <button id="addOneToCartBtn-{{ $cartBook->book->id }}" class="w-1/5 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white font-bold py-2 px-4 rounded-e-lg" onclick="addOneToCart({{ $cartBook->book->id }}, {{ $cartBook->book->stock }})">+</button>
-                                <button id="deleteFromCartBtn-{{ $cartBook->book->id }}" class="text-red-500 ml-4" onclick="deleteFromCart({{ $cartBook->book->id }})">🗑</button>
+                                <button id="removeFromCartBtn-{{ $cartBook->book->uuid }}" class="w-1/5 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white font-bold py-2 px-4 rounded-s-lg" onclick="removeFromCart('{{ $cartBook->book->uuid }}')" {{ $cartBook->quantity === 1 ? "disabled" : "" }}>-</button>
+                                <input type="text" id="quantity-{{ $cartBook->book->uuid }}" name="quantity" value="{{ $cartBook->quantity }}" class="w-1/5 text-center p-2 bg-gray-100 text-gray-900" readonly disabled>
+                                <button id="addOneToCartBtn-{{ $cartBook->book->uuid }}" class="w-1/5 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white font-bold py-2 px-4 rounded-e-lg" onclick="addOneToCart('{{ $cartBook->book->uuid }}', {{ $cartBook->book->stock }})">+</button>
+                                <button id="deleteFromCartBtn-{{ $cartBook->book->uuid }}" class="text-red-500 ml-4" onclick="deleteFromCart('{{ $cartBook->book->uuid }}')">🗑</button>
                             </div>
                         </div>
                     </div>
@@ -51,9 +51,9 @@
             <h2 class="text-xl font-bold mb-4">Récapitulatif</h2>
             @if ($cart)
                 @foreach ( $cart->cartBooks as $cartBook)
-                    <div id="total_book_container_{{ $cartBook->book->id }}" class="flex justify-between mb-2">
+                    <div id="total_book_container_{{ $cartBook->book->uuid }}" class="flex justify-between mb-2">
                         <span>{{ $cartBook->book->name }}:</span>
-                        <span id="total_book_price_{{ $cartBook->book->id }}" class="text-green-500">${{ number_format($cartBook->book->price * $cartBook->quantity, 2) }}</span>
+                        <span id="total_book_price_{{ $cartBook->book->uuid }}" class="text-green-500">${{ number_format($cartBook->book->price * $cartBook->quantity, 2) }}</span>
                     </div>
                 @endforeach
                 <div class="flex justify-between font-bold text-lg">
