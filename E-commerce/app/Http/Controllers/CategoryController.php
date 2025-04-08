@@ -18,13 +18,9 @@ class CategoryController extends Controller
 
     public function index()
     {
-        try {
-            $categories = Category::with('admin')->paginate(10);
+        $categories = Category::with('admin')->paginate(10);
 
-            return view('admin.categories.index', compact('categories'));
-        }catch (Exception $e) {
-            return redirect()->back()->with('error', 'Error while getting categories try again later.');
-        }
+        return view('admin.categories.index', compact('categories'));
     }
 
     public function show(string $uuid)
@@ -41,27 +37,23 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
-        try {
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'description' => 'required|string'
-            ]);
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string'
+        ]);
 
-            $category = Category::create([
-                'uuid' => Str::uuid(),
-                'name' => $request->name,
-                'description' => $request->description,
-                'admin_id' => Auth::guard('admin')->id()
-            ]);
+        $category = Category::create([
+            'uuid' => Str::uuid(),
+            'name' => $request->name,
+            'description' => $request->description,
+            'admin_id' => Auth::guard('admin')->id()
+        ]);
 
-            if (!$category) {
-                return back()->with('error', 'Category not created.');
-            }
-
-            return redirect()->route('admin.categories.index')->with('success', 'Category created successfully.');
-        }catch (Exception $e) {
-            return redirect()->back()->with('error', 'Error while creating category try again later.');
+        if (!$category) {
+            return back()->with('error', 'Category not created.');
         }
+
+        return redirect()->route('admin.categories.index')->with('success', 'Category created successfully.');
     }
 
     public function edit(string $uuid)
@@ -72,43 +64,35 @@ class CategoryController extends Controller
 
     public function update(Request $request, string $uuid)
     {
-        try {
-            $category = Category::where('uuid', $uuid)->firstOrFail();
+        $category = Category::where('uuid', $uuid)->firstOrFail();
 
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'description' => 'required|string'
-            ]);
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string'
+        ]);
 
-            $isUpdated = $category->update([
-                'name' => $request->name,
-                'description' => $request->description
-            ]);
+        $isUpdated = $category->update([
+            'name' => $request->name,
+            'description' => $request->description
+        ]);
 
-            if (!$isUpdated) {
-                return back()->with('error', 'Category not updated.');
-            }
-
-            return redirect()->route('admin.categories.index')->with('success', 'Category updated successfully.');
-        }catch (Exception $e) {
-            return redirect()->back()->with('error', 'Error while updating category try again later.');
+        if (!$isUpdated) {
+            return back()->with('error', 'Category not updated.');
         }
+
+        return redirect()->route('admin.categories.index')->with('success', 'Category updated successfully.');
     }
 
     public function destroy(string $uuid)
     {
-        try {
-            $category = Category::where('uuid', $uuid)->firstOrFail();
+        $category = Category::where('uuid', $uuid)->firstOrFail();
 
-            $isDeleted = $category->delete();
+        $isDeleted = $category->delete();
 
-            if (!$isDeleted) {
-                return back()->with('error', 'Category not deleted.');
-            }
-
-            return redirect()->route('admin.categories.index')->with('success', 'Category deleted successfully.');
-        }catch (Exception $e) {
-            return redirect()->back()->with('error', 'Error while deleting category try again later.');
+        if (!$isDeleted) {
+            return back()->with('error', 'Category not deleted.');
         }
+
+        return redirect()->route('admin.categories.index')->with('success', 'Category deleted successfully.');
     }
 }

@@ -22,12 +22,8 @@ class UserController extends Controller
 
     public function index()
     {
-        try {
-            $users = User::paginate(10);
-            return view('admin.users.index', compact('users'));
-        }catch (Exception $e) {
-            return redirect()->back()->with('error', value: 'Error while getting users try again later.');
-        }
+        $users = User::paginate(10);
+        return view('admin.users.index', compact('users'));
     }
 
     public function show(string $uuid)
@@ -43,33 +39,29 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        /* try { */
-            $request->validate([
-                'name' => 'required',
-                'email' => 'required|email|unique:users,email',
-                'phone' => 'required|unique:users,phone',
-                'password' => 'required|confirmed',
-                'role' => 'required|string|in:admin,publisher'
-            ]);
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email',
+            'phone' => 'required|unique:users,phone',
+            'password' => 'required|confirmed',
+            'role' => 'required|string|in:admin,publisher'
+        ]);
 
-            $user = User::create([
-                'uuid' => Str::uuid(),
-                'name' => $request->name,
-                'email' => $request->email,
-                'phone' => $request->phone,
-                'email_verified_at' => now(),
-                'password' => Hash::make($request->password),
-                'role' => $request->role
-            ]);
+        $user = User::create([
+            'uuid' => Str::uuid(),
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'email_verified_at' => now(),
+            'password' => Hash::make($request->password),
+            'role' => $request->role
+        ]);
 
-            if (!$user) {
-                return back()->with('error', 'User not created.');
-            }
+        if (!$user) {
+            return back()->with('error', 'User not created.');
+        }
 
-            return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
-        /* }catch (Exception $e) {
-            return redirect()->back()->with('error', value: 'Error while creating user try again later.');
-        } */
+        return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
     }
 
     public function edit(string $uuid)
@@ -80,81 +72,70 @@ class UserController extends Controller
 
     public function update(Request $request, string $uuid)
     {
-        try {
-            $user = User::where('uuid', $uuid)->firstOrFail();
+        $user = User::where('uuid', $uuid)->firstOrFail();
 
-            $request->validate([
-                'role' => 'required|string|in:admin,publisher,client'
-            ]);
+        $request->validate([
+            'role' => 'required|string|in:admin,publisher,client'
+        ]);
 
-            $isUpdated = $user->update([
-                'role' => $request->role
-            ]);
+        $isUpdated = $user->update([
+            'role' => $request->role
+        ]);
 
-            if (!$isUpdated) {
-                return back()->with('error', 'User role not updated.');
-            }
-
-            return redirect()->route('admin.users.index')->with('success', 'User role updated successfully.');
-        }catch (Exception $e) {
-            return redirect()->back()->with('error', value: 'Error while updating user role try again later.');
+        if (!$isUpdated) {
+            return back()->with('error', 'User role not updated.');
         }
+
+        return redirect()->route('admin.users.index')->with('success', 'User role updated successfully.');
     }
 
     public function destroy(string $uuid)
     {
-        try {
-            $user = User::where('uuid', $uuid)->firstOrFail();
+        $user = User::where('uuid', $uuid)->firstOrFail();
 
-            $isDeleted = $user->delete();
+        $isDeleted = $user->delete();
 
-            if (!$isDeleted) {
-                return back()->with('error', 'User not deleted.');
-            }
-
-            return redirect()->route('admin.users.index')->with('success', 'User deleted successfully.');
-        }catch (Exception $e) {
-            return redirect()->back()->with('error', value: 'Error while deleting user try again later.');
+        if (!$isDeleted) {
+            return back()->with('error', 'User not deleted.');
         }
+
+        return redirect()->route('admin.users.index')->with('success', 'User deleted successfully.');
     }
 
-    public function changePasswordView(string $uuid){
+    public function changePasswordView(string $uuid)
+    {
         $user = User::where('uuid', $uuid)->firstOrFail();
         return view('users.change-password', compact('user'));
     }
 
     public function changePassword(Request $request, string $uuid)
     {
-        try {
-            $user = User::where('uuid', $uuid)->firstOrFail();
+        $user = User::where('uuid', $uuid)->firstOrFail();
 
-            $request->validate([
-                'old_password' => 'required',
-                'new_password' => 'required|confirmed'
-            ]);
+        $request->validate([
+            'old_password' => 'required',
+            'new_password' => 'required|confirmed'
+        ]);
 
-            if (!Hash::check($request->old_password, $user->password)) {
-                return back()->with('error', 'Old password is incorrect.');
-            }
-
-            $isUpdated = $user->update([
-                'password' => Hash::make($request->new_password)
-            ]);
-
-            if (!$isUpdated) {
-                return back()->with('error', 'Password not updated.');
-            }
-
-            Mail::to($user->email)->send(new PasswordUpdated($user, $user->role));
-
-            return match ($user->role) {
-                'admin' => redirect()->route('admin.profile')->with('success', 'Password updated successfully.'),
-                'publisher' => redirect()->route('publisher.profile')->with('success', 'Password updated successfully.'),
-                default => redirect()->route('client.index')->with('success', 'Password updated successfully.')
-            };
-        }catch (Exception $e) {
-            return redirect()->back()->with('error', value: 'Error while updating password try again later.');
+        if (!Hash::check($request->old_password, $user->password)) {
+            return back()->with('error', 'Old password is incorrect.');
         }
+
+        $isUpdated = $user->update([
+            'password' => Hash::make($request->new_password)
+        ]);
+
+        if (!$isUpdated) {
+            return back()->with('error', 'Password not updated.');
+        }
+
+        Mail::to($user->email)->send(new PasswordUpdated($user, $user->role));
+
+        return match ($user->role) {
+            'admin' => redirect()->route('admin.profile')->with('success', 'Password updated successfully.'),
+            'publisher' => redirect()->route('publisher.profile')->with('success', 'Password updated successfully.'),
+            default => redirect()->route('client.index')->with('success', 'Password updated successfully.')
+        };
     }
 
     public function editProfile(string $uuid)
@@ -199,11 +180,5 @@ class UserController extends Controller
 
             return redirect()->route('verify.notice', $user->uuid)->with('success', 'Profile updated successfully, please verify your new email address.');
         }
-
-        return match ($user->role) {
-            'admin' => redirect()->route('admin.profile')->with('success', 'Profile updated successfully'),
-            'publisher' => redirect()->route('publisher.profile')->with('success', 'Profile updated successfully'),
-            default => redirect()->route('client.index')->with('success', 'Profile updated successfully')
-        };
     }
 }

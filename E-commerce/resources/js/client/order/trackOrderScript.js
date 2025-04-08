@@ -1,4 +1,4 @@
-import { showAlert } from './showAlert';
+import { showAlert } from '../../showAlert';
 
 $(document).ready(function () {
     $('#track-btn').click(function () {

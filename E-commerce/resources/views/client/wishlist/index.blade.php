@@ -4,9 +4,9 @@
     @vite([
         'resources/css/app.css',
         'resources/js/app.js',
-        'resources/js/addOneToCart.js',
-        'resources/js/removeFromCart.js',
-        'resources/js/deleteFromWishlist.js'
+        'resources/js/client/cart/addOneToCart.js',
+        'resources/js/client/cart/removeFromCart.js',
+        'resources/js/client/wishlist/deleteFromWishlist.js'
     ])
 @endsection
 

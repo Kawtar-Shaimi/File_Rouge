@@ -1,4 +1,4 @@
-import { showAlert } from './showAlert';
+import { showAlert } from '../../showAlert';
 
 function deleteFromWishlist(bookId) {
     const csrfToken = $('meta[name="csrf-token"]').attr('content');

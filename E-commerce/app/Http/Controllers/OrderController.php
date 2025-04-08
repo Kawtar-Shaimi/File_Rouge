@@ -88,7 +88,7 @@ class OrderController extends Controller
             'client_id' => Auth::guard('client')->id(),
         ]);
 
-        $client_id= env('PAYPAL_CLIENT_ID');
+        $client_id = env('PAYPAL_CLIENT_ID');
 
         session()->put('client_id', $client_id);
 
@@ -207,16 +207,12 @@ class OrderController extends Controller
 
     public function successOrder(Request $request)
     {
-        try {
-            if (!$request->session()->has('order_number')) {
-                return redirect()->route('home')->with('error', 'You didnt make any order');
-            }
-            return view('client.payment.success', [
-                'order_number' => $request->session()->get('order_number'),
-            ]);
-        } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Error while getting order number try again later.');
+        if (!$request->session()->has('order_number')) {
+            return redirect()->route('home')->with('error', 'You didnt make any order');
         }
+        return view('client.payment.success', [
+            'order_number' => $request->session()->get('order_number'),
+        ]);
     }
 
     public function show(string $uuid)
@@ -232,36 +228,29 @@ class OrderController extends Controller
 
     public function getOrderStatus(Request $request)
     {
-        try {
-            $orderNumber = $request->order_number;
+        $orderNumber = $request->order_number;
 
-            if (!$orderNumber) {
-                return response()->json([
-                    'status' => 'faild',
-                    'message' => "Enter an order number please",
-                ], 500)->header('Content-Type', 'application/json');
-            }
-
-            $query = Order::where('order_number', $orderNumber);
-
-            if (!$query->exists()) {
-                return response()->json([
-                    'status' => 'faild',
-                    'message' => "Order Number Not Found",
-                ], 404)->header('Content-Type', 'application/json');
-            }
-
-            return response()->json([
-                'status' => 'success',
-                'data' => [
-                    'status' => $query->first()->status,
-                ],
-            ], 200)->header('Content-Type', 'application/json');
-        } catch (Exception $e) {
+        if (!$orderNumber) {
             return response()->json([
                 'status' => 'faild',
-                'message' => 'Error while getting order status try again later.',
+                'message' => "Enter an order number please",
             ], 500)->header('Content-Type', 'application/json');
         }
+
+        $query = Order::where('order_number', $orderNumber);
+
+        if (!$query->exists()) {
+            return response()->json([
+                'status' => 'faild',
+                'message' => "Order Number Not Found",
+            ], 404)->header('Content-Type', 'application/json');
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'status' => $query->first()->status,
+            ],
+        ], 200)->header('Content-Type', 'application/json');
     }
 }

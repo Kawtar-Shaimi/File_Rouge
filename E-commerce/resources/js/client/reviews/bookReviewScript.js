@@ -1,4 +1,4 @@
-import { showAlert } from './showAlert';
+import { showAlert } from '../../showAlert';
 
 function rateBook() {
     let rating = 0;

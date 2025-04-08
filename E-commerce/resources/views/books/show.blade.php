@@ -6,12 +6,12 @@
     @vite([
         'resources/css/app.css',
         'resources/js/app.js',
-        'resources/js/addToCart.js',
-        'resources/js/addOneToCart.js',
-        'resources/js/removeFromCart.js',
-        'resources/js/addToWishlist.js',
-        'resources/js/removeFromWishlist.js',
-        'resources/js/bookReviewScript.js'
+        'resources/js/client/cart/addToCart.js',
+        'resources/js/client/cart/addOneToCart.js',
+        'resources/js/client/cart/removeFromCart.js',
+        'resources/js/client/wishlist/addToWishlist.js',
+        'resources/js/client/wishlist/removeFromWishlist.js',
+        'resources/js/client/reviews/bookReviewScript.js'
     ])
 @endsection
 

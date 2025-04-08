@@ -20,96 +20,74 @@ class WishlistController extends Controller
 
     public function index()
     {
-        try {
-            $wishlist = Wishlist::where('client_id', Auth::guard('client')->id())->first();
+        $wishlist = Wishlist::where('client_id', Auth::guard('client')->id())->first();
 
-            if ($wishlist) {
-                $wishlist->load('wishlistBooks.book');
-            }
-
-            return view('client.wishlist.index', compact('wishlist'));
-        } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Error while getting wishlist try again later.');
+        if ($wishlist) {
+            $wishlist->load('wishlistBooks.book');
         }
+
+        return view('client.wishlist.index', compact('wishlist'));
     }
 
     public function addToWishlist(string $uuid)
     {
-        try{
-            $book = Book::where('uuid', $uuid)->firstOrFail();
+        $book = Book::where('uuid', $uuid)->firstOrFail();
 
-            $wishlist = Wishlist::where('client_id' , Auth::guard('client')->id())->first();
+        $wishlist = Wishlist::where('client_id', Auth::guard('client')->id())->first();
 
-            if (!$wishlist) {
+        if (!$wishlist) {
 
-                $wishlist = Wishlist::create([
-                    'uuid' => Str::uuid(),
-                    'client_id' => Auth::guard('client')->id(),
-                ]);
-
-            }
-
-            $wishlistBook = WishlistBook::create([
-                'wishlist_id' => $wishlist->id,
-                'book_id' => $book->id,
+            $wishlist = Wishlist::create([
+                'uuid' => Str::uuid(),
+                'client_id' => Auth::guard('client')->id(),
             ]);
+        }
 
-            if (!$wishlistBook) {
-                return response()->json([
-                    'status' => 'faild',
-                    'message' => 'Error while adding book try again later.',
-                ], 500)->header('Content-Type', 'application/json');
-            }
+        $wishlistBook = WishlistBook::create([
+            'wishlist_id' => $wishlist->id,
+            'book_id' => $book->id,
+        ]);
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Book added to wishlist successfully',
-            ], 200)->header('Content-Type', 'application/json');
-
-        }catch(Exception $e) {
+        if (!$wishlistBook) {
             return response()->json([
                 'status' => 'faild',
-                'message' => 'Error while adding book to wishlist',
+                'message' => 'Error while adding book try again later.',
             ], 500)->header('Content-Type', 'application/json');
         }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Book added to wishlist successfully',
+        ], 200)->header('Content-Type', 'application/json');
     }
 
     public function removeFromWishlist(string $uuid)
     {
-        try {
-            $book = Book::where('uuid', $uuid)->firstOrFail();
+        $book = Book::where('uuid', $uuid)->firstOrFail();
 
-            $count = 0;
-            $wishlist = Wishlist::where('client_id', Auth::guard('client')->id())->first();
+        $count = 0;
+        $wishlist = Wishlist::where('client_id', Auth::guard('client')->id())->first();
 
-            if (!$wishlist) {
-                return response()->json([
-                    'status' => 'faild',
-                    'message' => 'wishlist not found try again later.',
-                ], 404)->header('Content-Type', 'application/json');
-            }
-
-            $wishlist->wishlistBooks()->where('book_id', $book->id)->delete();
-            $count = $wishlist->wishlistBooks()->count();
-
-            if ($count === 0) {
-                $wishlist->delete();
-            }
-
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Book removed from wishlist successfully',
-                'data' => [
-                    'count' => $count
-                ],
-            ],200)->header('Content-Type', 'application/json');
-
-        }catch(Exception $e) {
+        if (!$wishlist) {
             return response()->json([
                 'status' => 'faild',
-                'message' => 'Error while removing book from wishlist',
-            ], 500)->header('Content-Type', 'application/json');
+                'message' => 'wishlist not found try again later.',
+            ], 404)->header('Content-Type', 'application/json');
         }
-    }
 
+        $wishlist->wishlistBooks()->where('book_id', $book->id)->delete();
+        $count = $wishlist->wishlistBooks()->count();
+
+        if ($count === 0) {
+            $wishlist->delete();
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Book removed from wishlist successfully',
+            'data' => [
+                'count' => $count
+            ],
+        ], 200)->header('Content-Type', 'application/json');
+    }
 }

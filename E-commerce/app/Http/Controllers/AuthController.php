@@ -37,64 +37,60 @@ class AuthController extends Controller
         return view('auth.register');
     }
 
-    public function login(Request $request){
-        try {
-            $validatedData = $request->validate([
-                'email' => 'required|email',
-                'password' => 'required'
-            ]);
+    public function login(Request $request)
+    {
+        $validatedData = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
 
-            $remember = $request->has('remember');
+        $remember = $request->has('remember');
 
-            $guards = ['client', 'publisher', 'admin'];
+        $guards = ['client', 'publisher', 'admin'];
 
-            foreach ($guards as $guard) {
-                if (Auth::guard($guard)->attempt($validatedData, $remember)) {
+        foreach ($guards as $guard) {
+            if (Auth::guard($guard)->attempt($validatedData, $remember)) {
 
-                    $user = Auth::guard($guard)->user();
+                $user = Auth::guard($guard)->user();
 
-                    Auth::guard($guard)->login($user, $remember);
+                Auth::guard($guard)->login($user, $remember);
 
-                    return match ($guard) {
-                        'client' => redirect()->route('home'),
-                        'publisher' => redirect()->route('publisher.index'),
-                        'admin' => redirect()->route('admin.index'),
-                        default => redirect()->back()->with('error', 'Error while logging in, try again later.')
-                    };
-                }
+                return match ($guard) {
+                    'client' => redirect()->route('home'),
+                    'publisher' => redirect()->route('publisher.index'),
+                    'admin' => redirect()->route('admin.index'),
+                    default => redirect()->back()->with('error', 'Error while logging in, try again later.')
+                };
             }
-
-            return back()->withErrors(['email' => 'Invalid credentials.']);
-
-        } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Error while logging in, try again later.');
         }
+
+        return back()->withErrors(['email' => 'Invalid credentials.']);
     }
 
-    public function register(Request $request){
-        try {
-            $validatedData = $request->validate([
-                'name' => 'required',
-                'email' => 'required|email|unique:users,email',
-                'phone' => 'required|unique:users,phone',
-                'role' => 'required|in:client,publisher',
-                'password' => 'required|confirmed'
-            ]);
+    public function register(Request $request)
+    {
+        $validatedData = $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email',
+            'phone' => 'required|unique:users,phone',
+            'role' => 'required|in:client,publisher',
+            'password' => 'required|confirmed'
+        ]);
 
-            $validatedData['password'] = Hash::make($validatedData['password']);
-            $validatedData['uuid'] = Str::uuid();
+        $validatedData['password'] = Hash::make($validatedData['password']);
+        $validatedData['uuid'] = Str::uuid();
 
-            $remember = $request->has('remember');
+        $remember = $request->has('remember');
 
-            switch ($request->role) {
-                case 'client':{
+        switch ($request->role) {
+            case 'client': {
                     $user = Client::create($validatedData);
 
                     Auth::guard('client')->login($user, $remember);
 
                     break;
                 }
-                case 'publisher':{
+            case 'publisher': {
                     $user = Publisher::create($validatedData);
 
                     Auth::guard('publisher')->login($user, $remember);
@@ -102,42 +98,34 @@ class AuthController extends Controller
                     break;
                 }
 
-                default:{
+            default: {
                     return redirect()->back()->with('error', 'Error while register try again later.');
                 }
-            }
-
-
-            $token = $this->generateEmailVerificationToken($user->uuid);
-
-
-            $url = route('verify.email', [
-                'uuid' => $user->uuid,
-                'token' => $token,
-            ]);
-
-            Mail::to($user->email)->send(new VerifyEmailLink($url));
-
-            return redirect()->route('verify.notice', $user->uuid)->with('success', 'Registration successful.');
-
-        }catch (Exception $e) {
-            return redirect()->back()->with('error', 'Error while register try again later.');
         }
+
+
+        $token = $this->generateEmailVerificationToken($user->uuid);
+
+
+        $url = route('verify.email', [
+            'uuid' => $user->uuid,
+            'token' => $token,
+        ]);
+
+        Mail::to($user->email)->send(new VerifyEmailLink($url));
+
+        return redirect()->route('verify.notice', $user->uuid)->with('success', 'Registration successful.');
     }
 
-    public function logout($guard){
-        try {
-            if (!in_array($guard, ['client', 'publisher', 'admin'])) {
-                return redirect()->back()->with('error', 'Invalid user type for logout.');
-            }
-
-            Auth::guard($guard)->logout();
-
-            return redirect()->route('loginView');
-
-        }catch (Exception $e) {
-            return redirect()->back()->with('error', 'Error while logout try again later.');
+    public function logout($guard)
+    {
+        if (!in_array($guard, ['client', 'publisher', 'admin'])) {
+            return redirect()->back()->with('error', 'Invalid user type for logout.');
         }
+
+        Auth::guard($guard)->logout();
+
+        return redirect()->route('loginView');
     }
 
     public static function generateEmailVerificationToken(string $uuid)
@@ -158,7 +146,8 @@ class AuthController extends Controller
         return $token;
     }
 
-    public function verifyEmail(string $uuid, $token){
+    public function verifyEmail(string $uuid, $token)
+    {
         $user = User::where('uuid', $uuid)->firstOrFail();
 
         if (!$user) {
@@ -166,8 +155,8 @@ class AuthController extends Controller
         }
 
         $hash = EmailVerificationToken::where('user_id', $user->id)
-        ->where('expires_at', '>', now())
-        ->first();
+            ->where('expires_at', '>', now())
+            ->first();
 
         if (!$token || !hash_equals($hash->token, hash('sha256', $token))) {
             return redirect()->route('verify.notice', $user->uuid)->with('error', 'Invalid or expired token.');
@@ -192,7 +181,8 @@ class AuthController extends Controller
         return redirect()->route('home')->with('success', 'Email verified successfully.');
     }
 
-    public function verifyNotice(string $uuid){
+    public function verifyNotice(string $uuid)
+    {
         $user = User::where('uuid', $uuid)->firstOrFail();
 
         if (!$user) {
@@ -206,7 +196,8 @@ class AuthController extends Controller
         return view('auth.verify-notice', compact('user'));
     }
 
-    public function resendVerificationEmail(string $uuid){
+    public function resendVerificationEmail(string $uuid)
+    {
         $user = User::where('uuid', $uuid)->firstOrFail();
 
         if (!$user) {
@@ -317,8 +308,8 @@ class AuthController extends Controller
         }
 
         $hash = PasswordResetToken::where('user_id', $user->id)
-        ->where('expires_at', '>', now())
-        ->first();
+            ->where('expires_at', '>', now())
+            ->first();
 
         if (!$token || !hash_equals($hash->token, hash('sha256', $token))) {
             return redirect()->route('reset.notice', $user->uuid)->with('error', 'Invalid or expired token.');

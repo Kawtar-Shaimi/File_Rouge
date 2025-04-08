@@ -4,7 +4,7 @@
     @vite([
         'resources/css/app.css',
         'resources/js/app.js',
-        'resources/js/cartScript.js'
+        'resources/js/client/cart/cartScript.js'
     ])
 @endsection
 

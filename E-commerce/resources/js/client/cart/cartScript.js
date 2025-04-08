@@ -1,4 +1,4 @@
-import { showAlert } from './showAlert';
+import { showAlert } from '../../showAlert';
 
 function addOneToCart(bookId, stock) {
     const csrfToken = $('meta[name="csrf-token"]').attr('content');

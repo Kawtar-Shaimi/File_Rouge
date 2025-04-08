@@ -1,25 +1,26 @@
-import { showAlert } from './showAlert';
+import { showAlert } from '../../showAlert';
 
-function addOneToCart(bookId, stock) {
+function removeFromCart(bookId) {
     const csrfToken = $('meta[name="csrf-token"]').attr('content');
-    let quantity = parseInt($(`#quantity-${bookId}`).val()) + 1;
-
-    if (quantity <= stock) {
-        if (quantity > 1) {
-            $(`#removeFromCartBtn-${bookId}`).prop('disabled', false);
-        }
-
-        const url = `/client/cart/add/${bookId}`;
+    let quantity = parseInt($(`#quantity-${bookId}`).val());
+    if (quantity  > 1) {
+        quantity -= 1;
+        const url = `/client/cart/remove/${bookId}`;
         const data = {
             quantity: 1,
-            _token: csrfToken
+            _token: csrfToken,
+            _method: 'DELETE'
         };
+
         $.ajax({
             url: url,
             type: 'POST',
             data: data,
             success: function(response, _, xhr) {
                 if (xhr.status === 200) {
+                    if (quantity === 1) {
+                        $(`#removeFromCartBtn-${bookId}`).prop('disabled', true);
+                    }
                     $(`#quantity-${bookId}`).val(quantity);
                     showAlert("success", response.message)
                 }
@@ -36,9 +37,10 @@ function addOneToCart(bookId, stock) {
                 }
             }
         });
-    } else {
-        showAlert("error", "You reached the stock limit");
+    }else{
+        $(`#removeFromCartBtn-${bookId}`).prop('disabled', true);
     }
+
 }
 
-window.addOneToCart = addOneToCart;
+window.removeFromCart = removeFromCart;

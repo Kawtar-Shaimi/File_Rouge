@@ -16,29 +16,21 @@ class VisitController extends Controller
 
     public function index()
     {
-        try {
-            $visits = Visit::paginate(10);
+        $visits = Visit::paginate(10);
 
-            return view('admin.visits.index', compact('visits'));
-        }catch (Exception $e) {
-            return redirect()->back()->with('error', 'Error while getting visits try again later.');
-        }
+        return view('admin.visits.index', compact('visits'));
     }
 
     public function destroy(string $uuid)
     {
-        try {
-            $visit = Visit::where('uuid', $uuid)->firstOrFail();
-            
-            $isDeleted = $visit->delete();
+        $visit = Visit::where('uuid', $uuid)->firstOrFail();
 
-            if (!$isDeleted) {
-                return back()->with('error', 'Visit not deleted.');
-            }
+        $isDeleted = $visit->delete();
 
-            return redirect()->route('admin.visits.index')->with('success', 'Visit deleted successfully.');
-        }catch (Exception $e) {
-            return redirect()->back()->with('error', 'Error while deleting visit try again later.');
+        if (!$isDeleted) {
+            return back()->with('error', 'Visit not deleted.');
         }
+
+        return redirect()->route('admin.visits.index')->with('success', 'Visit deleted successfully.');
     }
 }

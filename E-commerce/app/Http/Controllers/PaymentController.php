@@ -25,24 +25,16 @@ class PaymentController extends Controller
 
     public function index()
     {
-        try {
-            $payments = Payment::with( 'order.client')->paginate(10);
+        $payments = Payment::with('order.client')->paginate(10);
 
-            return view('admin.payments.index', compact('payments'));
-        }catch (Exception $e) {
-            return redirect()->back()->with('error', 'Error while getting payments try again later.');
-        }
+        return view('admin.payments.index', compact('payments'));
     }
 
     public function show(string $uuid)
     {
-        try {
-            $payment = Payment::where('uuid', $uuid)->firstOrFail();
-            $payment->load('order', 'order.client');
-            return view('admin.payments.show', compact('payment'));
-        }catch (Exception $e) {
-            return redirect()->back()->with('error', 'Error while getting payment try again later.');
-        }
+        $payment = Payment::where('uuid', $uuid)->firstOrFail();
+        $payment->load('order', 'order.client');
+        return view('admin.payments.show', compact('payment'));
     }
 
     public function edit(string $uuid)
@@ -53,43 +45,35 @@ class PaymentController extends Controller
 
     public function update(Request $request, string $uuid)
     {
-        try {
-            $payment = Payment::where('uuid', $uuid)->firstOrFail();
+        $payment = Payment::where('uuid', $uuid)->firstOrFail();
 
-            $request->validate([
-                'status' => 'required|string|in:pending,paid,failed'
-            ]);
+        $request->validate([
+            'status' => 'required|string|in:pending,paid,failed'
+        ]);
 
-            $isUpdated = $payment->update([
-                'status' => $request->status
-            ]);
+        $isUpdated = $payment->update([
+            'status' => $request->status
+        ]);
 
-            if (!$isUpdated) {
-                return back()->with('error', 'Payment status not updated.');
-            }
-
-            return redirect()->route('admin.payments.index')->with('success', 'Payment status updated successfully.');
-        }catch (Exception $e) {
-            return redirect()->back()->with('error', 'Error while updating payment status try again later.');
+        if (!$isUpdated) {
+            return back()->with('error', 'Payment status not updated.');
         }
+
+        return redirect()->route('admin.payments.index')->with('success', 'Payment status updated successfully.');
     }
 
     public function destroy(string $uuid)
     {
 
-        try {
-            $payment = Payment::where('uuid', $uuid)->firstOrFail();
+        $payment = Payment::where('uuid', $uuid)->firstOrFail();
 
-            $isDeleted = $payment->delete();
+        $isDeleted = $payment->delete();
 
-            if (!$isDeleted) {
-                return back()->with('error', 'Payment not deleted.');
-            }
-
-            return redirect()->route('admin.payments.index')->with('success', 'Payment deleted successfully.');
-        }catch (Exception $e) {
-            return redirect()->back()->with('error', 'Error while deleting payment try again later.');
+        if (!$isDeleted) {
+            return back()->with('error', 'Payment not deleted.');
         }
+
+        return redirect()->route('admin.payments.index')->with('success', 'Payment deleted successfully.');
     }
 
     public function confirmCardPayment()
