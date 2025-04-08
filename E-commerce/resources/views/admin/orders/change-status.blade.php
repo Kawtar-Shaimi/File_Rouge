@@ -25,12 +25,13 @@
                             <option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : '' }} {{ $order->status == 'completed' ? 'disabled' : '' }}>Cancelled</option>
                         </select>
                     </div>
+                    <p id="status-error" class="text-red-500 text-xs mt-1"></p>
                     @error('status')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
 
                     <!-- Submit -->
-                    <button type="submit"
+                    <button id="update-status" type="submit"
                         class="w-full bg-purple-400 text-white p-3 rounded-lg hover:bg-blue-700 transition">Update Status</button>
                 </form>
             </div>
@@ -38,4 +39,20 @@
     </div>
 </div>
 
+<script>
+    $(document).ready(function () {
+        $('#status').on('change', function () {
+            var selectedStatus = $(this).val();
+            if (selectedStatus === 'in shipping' || selectedStatus === 'completed' || selectedStatus === 'cancelled') {
+                $('#status-error').text('Cannot change status to "In Shipping", "Completed", or "Cancelled".');
+                $('#status').addClass('border-red-500');
+                $('#update-status').prop('disabled', true);
+            } else {
+                $('#status-error').text('');
+                $('#status').removeClass('border-red-500').addClass('border-green-500');
+                $('#update-status').prop('disabled', false);
+            }
+        });
+    })
+</script>
 @endsection

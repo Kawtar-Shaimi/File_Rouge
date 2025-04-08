@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('books', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
-            $table->string('name');
+            $table->string('name', 150);
             $table->text('description');
             $table->decimal('price');
             $table->integer('stock');

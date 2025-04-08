@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ReviewRequest;
 use App\Models\Book;
 use App\Models\Review;
 use Exception;
@@ -32,14 +33,9 @@ class ReviewController extends Controller
         return view('admin.reviews.show', compact('review'));
     }
 
-    public function store(Request $request, string $uuid)
+    public function store(ReviewRequest $request, string $uuid)
     {
         $book = Book::where('uuid', $uuid)->firstOrFail();
-
-        $request->validate([
-            'rate' => 'required|numeric',
-            'content' => 'required'
-        ]);
 
         $review = Review::create([
             'uuid' => Str::uuid(),
@@ -66,14 +62,9 @@ class ReviewController extends Controller
         ], 200)->header('Content-Type', 'application/json');
     }
 
-    public function update(Request $request, string $uuid)
+    public function update(ReviewRequest $request, string $uuid)
     {
         $review = Review::where('uuid', $uuid)->firstOrFail();
-
-        $request->validate([
-            'rate' => 'required|numeric',
-            'content' => 'required'
-        ]);
 
         $oldRating = $review->rate;
 

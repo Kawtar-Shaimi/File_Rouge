@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
-            $table->string('name');
+            $table->string('name', 100);
             $table->text('description');
             $table->unsignedBigInteger('admin_id');
             $table->foreign('admin_id')->references('id')->on('users');

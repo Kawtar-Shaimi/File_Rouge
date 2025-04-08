@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ChangePasswordRequest;
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateProfileRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Mail\PasswordUpdated;
 use App\Mail\VerifyNewEmail;
 use App\Models\User;
@@ -37,16 +41,8 @@ class UserController extends Controller
         return view('admin.users.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email',
-            'phone' => 'required|unique:users,phone',
-            'password' => 'required|confirmed',
-            'role' => 'required|string|in:admin,publisher'
-        ]);
-
         $user = User::create([
             'uuid' => Str::uuid(),
             'name' => $request->name,
@@ -70,13 +66,9 @@ class UserController extends Controller
         return view('admin.users.edit', compact('user'));
     }
 
-    public function update(Request $request, string $uuid)
+    public function update(UpdateUserRequest $request, string $uuid)
     {
         $user = User::where('uuid', $uuid)->firstOrFail();
-
-        $request->validate([
-            'role' => 'required|string|in:admin,publisher,client'
-        ]);
 
         $isUpdated = $user->update([
             'role' => $request->role
@@ -108,14 +100,9 @@ class UserController extends Controller
         return view('users.change-password', compact('user'));
     }
 
-    public function changePassword(Request $request, string $uuid)
+    public function changePassword(ChangePasswordRequest $request, string $uuid)
     {
         $user = User::where('uuid', $uuid)->firstOrFail();
-
-        $request->validate([
-            'old_password' => 'required',
-            'new_password' => 'required|confirmed'
-        ]);
 
         if (!Hash::check($request->old_password, $user->password)) {
             return back()->with('error', 'Old password is incorrect.');
@@ -144,15 +131,9 @@ class UserController extends Controller
         return view('users.edit', compact('user'));
     }
 
-    public function updateProfile(Request $request, string $uuid)
+    public function updateProfile(UpdateProfileRequest $request, string $uuid)
     {
         $user = User::where('uuid', $uuid)->firstOrFail();
-
-        $request->validate([
-            "name" => "required",
-            "email" => "required|email|unique:users,email," .  $user->id,
-            "phone" => "required|unique:users,phone," .  $user->id,
-        ]);
 
         $isEmailUpdated = $request->email !== $user->email;
 

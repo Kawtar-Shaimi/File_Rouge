@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\ResetPasswordRequest;
+use App\Http\Requests\SendResetPasswordRequest;
 use App\Mail\EmailVerified;
 use App\Mail\PasswordReseted;
 use App\Mail\ResetPasswordToken;
@@ -37,12 +41,9 @@ class AuthController extends Controller
         return view('auth.register');
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $validatedData = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
+        $validatedData = $request->validated();
 
         $remember = $request->has('remember');
 
@@ -67,15 +68,9 @@ class AuthController extends Controller
         return back()->withErrors(['email' => 'Invalid credentials.']);
     }
 
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email',
-            'phone' => 'required|unique:users,phone',
-            'role' => 'required|in:client,publisher',
-            'password' => 'required|confirmed'
-        ]);
+        $validatedData = $request->validated();
 
         $validatedData['password'] = Hash::make($validatedData['password']);
         $validatedData['uuid'] = Str::uuid();
@@ -244,12 +239,8 @@ class AuthController extends Controller
         return $token;
     }
 
-    public function sendResetPassword(Request $request)
+    public function sendResetPassword(SendResetPasswordRequest $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-        ]);
-
         $user = User::where('email', $request->email)->first();
 
         if (!$user) {
@@ -318,12 +309,8 @@ class AuthController extends Controller
         return view('auth.reset-password', compact('user'));
     }
 
-    public function resetPassword(Request $request, string $uuid)
+    public function resetPassword(ResetPasswordRequest $request, string $uuid)
     {
-        $request->validate([
-            'password' => 'required|confirmed',
-        ]);
-
         $user = User::where('uuid', $uuid)->firstOrFail();
 
         if (!$user) {

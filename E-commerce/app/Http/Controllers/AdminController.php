@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ChangeOrderStatusRequest;
 use App\Mail\OrderCancelled;
 use App\Mail\OrderStatusUpdated;
 use App\Models\Category;
@@ -273,7 +274,7 @@ class AdminController extends Controller
         return view('admin.orders.change-status', compact('order'));
     }
 
-    public function changeOrderStatus(Request $request, string $uuid)
+    public function changeOrderStatus(ChangeOrderStatusRequest $request, string $uuid)
     {
         $order = Order::where('uuid', $uuid)->firstOrFail();
 
@@ -283,10 +284,6 @@ class AdminController extends Controller
             'completed' => ["cancelled"],
             'cancelled' => ["completed"],
         ];
-
-        $request->validate([
-            'status' => 'required|string|in:pending,in shipping,completed,cancelled'
-        ]);
 
         if (in_array($order->status, $revertedStatusArr[$request->status])) {
             return back()->with('error', "You cannot revert an order status");

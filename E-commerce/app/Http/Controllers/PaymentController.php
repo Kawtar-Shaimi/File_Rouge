@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PaymentRequest;
 use App\Mail\OrderConfirmation;
 use App\Models\Book;
 use App\Models\Cart;
@@ -43,13 +44,9 @@ class PaymentController extends Controller
         return view('admin.payments.edit', compact('payment'));
     }
 
-    public function update(Request $request, string $uuid)
+    public function update(PaymentRequest $request, string $uuid)
     {
         $payment = Payment::where('uuid', $uuid)->firstOrFail();
-
-        $request->validate([
-            'status' => 'required|string|in:pending,paid,failed'
-        ]);
 
         $isUpdated = $payment->update([
             'status' => $request->status

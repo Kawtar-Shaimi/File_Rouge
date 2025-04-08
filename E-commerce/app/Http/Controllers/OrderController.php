@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\OrderRequest;
 use App\Mail\OrderConfirmation;
 use App\Models\Cart;
 use App\Models\CartBook;
@@ -38,7 +39,7 @@ class OrderController extends Controller
         return $cart;
     }
 
-    private function handleCreditCardPayment(Request $request, $total_price)
+    private function handleCreditCardPayment(OrderRequest $request, $total_price)
     {
         Stripe::setApiKey(env('STRIPE_SECRET'));
 
@@ -95,7 +96,7 @@ class OrderController extends Controller
         return redirect()->route('client.payment.paypal.confirm-paypal');
     }
 
-    private function createOrder(Request $request, $total_price)
+    private function createOrder(OrderRequest $request, $total_price)
     {
         $order = Order::create([
             'uuid' => Str::uuid(),
@@ -119,20 +120,8 @@ class OrderController extends Controller
         return $order;
     }
 
-    public function makeOrder(Request $request)
+    public function makeOrder(OrderRequest $request)
     {
-        $request->validate([
-            'shipping_name' => 'required|string|max:60',
-            'shipping_email' => 'required|email|max:150',
-            'shipping_phone' => 'required|string|max:20',
-            'shipping_address' => 'required|string|max:255',
-            'shipping_country' => 'required|string|max:100',
-            'shipping_city' => 'required|string|max:100',
-            'shipping_postal_code' => 'required|string|max:20',
-            'payment_method' => 'required|in:credit_card,paypal,cash_on_delivery',
-        ]);
-
-
         $cart = $this->getCart();
 
         if ($cart instanceof RedirectResponse) {

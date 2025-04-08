@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreBookRequest;
+use App\Http\Requests\UpdateBookRequest;
 use App\Models\Category;
 use App\Models\Book;
 use Exception;
@@ -21,7 +23,6 @@ class BookController extends Controller
 
     public function index(Request $request)
     {
-
         $search = $request->input('query');
 
         $books = $search ? Book::where('name', 'LIKE', "%{$search}%")
@@ -92,17 +93,8 @@ class BookController extends Controller
         return view('publisher.books.create', compact('categories'));
     }
 
-    public function store(Request $request)
+    public function store(StoreBookRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric',
-            'category_id' => 'required|exists:categories,uuid',
-            'stock' => 'required|numeric',
-            'description' => 'required|string',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
-
         $category = Category::where('uuid', $request->category_id)->firstOrFail();
 
         $image = $request->file('image');
@@ -134,7 +126,7 @@ class BookController extends Controller
         return view('publisher.books.edit', compact('book', 'categories'));
     }
 
-    public function update(Request $request, string $uuid)
+    public function update(UpdateBookRequest $request, string $uuid)
     {
         $request->validate([
             'name' => 'required|string|max:255',

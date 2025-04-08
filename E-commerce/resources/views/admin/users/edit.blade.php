@@ -24,12 +24,13 @@
                             <option @if ($user->role == 'publisher') selected @endif value="publisher">Publisher</option>
                         </select>
                     </div>
+                    <p id="roleErr" class="text-red-500 text-sm mt-1"></p>
                     @error('role')
-                        <p class="text-red-500 text-sm">{{ $message }}</p>
+                        <p class="text-red-500 text-sm my-1">{{ $message }}</p>
                     @enderror
 
                     <!-- Submit -->
-                    <button type="submit"
+                    <button id="update-user" type="submit"
                         class="w-full bg-purple-400 text-white p-3 rounded-lg hover:bg-blue-700 transition">Update</button>
                 </form>
             </div>
@@ -37,4 +38,20 @@
     </div>
 </div>
 
+<script>
+    $(document).ready(function() {
+        $('#role').on('change', function() {
+            var role = $(this).val();
+            if (role === 'admin' || role === 'publisher') {
+                $('#roleErr').text('');
+                $('#role').removeClass('border-red-500').addClass('border-green-500');
+                $('#update-user').prop('disabled', false);
+            } else {
+                $('#roleErr').text('Role must be admin or publisher');
+                $('#role').removeClass('border-green-500').addClass('border-red-500');
+                $('#update-user').prop('disabled', true);
+            }
+        });
+    });
+</script>
 @endsection

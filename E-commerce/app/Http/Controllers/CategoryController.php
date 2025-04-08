@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use Exception;
 use Illuminate\Http\Request;
@@ -35,13 +36,8 @@ class CategoryController extends Controller
         return view('admin.categories.create');
     }
 
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string'
-        ]);
-
         $category = Category::create([
             'uuid' => Str::uuid(),
             'name' => $request->name,
@@ -62,14 +58,9 @@ class CategoryController extends Controller
         return view('admin.categories.edit', compact('category'));
     }
 
-    public function update(Request $request, string $uuid)
+    public function update(CategoryRequest $request, string $uuid)
     {
         $category = Category::where('uuid', $uuid)->firstOrFail();
-
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string'
-        ]);
 
         $isUpdated = $category->update([
             'name' => $request->name,

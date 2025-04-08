@@ -20,8 +20,9 @@
                         <input type="text" id="name" name="name" required value="{{ old('name', $category->name) }}"
                             class="w-full mt-2 p-2 border rounded-lg focus:ring focus:ring-blue-300">
                     </div>
+                    <p id="nameErr" class="text-red-500 mt-1"></p>
                     @error('name')
-                        <p class="text-red-500">{{ $message }}</p>
+                        <p class="text-red-500 mt-1">{{ $message }}</p>
                     @enderror
 
                     <!-- Description -->
@@ -30,12 +31,13 @@
                         <textarea id="description" name="description" rows="3" required
                             class="w-full mt-2 p-2 border rounded-lg focus:ring focus:ring-blue-300">{{ old('description', $category->description) }}</textarea>
                     </div>
+                    <p id="descriptionErr" class="text-red-500 mt-1"></p>
                     @error('description')
-                        <p class="text-red-500">{{ $message }}</p>
+                        <p class="text-red-500 mt-1">{{ $message }}</p>
                     @enderror
 
                     <!-- Submit -->
-                    <button type="submit"
+                    <button id="update-category" type="submit"
                         class="w-full bg-purple-400 text-white p-3 rounded-lg hover:bg-blue-700 transition">Update Category</button>
                 </form>
             </div>
@@ -43,4 +45,49 @@
     </div>
 </div>
 
+<script>
+    $(document).ready(function() {
+        $('#name').on('input', function() {
+            var name = $(this).val();
+            if (name.length < 3) {
+                $('#nameErr').text('Name must be at least 3 characters');
+                $('#name').removeClass('border-green-500').addClass('border-red-500');
+                $('#update-category').prop('disabled', true);
+            } 
+            else if (name.length > 100) {
+                $('#nameErr').text('Name must be less than 100 characters');
+                $('#name').removeClass('border-green-500').addClass('border-red-500');
+                $('#update-category').prop('disabled', true);
+            }
+            else if (!/^[a-zA-Z\s]+$/.test(name)) {
+                $('#nameErr').text('Name must only contain letters and spaces');
+                $('#name').removeClass('border-green-500').addClass('border-red-500');
+                $('#update-category').prop('disabled', true);
+            }
+            else if (name.trim() === '') {
+                $('#nameErr').text('Name cannot be empty');
+                $('#name').removeClass('border-green-500').addClass('border-red-500');
+                $('#update-category').prop('disabled', true);
+            }
+            else {
+                $('#nameErr').text('');
+                $('#name').removeClass('border-red-500').addClass('border-green-500');
+                $('#update-category').prop('disabled', false);
+            }
+        });
+        $('#description').on('input', function() {
+            var description = $(this).val();
+            if (description.length < 3) {
+                $('#descriptionErr').text('Description must be at least 3 characters');
+                $('#description').removeClass('border-green-500').addClass('border-red-500');
+                $('#update-category').prop('disabled', true);
+            }
+            else {
+                $('#descriptionErr').text('');
+                $('#description').removeClass('border-red-500').addClass('border-green-500');
+                $('#update-category').prop('disabled', false);
+            }
+        })
+    });
+</script>
 @endsection
