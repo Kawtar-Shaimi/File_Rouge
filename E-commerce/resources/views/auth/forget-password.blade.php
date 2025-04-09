@@ -2,9 +2,10 @@
 
 @section('head')
     @vite([
-    'resources/css/app.css',
-    'resources/js/app.js'
-])
+        'resources/css/app.css',
+        'resources/js/app.js',
+        'resources/js/auth/forgetPasswordInputValidation.js',
+    ])
 @endsection
 
 @section('content')
@@ -34,28 +35,4 @@
             </form>
         </div>
     </div>
-<script>
-    $(document).ready(function() {
-       $('#email').on('input', function() {
-           var email = $(this).val();
-           if (email.length < 3) {
-               $('#emailErr').text('Email must be at least 3 characters');
-               $('#email').removeClass('border-green-500').addClass('border-red-500');
-               $('#send-reset-link').prop('disabled', true);
-           } else if (email.length > 150) {
-               $('#emailErr').text('Email must be less than 150 characters');
-               $('#email').removeClass('border-green-500').addClass('border-red-500');
-               $('#send-reset-link').prop('disabled', true);
-           } else if (!/^\S+@\S+\.\S+$/.test(email)) {
-               $('#emailErr').text('Invalid email format');
-               $('#email').removeClass('border-green-500').addClass('border-red-500');
-               $('#send-reset-link').prop('disabled', true);
-           } else {
-               $('#emailErr').text('');
-               $('#email').removeClass('border-red-500').addClass('border-green-500');
-               $('#send-reset-link').prop('disabled', false);
-           }
-       });
-   })
-</script>
 @endsection

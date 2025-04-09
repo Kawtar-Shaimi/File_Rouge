@@ -1,8 +1,15 @@
 @extends('layouts.back-office')
 
+@section('head')
+    @vite([
+        'resources/css/app.css',
+        'resources/js/app.js'
+    ])
+@endsection
+
 @section('content')
 
-    @include('layouts.publisher-sidebar')
+@include('layouts.publisher-sidebar')
 
     <div class="container mx-auto p-8">
         <div class="max-w-4xl ms-auto bg-white p-8 rounded-xl shadow-xl space-y-6">

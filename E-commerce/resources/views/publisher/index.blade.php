@@ -1,5 +1,12 @@
 @extends('layouts.back-office')
 
+@section('head')
+    @vite([
+        'resources/css/app.css',
+        'resources/js/app.js'
+    ])
+@endsection
+
 @section('content')
 
 @include('layouts.publisher-sidebar')
@@ -8,7 +15,7 @@
 
     <!-- Dashboard -->
     <h1 class="text-3xl font-bold mb-6">Dashboard</h1>
-    
+
     <!-- Statistiques -->
     <div class="grid grid-cols-4 gap-6">
         <div class="bg-white p-6 rounded-lg shadow-lg text-center">
@@ -96,7 +103,7 @@
 
             let best_saled_books_chart = new google.visualization.ColumnChart(document.getElementById("best_saled_books_chart_div"));
             best_saled_books_chart.draw(best_saled_books_chart_view, best_saled_books_chart_options);
-            
+
         @else
             $("#best_saled_books_chart_div").html(`
                 <p class="w-full h-full m-0 p-0 flex justify-center items-center text-red-500 font-bold text-3xl text-center">No Data To Show</p>

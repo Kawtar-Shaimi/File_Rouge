@@ -3,7 +3,8 @@
 @section('head')
     @vite([
         'resources/css/app.css',
-        'resources/js/app.js'
+        'resources/js/app.js',
+        'resources/js/auth/loginInputValidation.js',
     ])
 @endsection
 
@@ -39,7 +40,7 @@
                     <input type="checkbox" id="remember" name="remember" class="mr-2">
                     <label for="remember" class="text-sm text-gray-700">Remember me</label>
                 </div>
-                
+
                 <button id="login" type="submit" class="w-full bg-purple-400 text-white font-bold py-3 rounded-lg hover:bg-blue-600">
                     Login
                 </button>
@@ -56,47 +57,4 @@
         </form>
     </div>
 </div>
-
-<script>
-    $(document).ready(function() {
-       $('#email').on('input', function() {
-           var email = $(this).val();
-           if (email.length < 3) {
-               $('#emailErr').text('Email must be at least 3 characters');
-               $('#email').removeClass('border-green-500').addClass('border-red-500');
-               $('#login').prop('disabled', true);
-           } else if (email.length > 150) {
-               $('#emailErr').text('Email must be less than 150 characters');
-               $('#email').removeClass('border-green-500').addClass('border-red-500');
-               $('#login').prop('disabled', true);
-           } else if (!/^\S+@\S+\.\S+$/.test(email)) {
-               $('#emailErr').text('Invalid email format');
-               $('#email').removeClass('border-green-500').addClass('border-red-500');
-               $('#login').prop('disabled', true);
-           } else {
-               $('#emailErr').text('');
-               $('#email').removeClass('border-red-500').addClass('border-green-500');
-               $('#login').prop('disabled', false);
-           }
-       });
-
-       $('#password').on('input', function() {
-           var password = $(this).val();
-           if (password.length < 8) {
-               $('#passwordErr').text('Password must be at least 8 characters');
-               $('#password').removeClass('border-green-500').addClass('border-red-500');
-               $('#login').prop('disabled', true);
-           } else if (password.length > 20) {
-               $('#passwordErr').text('Password must be less than 20 characters');
-               $('#password').removeClass('border-green-500').addClass('border-red-500');
-               $('#login').prop('disabled', true);
-           } else {
-               $('#passwordErr').text('');
-               $('#password').removeClass('border-red-500').addClass('border-green-500');
-               $('#login').prop('disabled', false);
-           }
-       });
-   })
-</script>
-
 @endsection

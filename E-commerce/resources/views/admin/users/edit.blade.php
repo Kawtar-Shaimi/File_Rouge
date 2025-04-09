@@ -1,5 +1,13 @@
 @extends('layouts.back-office')
 
+@section('head')
+    @vite([
+        'resources/css/app.css',
+        'resources/js/app.js',
+        'resources/js/admin/users/updateInputValidation.js',
+    ])
+@endsection
+
 @section('content')
 
 @include('layouts.admin-sidebar')
@@ -18,7 +26,7 @@
                     <div class="mb-4">
                         <label for="role" class="block text-lg font-semibold">Role</label>
                         <select name="role" id="role"
-                            class="w-full mt-2 p-2 border rounded-lg focus:ring focus:ring-blue-300">
+                            class="w-full mt-2 p-2 border rounded-lg">
                             <option value="">Select Role</option>
                             <option @if ($user->role == 'admin') selected @endif value="admin">Admin</option>
                             <option @if ($user->role == 'publisher') selected @endif value="publisher">Publisher</option>
@@ -37,21 +45,4 @@
         </div>
     </div>
 </div>
-
-<script>
-    $(document).ready(function() {
-        $('#role').on('change', function() {
-            var role = $(this).val();
-            if (role === 'admin' || role === 'publisher') {
-                $('#roleErr').text('');
-                $('#role').removeClass('border-red-500').addClass('border-green-500');
-                $('#update-user').prop('disabled', false);
-            } else {
-                $('#roleErr').text('Role must be admin or publisher');
-                $('#role').removeClass('border-green-500').addClass('border-red-500');
-                $('#update-user').prop('disabled', true);
-            }
-        });
-    });
-</script>
 @endsection

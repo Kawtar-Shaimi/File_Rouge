@@ -1,5 +1,12 @@
 @extends('layouts.back-office')
 
+@section('head')
+    @vite([
+        'resources/css/app.css',
+        'resources/js/app.js'
+    ])
+@endsection
+
 @section('content')
 
 @include('layouts.admin-sidebar')

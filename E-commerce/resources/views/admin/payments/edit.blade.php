@@ -1,5 +1,13 @@
 @extends('layouts.back-office')
 
+@section('head')
+    @vite([
+        'resources/css/app.css',
+        'resources/js/app.js',
+        'resources/js/admin/payments/updateInputValidation.js',
+    ])
+@endsection
+
 @section('content')
 
 @include('layouts.admin-sidebar')
@@ -37,21 +45,4 @@
         </div>
     </div>
 </div>
-
-<script>
-    $(document).ready(function () {
-        $('#status').on('change', function () {
-            var selectedStatus = $(this).val();
-            if (selectedStatus === 'in shipping' || selectedStatus === 'completed' || selectedStatus === 'cancelled') {
-                $('#status-error').text('Cannot change status to "In Shipping", "Completed", or "Cancelled".');
-                $('#status').removeClass('border-green-500').addClass('border-red-500');
-                $('#update-status').prop('disabled', true);
-            } else {
-                $('#status-error').text('');
-                $('#status').removeClass('border-red-500').addClass('border-green-500');
-                $('#update-status').prop('disabled', false);
-            }
-        });
-    })
-</script>
 @endsection
