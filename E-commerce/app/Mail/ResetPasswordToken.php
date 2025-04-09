@@ -20,7 +20,7 @@ class ResetPasswordToken extends Mailable
 
     public function build()
     {
-        return $this->view('emails.reset-password')
+        return $this->view('emails.auth.reset-password')
             ->subject('Reset Your Password')
             ->with([
                 'url' => $this->url,

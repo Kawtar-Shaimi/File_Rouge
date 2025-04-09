@@ -33,7 +33,7 @@ Route::middleware('trackVisit')->group(function () {
             Route::get('/{uuid}/notice', 'resetNotice')->name('notice');
             Route::get('/{uuid}/{token}', 'verifyResetPassword')->name('password');
             Route::post('/{uuid}/resend', 'resendResetPasswordEmail')->name('resend')->middleware('throttle:5,1');
-            Route::post('/{uuid}/reset-password', 'resetPassword')->name('reset-password');
+            Route::post('/{uuid}/auth.reset-password', 'resetPassword')->name('auth.reset-password');
         });
     });
 

@@ -7,6 +7,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateProfileRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Mail\PasswordUpdated;
+use App\Mail\ProfileUpdated;
 use App\Mail\VerifyNewEmail;
 use App\Models\User;
 use Exception;
@@ -161,5 +162,13 @@ class UserController extends Controller
 
             return redirect()->route('verify.notice', $user->uuid)->with('success', 'Profile updated successfully, please verify your new email address.');
         }
+
+        Mail::to($user->email)->send(new ProfileUpdated($user, $user->role));
+
+        return match ($user->role) {
+            'admin' => redirect()->route('admin.profile')->with('success', 'Profile updated successfully.'),
+            'publisher' => redirect()->route('publisher.profile')->with('success', 'Profile updated successfully.'),
+            default => redirect()->route('client.index')->with('success', 'Profile updated successfully.')
+        };
     }
 }

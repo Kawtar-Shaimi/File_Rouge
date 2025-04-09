@@ -20,7 +20,7 @@ class VerifyNewEmail extends Mailable
 
     public function build()
     {
-        return $this->view('emails.verify-new-email')
+        return $this->view('emails.auth.verify-new-email')
             ->subject('Verify Your New Email Address')
             ->with([
                 'url' => $this->url,

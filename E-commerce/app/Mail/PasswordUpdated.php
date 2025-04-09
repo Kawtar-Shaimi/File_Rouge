@@ -21,7 +21,7 @@ class PasswordUpdated extends Mailable
 
     public function build()
     {
-        return $this->view('emails.password-updated')
+        return $this->view('emails.auth.password-updated')
             ->subject('Password Updated Successfully')
             ->with([
                 'user' => $this->user,

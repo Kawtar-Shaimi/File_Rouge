@@ -3,7 +3,6 @@
 @section('head')
     @vite([
         'resources/css/app.css',
-        'resources/js/app.js',
         'resources/js/client/payment/checkoutInputValidation.js',
     ])
 @endsection

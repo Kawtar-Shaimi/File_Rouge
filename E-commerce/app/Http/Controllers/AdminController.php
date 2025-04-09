@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ChangeOrderStatusRequest;
+use App\Mail\AdminBookRemoved;
+use App\Mail\AdminOrderCanceled;
 use App\Mail\OrderCancelled;
 use App\Mail\OrderStatusUpdated;
+use App\Mail\PublisherBookRemoved;
+use App\Mail\PublisherOrderCanceled;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Book;
@@ -12,6 +16,7 @@ use App\Models\User;
 use App\Models\Visit;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
 class AdminController extends Controller
@@ -232,10 +237,22 @@ class AdminController extends Controller
     {
         $book = Book::where('uuid', $uuid)->firstOrFail();
 
+        $book_name = $book->name;
+        $publisher = $book->publisher;
+
         $isDeleted = $book->delete();
 
         if (!$isDeleted) {
             return back()->with('error', 'Book not deleted.');
+        }
+
+        Mail::to($publisher->email)->send(new PublisherBookRemoved($publisher, $book_name));
+
+        $admins = User::where('role', 'admin')->get();
+        $admin_name = Auth::guard('admin')->user()->name;
+
+        foreach ($admins as $admin) {
+            Mail::to($admin->email)->send(new AdminBookRemoved($admin, $book_name, $admin_name));
         }
 
         return redirect()->route('admin.books.index')->with('success', 'Book deleted successfully.');
@@ -303,20 +320,27 @@ class AdminController extends Controller
                 "cancellation_reason" => $request->reason
             ]);
 
-            $order->orderBooks()->update([
-                'is_cancelled' => true,
-                'cancellation_reason' => $request->reason
-            ]);
-
             $order->payment()->update([
                 "status" => "failed"
             ]);
 
             foreach ($order->orderBooks as $orderBook) {
                 $orderBook->book()->increment('stock', $orderBook->quantity);
+                $orderBook->update([
+                    'is_cancelled' => true,
+                    'cancellation_reason' => $request->reason
+                ]);
+
+                Mail::to($orderBook->book->publisher->email)->send(new PublisherOrderCanceled($orderBook->book->publisher, $orderBook, $request->reason, $orderBook->book->name));
             }
 
             Mail::to($order->client->email)->send(new OrderCancelled($order, $request->reason));
+
+            $admins = User::where('role', 'admin')->get();
+
+            foreach ($admins as $admin) {
+                Mail::to($admin->email)->send(new AdminOrderCanceled($admin, $order, $request->reason));
+            }
         }
 
         $isUpdated = $order->update([

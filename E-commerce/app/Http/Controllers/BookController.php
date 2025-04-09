@@ -4,11 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
+use App\Mail\AdminBookCreated;
+use App\Mail\AdminBookDeleted;
+use App\Mail\AdminBookUpdated;
+use App\Mail\PublisherBookCreated;
+use App\Mail\PublisherBookDeleted;
+use App\Mail\PublisherBookUpdated;
 use App\Models\Category;
 use App\Models\Book;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -116,6 +124,16 @@ class BookController extends Controller
             return back()->with('error', 'Book creation failed');
         }
 
+        $user = Auth::guard('publisher')->user();
+
+        Mail::to($user->email)->send(new PublisherBookCreated($user, $book->name, $book->uuid));
+
+        $admins = User::where('role', 'admin')->get();
+
+        foreach ($admins as $admin) {
+            Mail::to($admin->email)->send(new AdminBookCreated($admin, $book));
+        }
+
         return redirect()->route('publisher.books.index')->with('success', 'Book created successfully');
     }
 
@@ -173,6 +191,16 @@ class BookController extends Controller
             }
         }
 
+        $user = Auth::guard('publisher')->user();
+
+        Mail::to($user->email)->send(new PublisherBookUpdated($user, $book->name, $book->uuid));
+
+        $admins = User::where('role', 'admin')->get();
+
+        foreach ($admins as $admin) {
+            Mail::to($admin->email)->send(new AdminBookUpdated($admin, $book));
+        }
+
         return redirect()->route('publisher.books.index')->with('success', 'Book updated successfully');
     }
 
@@ -189,10 +217,23 @@ class BookController extends Controller
             }
         }
 
+        $book_name = $book->name;
+        $publisher_name = $book->publisher->name;
+
         $isDeleted = $book->delete();
 
         if (!$isDeleted) {
             return back()->with('error', 'Book deletion failed');
+        }
+
+        $user = Auth::guard('publisher')->user();
+
+        Mail::to($user->email)->send(new PublisherBookDeleted($user, $book_name));
+
+        $admins = User::where('role', 'admin')->get();
+
+        foreach ($admins as $admin) {
+            Mail::to($admin->email)->send(new AdminBookDeleted($admin, $book_name, $publisher_name));
         }
 
         return redirect()->route('publisher.books.index')->with('success', 'Book deleted successfully');

@@ -20,7 +20,7 @@ class PasswordReseted extends Mailable
 
     public function build()
     {
-        return $this->view('emails.password-reseted')
+        return $this->view('emails.auth.password-reseted')
             ->subject('Password Reset Confirmation')
             ->with([
                 'user' => $this->user,

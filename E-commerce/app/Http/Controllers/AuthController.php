@@ -306,7 +306,7 @@ class AuthController extends Controller
             return redirect()->route('reset.notice', $user->uuid)->with('error', 'Invalid or expired token.');
         }
 
-        return view('auth.reset-password', compact('user'));
+        return view('auth.auth.reset-password', compact('user'));
     }
 
     public function resetPassword(ResetPasswordRequest $request, string $uuid)

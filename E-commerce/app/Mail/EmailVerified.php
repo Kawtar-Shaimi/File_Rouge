@@ -21,7 +21,7 @@ class EmailVerified extends Mailable
 
     public function build()
     {
-        return $this->view('emails.email-verified')
+        return $this->view('emails.auth.email-verified')
             ->subject('Email Verified Successfully')
             ->with([
                 'user' => $this->user,

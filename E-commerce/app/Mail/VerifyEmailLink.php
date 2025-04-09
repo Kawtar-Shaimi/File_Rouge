@@ -20,11 +20,11 @@ class VerifyEmailLink extends Mailable
 
     public function build()
     {
-        return $this->view('emails.verify-email')
+        return $this->view('emails.auth.verify-email')
             ->subject('Verify Your Email Address')
             ->with([
                 'url' => $this->url,
             ]);
     }
-    
+
 }

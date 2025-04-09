@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ReviewRequest;
+use App\Mail\AdminReviewDeleted;
+use App\Mail\ClientReviewDeleted;
 use App\Models\Book;
 use App\Models\Review;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class ReviewController extends Controller
@@ -120,11 +124,23 @@ class ReviewController extends Controller
     {
         $review = Review::where('uuid', $uuid)->firstOrFail();
 
+        $book = $review->book;
+        $client = $review->client;
+        $admin_name = Auth::guard('admin')->user()->name;
+
         $isDeleted = $review->delete();
 
         if (!$isDeleted) {
             return back()->with('error', 'Review not deleted.');
         }
+
+        $admins = User::where('role', 'admin')->get();
+
+        foreach ($admins as $admin) {
+            Mail::to($admin->email)->send(new AdminReviewDeleted($admin, $book, $admin_name));
+        }
+
+        Mail::to($client->email)->send(new ClientReviewDeleted($client, $book));
 
         return redirect()->route('admin.reviews.index')->with('success', 'Review deleted successfully.');
     }

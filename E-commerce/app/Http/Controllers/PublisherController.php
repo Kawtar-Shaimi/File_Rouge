@@ -2,13 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\AdminOrderBookCanceled;
+use App\Mail\ClientOrderBookCanceled;
+use App\Mail\PublisherOrderBookCanceled;
 use App\Models\OrderBook;
 use App\Models\Book;
+use App\Models\Client;
 use App\Models\Order;
 use App\Models\Review;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class PublisherController extends Controller
 {
@@ -197,17 +203,31 @@ class PublisherController extends Controller
             return back()->with('error', 'Please enter a cancellation reason');
         }
 
-        $is_updated = OrderBook::with(['order', 'book', 'order.client'])->whereHas('book', function ($query) {
+        $order = OrderBook::with(['order', 'book', 'order.client'])->whereHas('book', function ($query) {
             $query->where('publisher_id', Auth::guard('publisher')->id());
         })->whereHas('order', function ($query) use ($uuid) {
             $query->where('uuid', $uuid);
-        })->update([
+        })->first();
+
+        $is_updated = $order->update([
             'is_cancelled' => true,
             'cancellation_reason' => $request->cancellation_reason
         ]);
 
         if (!$is_updated) {
             return back()->with('error', 'Error while cancelling order');
+        }
+
+        $publisher = Auth::guard('publisher')->user();
+
+        Mail::to($publisher->email)->send(new PublisherOrderBookCanceled($publisher, $order, $request->cancellation_reason, $order->book->name));
+
+        Mail::to($order->order->client->email)->send(new ClientOrderBookCanceled($order->order->client, $order->order, $request->cancellation_reason, $order->book->name));
+
+        $admins = User::where('role', 'admin')->get();
+
+        foreach ($admins as $admin) {
+            Mail::to($admin->email)->send(new AdminOrderBookCanceled($admin, $order->order, $request->cancellation_reason, $order->book->name));
         }
 
         return redirect()->route('publisher.orders.index')->with('success', 'Order has been cancelled successfully');

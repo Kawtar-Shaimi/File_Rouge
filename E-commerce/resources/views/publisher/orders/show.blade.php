@@ -141,11 +141,11 @@
             <h3 class="text-2xl text-center font-semibold text-gray-800">Cancel Order</h3>
             <div class="mb-4">
                 <label for="reason" class="text-sm font-medium text-gray-700">Reason:</label>
-                <input type="text" id="reason" name="reason"
+                <input type="text" id="reason" name="cancellation_reason"
                     class="w-full p-3 border rounded-lg mt-1" required>
             </div>
             <p id="reason-error" class="text-red-500 text-xs mt-1"></p>
-            @error('reason')
+            @error('cancellation_reason')
                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
             @enderror
             <div class="mt-4 flex justify-center items-center space-x-2">

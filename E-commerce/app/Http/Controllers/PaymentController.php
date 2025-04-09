@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PaymentRequest;
+use App\Mail\AdminOrderPlaced;
 use App\Mail\OrderConfirmation;
+use App\Mail\PublisherOrderPlaced;
 use App\Models\Book;
 use App\Models\Cart;
 use App\Models\CartBook;
 use App\Models\Order;
 use App\Models\Payment;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -111,18 +114,6 @@ class PaymentController extends Controller
 
         foreach ($cart->cartBooks as $cartBook) {
 
-            $orderBook = $order->orderBooks()->create([
-                'order_id' => $order->id,
-                'book_id' => $cartBook->book_id,
-                'quantity' => $cartBook->quantity,
-                'total' => $cartBook->quantity * $cartBook->book->price,
-            ]);
-
-            if (!$orderBook) {
-                $order->delete();
-                return redirect()->back()->with('error', 'Error while ordering try again later.');
-            }
-
             $book = Book::where('id', $cartBook->book_id)->first();
 
             if (!$book) {
@@ -130,18 +121,34 @@ class PaymentController extends Controller
                 return redirect()->back()->with('error', 'Error while ordering try again later.');
             }
 
-            $book->update([
-                'stock' => $book->stock - $cartBook->quantity
-            ]);
+            if ($book->stock >= $cartBook->quantity) {
+                $orderBook = $order->orderBooks()->create([
+                    'order_id' => $order->id,
+                    'book_id' => $cartBook->book_id,
+                    'quantity' => $cartBook->quantity,
+                    'total' => $cartBook->quantity * $cartBook->book->price,
+                ]);
 
-            if ($book->stock === 0) {
-                CartBook::where('book_id', $book->id)->delete();
+                if (!$orderBook) {
+                    $order->delete();
+                    return redirect()->back()->with('error', 'Error while ordering try again later.');
+                }
+
+                $book->decrement('stock', $cartBook->quantity);
+
+                Mail::to($book->publisher->email)->send(new PublisherOrderPlaced($book->publisher, $orderBook));
             }
         }
 
         $cart->delete();
 
         Mail::to($order->shipping_email)->send(new OrderConfirmation($order));
+
+        $admins = User::where('role', 'admin')->get();
+
+        foreach ($admins as $admin) {
+            Mail::to($admin->email)->send(new AdminOrderPlaced($admin, $order));
+        }
 
         session()->forget('payment_intent');
         session()->forget('client_id');
