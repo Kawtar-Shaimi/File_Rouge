@@ -87,18 +87,21 @@
                                         </td>
                                         <td class="py-3 px-4">{{ $order->order->client->name }}</td>
                                         <td class="py-3 px-4">{{ $order->order->client->email }}</td>
-                                        <td
-                                            class="py-3 px-4 font-bold {{ $order->order->payment->status === 'paid' ? 'text-green-600' : ($order->order->payment->status === 'failed' ? 'text-red-600' : 'text-black') }}">
+                                        <td class="py-3 px-4 font-bold {{ $order->order->payment->status === 'paid' ? 'text-green-600' : ($order->order->payment->status === 'failed' ? 'text-red-600' : 'text-black') }}">
                                             ${{ $order->order->total_amount }}</td>
-                                        <td class="py-3 px-4">
-                                            @if ($order->order->status == 'pending')
-                                                <span class="bg-yellow-400 text-white px-3 py-1 rounded">{{ $order->order->status }}</span>
-                                            @elseif ($order->order->status == 'in shipping')
-                                                <span class="bg-blue-400 text-white px-3 py-1 rounded">{{ $order->order->status }}</span>
-                                            @elseif ($order->order->status == 'completed')
-                                                <span class="bg-green-400 text-white px-3 py-1 rounded">{{ $order->order->status }}</span>
+                                        <td class="p-3 border">
+                                            @if (!$order->is_cancelled)
+                                                @if ($order->order->status == 'pending')
+                                                    <span class="bg-yellow-400 text-white px-3 py-1 rounded">{{ $order->order->status }}</span>
+                                                @elseif ($order->order->status == 'in shipping')
+                                                    <span class="bg-blue-400 text-white px-3 py-1 rounded">{{ $order->order->status }}</span>
+                                                @elseif ($order->order->status == 'completed')
+                                                    <span class="bg-green-400 text-white px-3 py-1 rounded">{{ $order->order->status }}</span>
+                                                @else
+                                                    <span class="bg-red-400 text-white px-3 py-1 rounded">{{ $order->order->status }}</span>
+                                                @endif
                                             @else
-                                                <span class="bg-red-400 text-white px-3 py-1 rounded">{{ $order->order->status }}</span>
+                                                <span class="bg-red-400 text-white px-3 py-1 rounded">Cancelled</span>
                                             @endif
                                         </td>
                                         <td class="py-3 px-4">

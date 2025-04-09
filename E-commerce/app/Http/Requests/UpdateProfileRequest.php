@@ -26,8 +26,8 @@ class UpdateProfileRequest extends FormRequest
 
         return [
             'name' => 'required|max:60|min:3',
-            'email' => 'required|email|max:150|min:3|unique:users,email,' . $user->id,
-            'phone' => 'required|max:20|min:6|unique:users,phone,' . $user->id,
+            'email' => "required|email|max:150|min:3|unique:users,email,{$user->id}",
+            'phone' => "required|max:20|min:6|unique:users,phone,{$user->id}",
         ];
     }
 

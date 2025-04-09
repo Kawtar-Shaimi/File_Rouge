@@ -22,6 +22,7 @@ class Order extends Model
         'payment_method',
         'total_amount',
         'status',
+        'cancellation_reason',
         'client_id'
     ];
     public function client()

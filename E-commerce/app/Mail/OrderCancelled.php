@@ -11,11 +11,12 @@ use Illuminate\Queue\SerializesModels;
 
 class OrderCancelled extends Mailable
 {
-    public $order;
+    public $order, $reason;
 
-    public function __construct($order)
+    public function __construct($order, $reason)
     {
         $this->order = $order;
+        $this->reason = $reason;
     }
 
     public function build()
@@ -24,6 +25,7 @@ class OrderCancelled extends Mailable
             ->subject('Order Canceled')
             ->with([
                 'order' => $this->order,
+                'reason' => $this->reason
             ]);
     }
 }

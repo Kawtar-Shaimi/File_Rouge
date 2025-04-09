@@ -12,6 +12,10 @@
             We regret to inform you that your order <strong>#{{ $order->order_number }}</strong> has been <span style="color: red; font-weight: bold;">canceled</span>.
         </p>
 
+        <p style="text-align: center; font-size: 16px; color: #4b5563; margin-bottom: 30px;">
+            Order cancellation reason: {{ $reason }}
+        </p>
+
         <div style="text-align: center; margin-top: 40px;">
             <a href="{{ route('client.order.show', $order->uuid) }}" style="background-color: #4f46e5; color: white; padding: 12px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px;">
                 View Order Details

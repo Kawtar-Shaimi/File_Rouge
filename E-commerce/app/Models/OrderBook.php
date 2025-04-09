@@ -11,7 +11,7 @@ class OrderBook extends Model
 
     protected $table = "orders_books";
 
-    protected $fillable = ['order_id', 'book_id', 'quantity', 'total', 'is_cancelled'];
+    protected $fillable = ['order_id', 'book_id', 'quantity', 'total', 'is_cancelled', 'cancellation_reason'];
 
     public function order(){
         return $this->belongsTo(Order::class);

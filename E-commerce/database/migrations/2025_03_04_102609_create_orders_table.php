@@ -25,6 +25,7 @@ return new class extends Migration
             $table->enum('payment_method', ['credit_card', 'paypal', 'cash_on_delivery'])->default('cash_on_delivery');
             $table->decimal('total_amount');
             $table->enum('status', ['pending', 'in shipping', 'completed', 'cancelled'])->default('pending');
+            $table->text('cancellation_reason')->nullable();
             $table->unsignedBigInteger('client_id');
             $table->foreign('client_id')->references('id')->on('users')
                 ->onDelete('cascade');

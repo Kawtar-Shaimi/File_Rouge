@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('quantity');
             $table->decimal('total');
             $table->boolean('is_cancelled')->default(false);
+            $table->text('cancellation_reason')->nullable();
             $table->timestamps();
         });
     }

@@ -28,6 +28,12 @@
                             <td class="p-3 border">Order Status</td>
                             <td class="p-3 border">{{ $order->status }}</td>
                         </tr>
+                        @if ($order->status === 'cancelled')
+                            <tr>
+                                <td class="p-3 border">Cancellation Reason</td>
+                                <td class="p-3 border">{{ $order->cancellation_reason }}</td>
+                            </tr>
+                        @endif
                         <tr>
                             <td class="p-3 border">Order Payment Status</td>
                             <td class="p-3 border">{{ $order->payment->status }}</td>
@@ -95,6 +101,7 @@
                                 <th class="p-3 border">Prix</th>
                                 <th class="p-3 border">Catégorie</th>
                                 <th class="p-3 border">Quantity</th>
+                                <th class="p-3 border">Status</th>
                                 <th class="p-3 border">Total</th>
                             </tr>
                         </thead>
@@ -107,6 +114,21 @@
                                         <td class="p-3 border text-green-600 font-bold">${{ $orderBook->book->price }}</td>
                                         <td class="p-3 border">{{ $orderBook->book->category->name }}</td>
                                         <td class="p-3 border">{{ $orderBook->quantity }}</td>
+                                        <td class="p-3 border">
+                                            @if (!$orderBook->is_cancelled)
+                                                @if ($order->status == 'pending')
+                                                    <span class="bg-yellow-400 text-white px-3 py-1 rounded">{{ $order->status }}</span>
+                                                @elseif ($order->status == 'in shipping')
+                                                    <span class="bg-blue-400 text-white px-3 py-1 rounded">{{ $order->status }}</span>
+                                                @elseif ($order->status == 'completed')
+                                                    <span class="bg-green-400 text-white px-3 py-1 rounded">{{ $order->status }}</span>
+                                                @else
+                                                    <span class="bg-red-400 text-white px-3 py-1 rounded">{{ $order->status }}</span>
+                                                @endif
+                                            @else
+                                                <span class="bg-red-400 text-white px-3 py-1 rounded">Cancelled</span>
+                                            @endif
+                                        </td>
                                         <td class="p-3 border text-green-600 font-bold">${{ $orderBook->total }}</td>
                                     </tr>
                                 @endforeach

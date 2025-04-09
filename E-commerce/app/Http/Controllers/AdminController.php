@@ -286,7 +286,37 @@ class AdminController extends Controller
         ];
 
         if (in_array($order->status, $revertedStatusArr[$request->status])) {
-            return back()->with('error', "You cannot revert an order status");
+            return back()->withErrors([
+                'status' => 'Status cannot be reverted.'
+            ]);
+        }
+
+        if ($request->status === "cancelled") {
+
+            if ($request->reason === "") {
+                return back()->withErrors([
+                    'reason' => 'Reason is required.'
+                ]);
+            }
+
+            $order->update([
+                "cancellation_reason" => $request->reason
+            ]);
+
+            $order->orderBooks()->update([
+                'is_cancelled' => true,
+                'cancellation_reason' => $request->reason
+            ]);
+
+            $order->payment()->update([
+                "status" => "failed"
+            ]);
+
+            foreach ($order->orderBooks as $orderBook) {
+                $orderBook->book()->increment('stock', $orderBook->quantity);
+            }
+
+            Mail::to($order->client->email)->send(new OrderCancelled($order, $request->reason));
         }
 
         $isUpdated = $order->update([
@@ -301,17 +331,6 @@ class AdminController extends Controller
             $order->payment()->update([
                 "status" => "paid"
             ]);
-        }
-
-        if ($request->status === "cancelled") {
-            $order->payment()->update([
-                "status" => "failed"
-            ]);
-            foreach ($order->orderBooks as $orderBook) {
-                $orderBook->book()->increment('stock', $orderBook->quantity);
-            }
-
-            Mail::to($order->client->email)->send(new OrderCancelled($order));
         }
 
         Mail::to($order->client->email)->send(new OrderStatusUpdated($order));

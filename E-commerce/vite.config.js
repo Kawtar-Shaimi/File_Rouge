@@ -40,6 +40,7 @@ export default defineConfig({
                 'resources/js/publisher/books/createInputValidation.js',
                 'resources/js/publisher/books/updateInputValidation.js',
                 'resources/js/publisher/orders/orders.js',
+                'resources/js/publisher/orders/cancelOrder.js',
                 'resources/js/publisher/reviews/reviews.js',
                 'resources/js/users/changePasswordInputValidation.js',
                 'resources/js/users/updateProfileInputValidation.js',

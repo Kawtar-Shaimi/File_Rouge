@@ -5,6 +5,7 @@
         'resources/css/app.css',
         'resources/js/app.js',
         'resources/js/publisher/orders/orders.js',
+        'resources/js/publisher/orders/cancelOrder.js'
     ])
 @endsection
 

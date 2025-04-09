@@ -38,9 +38,21 @@
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
 
+                    <div id="cancel_reason" class="hidden">
+                        <div class="mb-4">
+                            <label for="reason" class="text-sm font-medium text-gray-700">Reason</label>
+                            <input type="text" id="reason" name="reason"
+                                class="w-full p-3 border rounded-lg mt-1" required>
+                        </div>
+                        <p id="reason-error" class="text-red-500 text-xs mt-1"></p>
+                        @error('reason')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                     <!-- Submit -->
                     <button id="update-status" type="submit"
-                        class="w-full bg-purple-400 text-white p-3 rounded-lg hover:bg-blue-700 transition">Update Status</button>
+                        class="w-full bg-purple-400 text-white p-3 rounded-lg hover:bg-blue-700 transition mt-4">Update Status</button>
                 </form>
             </div>
         </div>

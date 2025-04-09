@@ -161,6 +161,7 @@ Route::middleware('trackVisit')->group(function () {
         Route::controller(PublisherController::class)->prefix('/orders')->as('orders.')->group(function () {
             Route::get('/', 'orders')->name('index');
             Route::get('/{uuid}', 'order')->name('show');
+            Route::post('/{uuid}/cancel', 'cancelOrder')->name('cancel');
         });
 
         /* Publisher Filters routes */

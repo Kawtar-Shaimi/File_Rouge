@@ -190,6 +190,29 @@ class PublisherController extends Controller
         return view('publisher.orders.show', compact('order'));
     }
 
+    public function cancelOrder(Request $request, string $uuid)
+    {
+
+        if ($request->cancellation_reason === "") {
+            return back()->with('error', 'Please enter a cancellation reason');
+        }
+
+        $is_updated = OrderBook::with(['order', 'book', 'order.client'])->whereHas('book', function ($query) {
+            $query->where('publisher_id', Auth::guard('publisher')->id());
+        })->whereHas('order', function ($query) use ($uuid) {
+            $query->where('uuid', $uuid);
+        })->update([
+            'is_cancelled' => true,
+            'cancellation_reason' => $request->cancellation_reason
+        ]);
+
+        if (!$is_updated) {
+            return back()->with('error', 'Error while cancelling order');
+        }
+
+        return redirect()->route('publisher.orders.index')->with('success', 'Order has been cancelled successfully');
+    }
+
     public function books()
     {
         $books = Book::where('publisher_id', Auth::guard('publisher')->id())->paginate(10);
