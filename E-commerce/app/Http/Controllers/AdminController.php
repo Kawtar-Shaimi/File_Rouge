@@ -14,10 +14,17 @@ use App\Models\Order;
 use App\Models\Book;
 use App\Models\User;
 use App\Models\Visit;
+use App\Notifications\AdminBookRemoved as NotificationsAdminBookRemoved;
+use App\Notifications\AdminOrderCanceled as NotificationsAdminOrderCanceled;
+use App\Notifications\OrderCancelled as NotificationsOrderCancelled;
+use App\Notifications\OrderStatusUpdated as NotificationsOrderStatusUpdated;
+use App\Notifications\PublisherBookRemoved as NotificationsPublisherBookRemoved;
+use App\Notifications\PublisherOrderCanceled as NotificationsPublisherOrderCanceled;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 
 class AdminController extends Controller
 {
@@ -248,11 +255,15 @@ class AdminController extends Controller
 
         Mail::to($publisher->email)->send(new PublisherBookRemoved($publisher, $book_name));
 
+        Notification::send($publisher, new NotificationsPublisherBookRemoved($book_name));
+
         $admins = User::where('role', 'admin')->get();
         $admin_name = Auth::guard('admin')->user()->name;
 
         foreach ($admins as $admin) {
             Mail::to($admin->email)->send(new AdminBookRemoved($admin, $book_name, $admin_name));
+
+            Notification::send($admin, new NotificationsAdminBookRemoved($book_name, $publisher->name, $admin_name));
         }
 
         return redirect()->route('admin.books.index')->with('success', 'Book deleted successfully.');
@@ -332,14 +343,20 @@ class AdminController extends Controller
                 ]);
 
                 Mail::to($orderBook->book->publisher->email)->send(new PublisherOrderCanceled($orderBook->book->publisher, $orderBook, $request->reason, $orderBook->book->name));
+
+                Notification::send($orderBook->book->publisher, new NotificationsPublisherOrderCanceled($orderBook->order, $request->reason, $orderBook->book->name));
             }
 
             Mail::to($order->client->email)->send(new OrderCancelled($order, $request->reason));
+
+            Notification::send($order->client, new NotificationsOrderCancelled($order, $request->reason));
 
             $admins = User::where('role', 'admin')->get();
 
             foreach ($admins as $admin) {
                 Mail::to($admin->email)->send(new AdminOrderCanceled($admin, $order, $request->reason));
+
+                Notification::send($admin, new NotificationsAdminOrderCanceled($order, $request->reason));
             }
         }
 
@@ -358,6 +375,8 @@ class AdminController extends Controller
         }
 
         Mail::to($order->client->email)->send(new OrderStatusUpdated($order));
+
+        Notification::send($order->client, new NotificationsOrderStatusUpdated($order));
 
         return redirect()->route('admin.orders.index', $order)->with('success', 'Order status updated successfully.');
     }

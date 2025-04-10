@@ -13,10 +13,17 @@ use App\Mail\PublisherBookUpdated;
 use App\Models\Category;
 use App\Models\Book;
 use App\Models\User;
+use App\Notifications\AdminBookCreated as NotificationsAdminBookCreated;
+use App\Notifications\AdminBookDeleted as NotificationsAdminBookDeleted;
+use App\Notifications\AdminBookUpdated as NotificationsAdminBookUpdated;
+use App\Notifications\PublisherBookCreated as NotificationsPublisherBookCreated;
+use App\Notifications\PublisherBookDeleted as NotificationsPublisherBookDeleted;
+use App\Notifications\PublisherBookUpdated as NotificationsPublisherBookUpdated;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -127,11 +134,13 @@ class BookController extends Controller
         $user = Auth::guard('publisher')->user();
 
         Mail::to($user->email)->send(new PublisherBookCreated($user, $book->name, $book->uuid));
+        Notification::send($user, new NotificationsPublisherBookCreated($book->name, $book->uuid));
 
         $admins = User::where('role', 'admin')->get();
 
         foreach ($admins as $admin) {
             Mail::to($admin->email)->send(new AdminBookCreated($admin, $book));
+            Notification::send($admin, new NotificationsAdminBookCreated($book));
         }
 
         return redirect()->route('publisher.books.index')->with('success', 'Book created successfully');
@@ -195,10 +204,13 @@ class BookController extends Controller
 
         Mail::to($user->email)->send(new PublisherBookUpdated($user, $book->name, $book->uuid));
 
+        Notification::send($user, new NotificationsPublisherBookUpdated($book->name, $book->uuid));
+
         $admins = User::where('role', 'admin')->get();
 
         foreach ($admins as $admin) {
             Mail::to($admin->email)->send(new AdminBookUpdated($admin, $book));
+            Notification::send($admin, new NotificationsAdminBookUpdated($book));
         }
 
         return redirect()->route('publisher.books.index')->with('success', 'Book updated successfully');
@@ -230,10 +242,13 @@ class BookController extends Controller
 
         Mail::to($user->email)->send(new PublisherBookDeleted($user, $book_name));
 
+        Notification::send($user, new NotificationsPublisherBookDeleted($book_name));
+
         $admins = User::where('role', 'admin')->get();
 
         foreach ($admins as $admin) {
             Mail::to($admin->email)->send(new AdminBookDeleted($admin, $book_name, $publisher_name));
+            Notification::send($admin, new NotificationsAdminBookDeleted($book_name, $publisher_name));
         }
 
         return redirect()->route('publisher.books.index')->with('success', 'Book deleted successfully');

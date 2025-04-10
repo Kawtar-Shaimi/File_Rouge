@@ -11,10 +11,14 @@ use App\Models\Client;
 use App\Models\Order;
 use App\Models\Review;
 use App\Models\User;
+use App\Notifications\AdminOrderBookCanceled as NotificationsAdminOrderBookCanceled;
+use App\Notifications\ClientOrderBookCanceled as NotificationsClientOrderBookCanceled;
+use App\Notifications\PublisherOrderBookCanceled as NotificationsPublisherOrderBookCanceled;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 
 class PublisherController extends Controller
 {
@@ -222,12 +226,18 @@ class PublisherController extends Controller
 
         Mail::to($publisher->email)->send(new PublisherOrderBookCanceled($publisher, $order, $request->cancellation_reason, $order->book->name));
 
+        Notification::send($publisher, new NotificationsPublisherOrderBookCanceled($order->order, $request->cancellation_reason, $order->book->name));
+
         Mail::to($order->order->client->email)->send(new ClientOrderBookCanceled($order->order->client, $order->order, $request->cancellation_reason, $order->book->name));
+
+        Notification::send($order->order->client, new NotificationsClientOrderBookCanceled($order->order, $request->cancellation_reason, $order->book->name));
 
         $admins = User::where('role', 'admin')->get();
 
         foreach ($admins as $admin) {
             Mail::to($admin->email)->send(new AdminOrderBookCanceled($admin, $order->order, $request->cancellation_reason, $order->book->name));
+
+            Notification::send($admin, new NotificationsAdminOrderBookCanceled($order->order, $request->cancellation_reason, $order->book->name));
         }
 
         return redirect()->route('publisher.orders.index')->with('success', 'Order has been cancelled successfully');

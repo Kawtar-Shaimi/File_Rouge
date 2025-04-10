@@ -8,10 +8,14 @@ use App\Mail\CategoryDeleted;
 use App\Mail\CategoryUpdated;
 use App\Models\Category;
 use App\Models\User;
+use App\Notifications\CategoryCreated as NotificationsCategoryCreated;
+use App\Notifications\CategoryDeleted as NotificationsCategoryDeleted;
+use App\Notifications\CategoryUpdated as NotificationsCategoryUpdated;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 
 class CategoryController extends Controller
@@ -59,6 +63,8 @@ class CategoryController extends Controller
 
         foreach ($admins as $admin) {
             Mail::to($admin->email)->send(new CategoryCreated($admin, $category, $admin_name));
+
+            Notification::send($admin, new NotificationsCategoryCreated($category, $admin_name));
         }
 
         return redirect()->route('admin.categories.index')->with('success', 'Category created successfully.');
@@ -88,6 +94,8 @@ class CategoryController extends Controller
 
         foreach ($admins as $admin) {
             Mail::to($admin->email)->send(new CategoryUpdated($admin, $category, $admin_name));
+
+            Notification::send($admin, new NotificationsCategoryUpdated($category, $admin_name));
         }
 
         return redirect()->route('admin.categories.index')->with('success', 'Category updated successfully.');
@@ -109,6 +117,8 @@ class CategoryController extends Controller
 
         foreach ($admins as $admin) {
             Mail::to($admin->email)->send(new CategoryDeleted($admin, $category_name, $admin_name));
+
+            Notification::send($admin, new NotificationsCategoryDeleted($category_name, $admin_name));
         }
 
         return redirect()->route('admin.categories.index')->with('success', 'Category deleted successfully.');

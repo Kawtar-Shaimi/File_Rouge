@@ -26,6 +26,36 @@
                     </button>
                     <span class="hidden md:block">{{ Auth::guard('client')->user()->name }}</span>
                 </a>
+                <div id="notification" class="relative mx-5">
+                    <i class="fa-regular fa-bell text-xl cursor-pointer"></i>
+                    @php
+                        $user = \App\Models\User::find(Auth::guard('client')->user()->id);
+                    @endphp
+                    <span id="notification-count"
+                        class="absolute top-0 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-sm cursor-pointer">
+                        {{ $user->unreadNotifications->count() }}
+                    </span>
+                    <div id="notification_list"
+                        class="hidden absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-2xl shadow-black">
+                        <ul class="py-2">
+                            @if ($user->unreadNotifications->count() > 0)
+                                @for ($i = 0; $i < ($user->unreadNotifications->count() < 5 ? $user->unreadNotifications->count() : 5); $i++)
+                                    <li
+                                        class="px-4 py-2 border-b @if (!$user->unreadNotifications[$i]->read_at) bg-gray-400 hover:bg-gray-500 @else hover:bg-gray-100 @endif">
+                                        <a href="{{ route('notifications.read-notification', $user->unreadNotifications[$i]->id) }}"
+                                            class="block text-gray-800">{{ Str::limit($user->unreadNotifications[$i]->data['message'], 20) }}</a>
+                                    </li>
+                                @endfor
+                                <li><a href="{{ route('notifications.client') }}"
+                                        class="block text-blue-400 px-4 py-1 text-sm hover:underline">View all
+                                        notifications</a></li>
+                            @else
+                                <li class="px-4 py-2 hover:bg-gray-100 text-red-500 text-center font-semibold">No
+                                    notifications</li>
+                            @endif
+                        </ul>
+                    </div>
+                </div>
                 <form method="POST" action="{{ route('logout', 'client') }}">
                     @csrf
                     <button type="submit" class="block w-full text-left px-4 py-2 hover:bg-gray-700">Logout</button>
@@ -75,4 +105,11 @@
             </div>
         @endif
     </div>
+    <script>
+        $(document).ready(function() {
+            $('#notification').click(function() {
+                $('#notification_list').toggleClass('hidden');
+            });
+        })
+    </script>
 </header>

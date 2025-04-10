@@ -15,11 +15,15 @@ use App\Models\EmailVerificationToken;
 use App\Models\PasswordResetToken;
 use App\Models\Publisher;
 use App\Models\User;
+use App\Notifications\EmailVerified as NotificationsEmailVerified;
+use App\Notifications\PasswordReseted as NotificationsPasswordReseted;
+use App\Notifications\VerifyEmailLink as NotificationsVerifyEmailLink;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 
 class AuthController extends Controller
@@ -109,6 +113,8 @@ class AuthController extends Controller
 
         Mail::to($user->email)->send(new VerifyEmailLink($url));
 
+        Notification::send($user, new NotificationsVerifyEmailLink());
+
         return redirect()->route('verify.notice', $user->uuid)->with('success', 'Registration successful.');
     }
 
@@ -173,6 +179,8 @@ class AuthController extends Controller
 
         Mail::to($user->email)->send(new EmailVerified($user, $user->role));
 
+        Notification::send($user, new NotificationsEmailVerified($user, $user->role));
+
         return redirect()->route('home')->with('success', 'Email verified successfully.');
     }
 
@@ -211,6 +219,8 @@ class AuthController extends Controller
         ]);
 
         Mail::to($user->email)->send(new VerifyEmailLink($url));
+
+        Notification::send($user, new NotificationsVerifyEmailLink());
 
         return redirect()->back()->with('success', 'Verification email resent successfully.');
     }
@@ -324,6 +334,8 @@ class AuthController extends Controller
         PasswordResetToken::where('user_id', $user->id)->delete();
 
         Mail::to($user->email)->send(new PasswordReseted($user));
+
+        Notification::send($user, new NotificationsPasswordReseted($user->role));
 
         return redirect()->route('loginView')->with('success', 'Password reset successfully.');
     }

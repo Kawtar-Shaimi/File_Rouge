@@ -10,10 +10,14 @@ use App\Mail\PasswordUpdated;
 use App\Mail\ProfileUpdated;
 use App\Mail\VerifyNewEmail;
 use App\Models\User;
+use App\Notifications\PasswordUpdated as NotificationsPasswordUpdated;
+use App\Notifications\ProfileUpdated as NotificationsProfileUpdated;
+use App\Notifications\VerifyNewEmail as NotificationsVerifyNewEmail;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 
 class UserController extends Controller
@@ -119,6 +123,8 @@ class UserController extends Controller
 
         Mail::to($user->email)->send(new PasswordUpdated($user, $user->role));
 
+        Notification::send($user, new NotificationsPasswordUpdated($user->role));
+
         return match ($user->role) {
             'admin' => redirect()->route('admin.profile')->with('success', 'Password updated successfully.'),
             'publisher' => redirect()->route('publisher.profile')->with('success', 'Password updated successfully.'),
@@ -160,10 +166,14 @@ class UserController extends Controller
 
             Mail::to($request->email)->send(new VerifyNewEmail($url));
 
+            Notification::send($user, new NotificationsVerifyNewEmail());
+
             return redirect()->route('verify.notice', $user->uuid)->with('success', 'Profile updated successfully, please verify your new email address.');
         }
 
         Mail::to($user->email)->send(new ProfileUpdated($user, $user->role));
+
+        Notification::send($user, new NotificationsProfileUpdated($user->role));
 
         return match ($user->role) {
             'admin' => redirect()->route('admin.profile')->with('success', 'Profile updated successfully.'),

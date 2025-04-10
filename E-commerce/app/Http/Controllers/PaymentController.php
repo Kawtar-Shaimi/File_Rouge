@@ -12,10 +12,14 @@ use App\Models\CartBook;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Models\User;
+use App\Notifications\AdminOrderPlaced as NotificationsAdminOrderPlaced;
+use App\Notifications\OrderConfirmation as NotificationsOrderConfirmation;
+use App\Notifications\PublisherOrderPlaced as NotificationsPublisherOrderPlaced;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 
 class PaymentController extends Controller
@@ -137,6 +141,8 @@ class PaymentController extends Controller
                 $book->decrement('stock', $cartBook->quantity);
 
                 Mail::to($book->publisher->email)->send(new PublisherOrderPlaced($book->publisher, $orderBook));
+
+                Notification::send($book->publisher, new NotificationsPublisherOrderPlaced($orderBook));
             }
         }
 
@@ -144,10 +150,14 @@ class PaymentController extends Controller
 
         Mail::to($order->shipping_email)->send(new OrderConfirmation($order));
 
+        Notification::send($order->client, new NotificationsOrderConfirmation($order));
+
         $admins = User::where('role', 'admin')->get();
 
         foreach ($admins as $admin) {
             Mail::to($admin->email)->send(new AdminOrderPlaced($admin, $order));
+
+            Notification::send($admin, new NotificationsAdminOrderPlaced($order));
         }
 
         session()->forget('payment_intent');

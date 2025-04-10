@@ -8,10 +8,13 @@ use App\Mail\ClientReviewDeleted;
 use App\Models\Book;
 use App\Models\Review;
 use App\Models\User;
+use App\Notifications\AdminReviewDeleted as NotificationsAdminReviewDeleted;
+use App\Notifications\ClientReviewDeleted as NotificationsClientReviewDeleted;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 
 class ReviewController extends Controller
@@ -138,9 +141,13 @@ class ReviewController extends Controller
 
         foreach ($admins as $admin) {
             Mail::to($admin->email)->send(new AdminReviewDeleted($admin, $book, $admin_name));
+
+            Notification::send($admin, new NotificationsAdminReviewDeleted($book, $admin_name));
         }
 
         Mail::to($client->email)->send(new ClientReviewDeleted($client, $book));
+
+        Notification::send($client, new NotificationsClientReviewDeleted($book));
 
         return redirect()->route('admin.reviews.index')->with('success', 'Review deleted successfully.');
     }

@@ -42,6 +42,7 @@ export default defineConfig({
                 'resources/js/client/wishlist/addToWishlist.js',
                 'resources/js/client/wishlist/deleteFromWishlist.js',
                 'resources/js/client/wishlist/removeFromWishlist.js',
+                'resources/js/notifications/notifications.js',
                 'resources/js/publisher/books/book.js',
                 'resources/js/publisher/books/books.js',
                 'resources/js/publisher/books/createInputValidation.js',

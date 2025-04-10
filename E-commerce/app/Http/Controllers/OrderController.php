@@ -12,12 +12,16 @@ use App\Models\Order;
 use App\Models\Payment;
 use App\Models\Book;
 use App\Models\User;
+use App\Notifications\AdminOrderPlaced as NotificationsAdminOrderPlaced;
+use App\Notifications\OrderConfirmation as NotificationsOrderConfirmation;
+use App\Notifications\PublisherOrderPlaced as NotificationsPublisherOrderPlaced;
 use Exception;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use Stripe\Exception\ApiErrorException;
 use Stripe\PaymentIntent;
@@ -183,6 +187,8 @@ class OrderController extends Controller
                 $book->decrement('stock', $cartBook->quantity);
 
                 Mail::to($book->publisher->email)->send(new PublisherOrderPlaced($book->publisher, $orderBook));
+
+                Notification::send($book->publisher, new NotificationsPublisherOrderPlaced($orderBook));
             }
         }
 
@@ -190,10 +196,14 @@ class OrderController extends Controller
 
         Mail::to($order->shipping_email)->send(new OrderConfirmation($order));
 
+        Notification::send($order->client, new NotificationsOrderConfirmation($order));
+
         $admins = User::where('role', 'admin')->get();
 
         foreach ($admins as $admin) {
             Mail::to($admin->email)->send(new AdminOrderPlaced($admin, $order));
+
+            Notification::send($admin, new NotificationsAdminOrderPlaced($order));
         }
 
         return redirect()->route('client.order.success')

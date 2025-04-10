@@ -10,6 +10,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\FilterController;
+use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\PublisherController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\UserController;
@@ -170,6 +171,16 @@ Route::middleware('trackVisit')->group(function () {
             Route::get('/orders', 'filterPublishersOrders')->name('orders');
             Route::get('/reviews', 'filterPublishersReviews')->name('reviews');
         });
+    });
+
+    /* Notifications routes */
+    Route::controller(NotificationsController::class)->prefix('/notifications')->as('notifications.')->group(function () {
+        Route::get('/client', 'client')->name('client');
+        Route::get('/client/read-notification/{id}', 'readNotification')->name('read-notification');
+        Route::get('/publisher', 'publisher')->name('publisher');
+        Route::get('/admin', 'admin')->name('admin');
+        Route::put('/mark-as-read/{guard}/{id}', 'markAsRead')->name('mark-as-read');
+        Route::delete('/delete-notification/{guard}/{id}', 'deleteNotification')->name('delete');
     });
 });
 
