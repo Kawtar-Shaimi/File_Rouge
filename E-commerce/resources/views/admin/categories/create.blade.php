@@ -18,7 +18,7 @@
             <div class="bg-white p-6 rounded-lg shadow-md">
                 <h2 class="text-2xl font-bold mb-4 text-center">Create Category</h2>
 
-                <form action="{{ route('admin.categories.store')  }}" method="POST">
+                <form id="create-category-form" action="{{ route('admin.categories.store')  }}" method="POST">
                     @csrf
 
                     <!-- Name -->

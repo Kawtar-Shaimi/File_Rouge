@@ -3,7 +3,8 @@
 @section('head')
     @vite([
         'resources/css/app.css',
-        'resources/js/app.js'
+        'resources/js/app.js',
+        'resources/js/publisher/books/book.js',
     ])
 @endsection
 
@@ -61,10 +62,10 @@
                         <td class="p-3 border">Actions</td>
                         <td class="p-3 border">
                             <a class="bg-blue-500 text-white px-3 py-1 rounded" href="{{ route('publisher.books.edit', $book->uuid) }}">Update</a>
-                            <form action="{{ route('publisher.books.delete', $book->uuid) }}" method="POST" class="inline">
+                            <form id="delete-form" action="{{ route('publisher.books.delete', $book->uuid) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
+                                <button id="delete" type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
                             </form>
                         </td>
                     </tr>

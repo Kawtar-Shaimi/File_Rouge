@@ -12,7 +12,7 @@
     <tbody>
         @if ($orders->count() > 0)
             @foreach ($orders as $order)
-                <tr class="text-center border">
+                <tr class="text-center">
                     <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('publisher.orders.show', $order->order->uuid) }}">#{{ $order->order->order_number }}</a></td>
                     <td class="p-3 border">{{ $order->order->client->name }}</td>
                     <td class="p-3 border">{{ $order->order->client->email }}</td>
@@ -32,19 +32,21 @@
                             <span class="bg-red-400 text-white px-3 py-1 rounded">Cancelled</span>
                         @endif
                     </td>
-                    <td class="p-3 flex gap-x-2 justify-center items-center">
-                        <a href="{{ route('publisher.orders.show', $order->order->uuid) }}"
-                            class="px-4 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition duration-300">Show</a>
-                        @if (!$order->is_cancelled)
-                            <button id="show-modal-{{ $order->order->uuid }}" type="button" onclick="showCancelModal('{{ $order->order->uuid }}')"
-                                class="px-4 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition duration-300">Cancel</button>
-                        @endif
+                    <td class="p-3 border">
+                        <div class="flex justify-center items-center space-x-2">
+                            <a href="{{ route('publisher.orders.show', $order->order->uuid) }}"
+                                class="px-4 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition duration-300">Show</a>
+                            @if (!$order->is_cancelled)
+                                <button id="show-modal-{{ $order->order->uuid }}" type="button" onclick="showCancelModal('{{ $order->order->uuid }}')"
+                                    class="px-4 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition duration-300">Cancel</button>
+                            @endif
+                        </div>
                     </td>
                 </tr>
                 <!-- Cancel Modal -->
                 <div id="cancel-modal-{{ $order->order->uuid }}" class="fixed inset-0 bg-gray-900 bg-opacity-50 items-center justify-center hidden">
                     <div class="w-2/4 bg-white px-14 py-16 rounded-lg shadow-lg">
-                        <form action="{{ route('publisher.orders.cancel', $order->order->uuid) }}" method="post">
+                        <form id="cancel-form-{{ $order->order->uuid }}" action="{{ route('publisher.orders.cancel', $order->order->uuid) }}" method="post">
                             @csrf
                             <h3 class="text-2xl text-center font-semibold text-gray-800">Cancel Order</h3>
                             <div class="mb-4">
@@ -59,7 +61,7 @@
                             <div class="mt-4 flex justify-center items-center space-x-2">
                                 <button id="close-modal-{{ $order->order->uuid }}" type="button" onclick="closeCancelModal('{{ $order->order->uuid }}')"
                                     class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-700 transition">Close</button>
-                                <button id="cancel-order" type="submit" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700 transition">Cancel Order</button>
+                                <button id="cancel-order-{{ $order->order->uuid }}" type="submit" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700 transition" onclick="showCancelConfirmation(event, '{{ $order->order->uuid }}')">Cancel Order</button>
                             </div>
                         </form>
                     </div>

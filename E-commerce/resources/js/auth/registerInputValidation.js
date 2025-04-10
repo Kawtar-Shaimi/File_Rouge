@@ -137,4 +137,14 @@ $(document).ready(function() {
             $('#register').prop('disabled', false);
         }
     });
+
+    $('#togglePassword').on('click', function() {
+        $('#password').attr('type', $('#password').attr('type') === 'password' ? 'text' : 'password');
+        $(this).toggleClass('fa-eye fa-eye-slash');
+    });
+
+    $('#toggleConfirmPassword').on('click', function() {
+        $('#password_confirmation').attr('type', $('#password_confirmation').attr('type') === 'password' ? 'text' : 'password');
+        $(this).toggleClass('fa-eye fa-eye-slash');
+    });
 })

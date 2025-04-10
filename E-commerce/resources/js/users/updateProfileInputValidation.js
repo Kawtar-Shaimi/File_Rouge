@@ -1,3 +1,5 @@
+import Swal from "sweetalert2";
+
 $(document).ready(function() {
 
     $('#name').on('input', function() {
@@ -61,5 +63,22 @@ $(document).ready(function() {
             $('#phone').removeClass('border-red-500  focus:ring focus:ring-red-300').addClass('border-green-500  focus:ring focus:ring-green-300');
             $('#update-user').prop('disabled', false);
         }
+    });
+
+    $('#update-user').on('click', function(e) {
+        e.preventDefault();
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You want to update your profile?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#6366f1',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Yes, update it!',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $(`#update-form`).submit();
+            }
+        });
     });
 })

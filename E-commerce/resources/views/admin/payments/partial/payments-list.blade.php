@@ -29,12 +29,16 @@
                         @endif
                     </td>
                     <td class="p-3 border">
-                        <button class="bg-blue-500 text-white px-3 py-1 rounded"><a href="{{ route('admin.payments.edit', $payment->uuid) }}">Update</a></button>
-                        <form action="{{ route('admin.payments.delete', $payment->uuid) }}" method="POST" class="inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
-                        </form>
+                        <div class="flex justify-center items-center space-x-2">
+                            @if ($payment->status === 'pending')
+                                <button class="bg-blue-500 text-white px-3 py-1 rounded"><a href="{{ route('admin.payments.edit', $payment->uuid) }}">Update</a></button>
+                            @endif
+                            <form id="delete-form-{{ $payment->uuid }}" action="{{ route('admin.payments.delete', $payment->uuid) }}" method="POST" class="inline">
+                                @csrf
+                                @method('DELETE')
+                                <button id="delete-{{ $payment->uuid }}" type="submit" class="bg-red-500 text-white px-3 py-1 rounded" onclick="showDeleteConfirmation(event, '{{ $payment->uuid }}')">Delete</button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
             @endforeach

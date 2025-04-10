@@ -59,7 +59,10 @@
 
                     <div>
                         <label for="password" class="block text-sm font-medium text-gray-700">Password:</label>
-                        <input type="password" id="password" name="password" class="w-full p-3 border rounded-md" value="{{ old('password') }}" required>
+                        <div class="relative">
+                            <input type="password" id="password" name="password" class="w-full p-3 border rounded-md" value="{{ old('password') }}" required>
+                            <i class="fa-solid fa-eye absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer" id="togglePassword"></i>
+                        </div>
                     </div>
                     <p id="passwordErr" class="text-red-500 text-sm mt-1"></p>
                     @error('password')
@@ -68,7 +71,10 @@
 
                     <div>
                         <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Confirm Password:</label>
-                        <input type="password" id="password_confirmation" name="password_confirmation" class="w-full p-3 border rounded-md" required>
+                        <div class="relative">
+                            <input type="password" id="password_confirmation" name="password_confirmation" class="w-full p-3 border rounded-md" required>
+                            <i class="fa-solid fa-eye absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer" id="toggleConfirmPassword"></i>
+                        </div>
                     </div>
                     <p id="password_confirmationErr" class="text-red-500 text-sm mt-1"></p>
                     @error('password_confirmation')

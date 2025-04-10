@@ -1,3 +1,5 @@
+import Swal from "sweetalert2";
+
 $(document).ready(function() {
     $('#old_password').on('input', function() {
         var password = $(this).val();
@@ -73,5 +75,37 @@ $(document).ready(function() {
             $('#new_password_confirmation').removeClass('border-red-500  focus:ring focus:ring-red-300').addClass('border-green-500  focus:ring focus:ring-green-300');
             $('#change-password').prop('disabled', false);
         }
+    });
+
+    $('#change-password').on('click', function(e) {
+        e.preventDefault();
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You want to change your password?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#6366f1',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Yes, change it!',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $(`#update-form`).submit();
+            }
+        });
+    });
+
+    $('#toggleOldPassword').on('click', function() {
+        $('#old_password').attr('type', $('#old_password').attr('type') === 'password' ? 'text' : 'password');
+        $(this).toggleClass('fa-eye fa-eye-slash');
+    });
+
+    $('#toggleNewPassword').on('click', function() {
+        $('#new_password').attr('type', $('#new_password').attr('type') === 'password' ? 'text' : 'password');
+        $(this).toggleClass('fa-eye fa-eye-slash');
+    });
+
+    $('#toggleConfirmNewPassword').on('click', function() {
+        $('#new_password_confirmation').attr('type', $('#new_password_confirmation').attr('type') === 'password' ? 'text' : 'password');
+        $(this).toggleClass('fa-eye fa-eye-slash');
     });
 })

@@ -1,3 +1,5 @@
+import Swal from "sweetalert2";
+
 $(document).ready(function() {
 
     function fetchBooks(query, page = 1, sort = 'id', order = 'asc') {
@@ -39,3 +41,22 @@ $(document).ready(function() {
         fetchBooks(query, page, sort, order);
     });
 });
+
+function showDeleteConfirmation(e, uuid) {
+    e.preventDefault();
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'This action will permanently delete this book!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc2626',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Yes, delete it!',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $(`#delete-form-${uuid}`).submit();
+        }
+    });
+}
+
+window.showDeleteConfirmation = showDeleteConfirmation;

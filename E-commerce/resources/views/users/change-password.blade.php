@@ -14,14 +14,17 @@
         <div class="bg-white p-8 rounded-lg shadow-lg max-w-2xl mx-auto">
             <!-- Formulaire d'adresse -->
             <h3 class="text-xl font-semibold mb-4">Change Password</h3>
-            <form action="{{ route('users.change-password.update', $user->uuid) }}" method="POST">
+            <form id="update-form" action="{{ route('users.change-password.update', $user->uuid) }}" method="POST">
                 <div class="space-y-4">
                     @csrf
 
                     <div>
                         <label for="old_password" class="block text-sm font-medium text-gray-700">Old Password:</label>
-                        <input type="password" id="old_password" name="old_password" class="w-full p-3 border rounded-md"
-                            value="{{ old('old_password') }}" required>
+                        <div class="relative">
+                            <input type="password" id="old_password" name="old_password" class="w-full p-3 border rounded-md"
+                                value="{{ old('old_password') }}" required>
+                            <i class="fa-solid fa-eye absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer" id="toggleOldPassword"></i>
+                        </div>
                     </div>
                     <p id="old_passwordErr" class="text-red-500 text-xs mt-1"></p>
                     @error('old_password')
@@ -30,8 +33,11 @@
 
                     <div>
                         <label for="new_password" class="block text-sm font-medium text-gray-700">New Password:</label>
-                        <input type="password" id="new_password" name="new_password" class="w-full p-3 border rounded-md"
-                            value="{{ old('new_password') }}" required>
+                        <div class="relative">
+                            <input type="password" id="new_password" name="new_password" class="w-full p-3 border rounded-md"
+                                value="{{ old('new_password') }}" required>
+                            <i class="fa-solid fa-eye absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer" id="toggleNewPassword"></i>
+                        </div>
                     </div>
                     <p id="new_passwordErr" class="text-red-500 text-xs mt-1"></p>
                     @error('new_password')
@@ -40,8 +46,11 @@
 
                     <div>
                         <label for="new_password_confirmation" class="block text-sm font-medium text-gray-700">Confirm New Password:</label>
-                        <input type="password" id="new_password_confirmation" name="new_password_confirmation"
-                            class="w-full p-3 border rounded-md" required>
+                        <div class="relative">
+                            <input type="password" id="new_password_confirmation" name="new_password_confirmation"
+                                class="w-full p-3 border rounded-md" required>
+                            <i class="fa-solid fa-eye absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer" id="toggleConfirmNewPassword"></i>
+                        </div>
                     </div>
                     <p id="new_password_confirmationErr" class="text-red-500 text-xs mt-1"></p>
                     @error('new_password_confirmation')

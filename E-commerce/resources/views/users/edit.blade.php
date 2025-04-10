@@ -13,7 +13,7 @@
 <div class="container mx-auto p-8">
     <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-xl space-y-6">
         <h2 class="text-2xl font-bold mb-4 text-center">Update Profile</h2>
-        <form action="{{ route('users.update', $user->uuid) }}" method="POST">
+        <form id="update-form" action="{{ route('users.update', $user->uuid) }}" method="POST">
             @csrf
             @method('PUT')
 

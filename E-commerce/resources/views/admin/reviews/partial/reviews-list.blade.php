@@ -19,11 +19,13 @@
                     <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.users.show', $review->client->uuid) }}">#{{ $review->client->name }}</a></td>
                     <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.books.show', $review->book->uuid) }}">{{ $review->book->name }}</a></td>
                     <td class="p-3 border">
-                        <form action="{{ route('admin.reviews.delete', $review->uuid) }}" method="POST" class="inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
-                        </form>
+                        <div class="flex justify-center items-center space-x-2">
+                            <form id="delete-form-{{ $review->uuid }}" action="{{ route('admin.reviews.delete', $review->uuid) }}" method="POST" class="inline">
+                                @csrf
+                                @method('DELETE')
+                                <button id="delete-{{ $review->uuid }}" type="submit" class="bg-red-500 text-white px-3 py-1 rounded" onclick="showDeleteConfirmation(event, '{{ $review->uuid }}')">Delete</button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
             @endforeach

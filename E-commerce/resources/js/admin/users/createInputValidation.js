@@ -1,3 +1,5 @@
+import Swal from "sweetalert2";
+
 $(document).ready(function() {
     $('#name').on('input', function() {
         var name = $(this).val();
@@ -137,5 +139,23 @@ $(document).ready(function() {
             $('#role').removeClass('border-green-500  focus:ring focus:ring-green-300').addClass('border-red-500  focus:ring focus:ring-red-300');
             $('#create-user').prop('disabled', true);
         }
+    });
+
+    $('#create-user').click(function(e) {
+        e.preventDefault();
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You are about to create a new user.',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#6366f1',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, create it!',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('#create-form').submit();
+            }
+        });
     });
 })

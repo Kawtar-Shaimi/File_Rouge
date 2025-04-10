@@ -1,4 +1,9 @@
+import Swal from "sweetalert2";
+
 $(document).ready(function() {
+
+    $('#add-book').prop('disabled', true);
+
     $('#name').on('input', function() {
         var name = $(this).val();
         if (name.length < 3) {
@@ -78,5 +83,23 @@ $(document).ready(function() {
             $('#image').removeClass('border-red-500  focus:ring focus:ring-red-300').addClass('border-green-500  focus:ring focus:ring-green-300');
             $('#add-book').prop('disabled', false);
         }
+    });
+
+    $('#add-book').click(function(e) {
+        e.preventDefault();
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You are about to create a new book.',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#6366f1',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, create it!',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('#createBookForm').submit();
+            }
+        });
     });
 });

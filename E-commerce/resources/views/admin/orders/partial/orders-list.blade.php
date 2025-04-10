@@ -31,12 +31,16 @@
                         @endif
                     </td>
                     <td class="p-3 border">
-                        <a href="{{ route('admin.orders.edit', $order->uuid) }}" class="bg-blue-500 text-white px-3 py-1 rounded">Update</a>
-                        <form action="{{ route('admin.orders.delete', $order->uuid) }}" method="POST" class="inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
-                        </form>
+                        <div class="flex justify-center items-center space-x-2">
+                            @if ($order->status !== 'completed' && $order->status !== 'cancelled')
+                                <a href="{{ route('admin.orders.edit', $order->uuid) }}" class="bg-blue-500 text-white px-3 py-1 rounded">Update</a>
+                            @endif
+                            <form id="delete-form-{{ $order->uuid }}" action="{{ route('admin.orders.delete', $order->uuid) }}" method="POST" class="inline">
+                                @csrf
+                                @method('DELETE')
+                                <button id="delete-{{ $order->uuid }}" type="submit" class="bg-red-500 text-white px-3 py-1 rounded" onclick="showDeleteConfirmation(event, '{{ $order->uuid }}')">Delete</button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
             @endforeach

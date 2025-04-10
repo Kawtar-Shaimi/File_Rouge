@@ -19,12 +19,14 @@
                     <td class="p-3 border text-blue-500 font-semibold">{{ $book->stock }}</td>
                     <td class="p-3 border">{{ $book->category->name }}</td>
                     <td class="p-3 border">
-                        <a class="bg-blue-500 text-white px-3 py-1 rounded" href="{{ route('publisher.books.edit', $book->uuid) }}">Update</a>
-                        <form action="{{ route('publisher.books.delete', $book->uuid) }}" method="POST" class="inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
-                        </form>
+                        <div class="flex justify-center items-center space-x-2">
+                            <a class="bg-blue-500 text-white px-3 py-1 rounded" href="{{ route('publisher.books.edit', $book->uuid) }}">Update</a>
+                            <form id="delete-form-{{ $book->uuid }}" action="{{ route('publisher.books.delete', $book->uuid) }}" method="POST" class="inline">
+                                @csrf
+                                @method('DELETE')
+                                <button id="delete-{{ $book->uuid }}" type="submit" class="bg-red-500 text-white px-3 py-1 rounded" onclick="showDeleteConfirmation(event, '{{ $book->uuid }}')">Delete</button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
             @endforeach

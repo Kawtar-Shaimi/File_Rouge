@@ -136,7 +136,7 @@
 <!-- Cancel Modal -->
 <div id="cancel-modal-{{ $order->order->uuid }}" class="fixed inset-0 bg-gray-900 bg-opacity-50 items-center justify-center hidden">
     <div class="w-2/4 bg-white px-14 py-16 rounded-lg shadow-lg">
-        <form action="{{ route('publisher.orders.cancel', $order->order->uuid) }}" method="post">
+        <form id="cancel-form" action="{{ route('publisher.orders.cancel', $order->order->uuid) }}" method="post">
             @csrf
             <h3 class="text-2xl text-center font-semibold text-gray-800">Cancel Order</h3>
             <div class="mb-4">

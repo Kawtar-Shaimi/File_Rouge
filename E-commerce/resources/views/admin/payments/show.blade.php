@@ -3,7 +3,8 @@
 @section('head')
     @vite([
         'resources/css/app.css',
-        'resources/js/app.js'
+        'resources/js/app.js',
+        'resources/js/admin/payments/payment.js',
     ])
 @endsection
 
@@ -90,11 +91,13 @@
                     <tr>
                         <td class="p-3 border">Actions</td>
                         <td class="p-3 border">
-                            <button class="bg-blue-500 text-white px-3 py-1 rounded"><a href="{{ route('admin.payments.edit', $payment->uuid) }}">Update</a></button>
-                            <form action="{{ route('admin.payments.delete', $payment->uuid) }}" method="POST" class="inline">
+                            @if ($payment->status === 'pending')
+                                <button class="bg-blue-500 text-white px-3 py-1 rounded"><a href="{{ route('admin.payments.edit', $payment->uuid) }}">Update</a></button>
+                            @endif
+                            <form id="delete-form" action="{{ route('admin.payments.delete', $payment->uuid) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
+                                <button id="delete" type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
                             </form>
                         </td>
                     </tr>

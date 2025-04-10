@@ -23,11 +23,13 @@
                     <td class="p-3 border">{{ $book->category->name }}</td>
                     <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('admin.users.show', $book->publisher->uuid) }}">{{ $book->publisher->name }}</a></td>
                     <td class="p-3 border">
-                        <form action="{{ route('admin.books.delete', $book->uuid) }}" method="POST" class="inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
-                        </form>
+                        <div class="flex justify-center items-center space-x-2">
+                            <form id="delete-form-{{ $book->uuid }}" action="{{ route('admin.books.delete', $book->uuid) }}" method="POST" class="inline">
+                                @csrf
+                                @method('DELETE')
+                                <button id="delete-{{ $book->uuid }}" type="submit" class="bg-red-500 text-white px-3 py-1 rounded" onclick="showDeleteConfirmation(event, '{{ $book->uuid }}')">Delete</button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
             @endforeach

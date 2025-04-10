@@ -3,7 +3,8 @@
 @section('head')
     @vite([
         'resources/css/app.css',
-        'resources/js/app.js'
+        'resources/js/app.js',
+        'resources/js/admin/categories/category.js',
     ])
 @endsection
 
@@ -45,10 +46,10 @@
                         <td class="p-3 border">Actions</td>
                         <td class="p-3 border">
                             <button class="bg-blue-500 text-white px-3 py-1 rounded"><a href="{{ route('admin.categories.edit', $category->uuid) }}">Update</a></button>
-                            <form action="{{ route('admin.categories.delete', $category->uuid) }}" method="POST" class="inline">
+                            <form id="delete-form" action="{{ route('admin.categories.delete', $category->uuid) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
+                                <button id="delete" type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
                             </form>
                         </td>
                     </tr>

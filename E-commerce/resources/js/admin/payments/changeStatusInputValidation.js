@@ -11,4 +11,21 @@ $(document).ready(function () {
             $('#update-status').prop('disabled', false);
         }
     });
+
+    $('#update-status').on('click', function(e) {
+        e.preventDefault();
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You want to change this payment status?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#6366f1',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Yes, change it!',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $(`#update-form`).submit();
+            }
+        });
+    });
 })

@@ -1,3 +1,5 @@
+import Swal from "sweetalert2";
+
 $(document).ready(function () {
     $('#status').on('change', function () {
         var selectedStatus = $(this).val();
@@ -35,4 +37,21 @@ $(document).ready(function () {
             $('#update-status').prop('disabled', false);
         }
     })
+
+    $('#update-status').on('click', function(e) {
+        e.preventDefault();
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You want to change this order status?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#6366f1',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Yes, change it!',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $(`#update-form`).submit();
+            }
+        });
+    });
 })

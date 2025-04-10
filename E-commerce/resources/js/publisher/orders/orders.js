@@ -1,3 +1,5 @@
+import Swal from "sweetalert2";
+
 $(document).ready(function() {
 
     function fetchOrders(query, page = 1, sort = 'order_number', order = 'asc') {
@@ -39,3 +41,22 @@ $(document).ready(function() {
         fetchOrders(query, page, sort, order);
     });
 });
+
+function showCancelConfirmation(e, uuid){
+    e.preventDefault();
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'This action will permanently cancel this order!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc2626',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Yes, cancel it!',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $(`#cancel-form-${uuid}`).submit();
+        }
+    });
+}
+
+window.showCancelConfirmation = showCancelConfirmation;

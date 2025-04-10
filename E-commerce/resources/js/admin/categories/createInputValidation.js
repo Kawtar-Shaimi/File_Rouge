@@ -28,17 +28,39 @@ $(document).ready(function() {
             $('#create-category').prop('disabled', false);
         }
     });
+
     $('#description').on('input', function() {
         var description = $(this).val();
         if (description.length < 3) {
             $('#descriptionErr').text('Description must be at least 3 characters');
             $('#description').removeClass('border-green-500  focus:ring focus:ring-green-300').addClass('border-red-500  focus:ring focus:ring-red-300');
             $('#create-category').prop('disabled', true);
-        }
-        else {
+        } else if (description.trim() === '') {
+            $('#descriptionErr').text('Description cannot be empty');
+            $('#description').removeClass('border-green-500  focus:ring focus:ring-green-300').addClass('border-red-500  focus:ring focus:ring-red-300');
+            $('#create-category').prop('disabled', true);
+        } else {
             $('#descriptionErr').text('');
             $('#description').removeClass('border-red-500  focus:ring focus:ring-red-300').addClass('border-green-500  focus:ring focus:ring-green-300');
             $('#create-category').prop('disabled', false);
         }
     })
+
+    $('#create-category').click(function(e) {
+        e.preventDefault();
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You are about to create a new category.',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#6366f1',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, create it!',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('#create-category-form').submit();
+            }
+        });
+    });
 });

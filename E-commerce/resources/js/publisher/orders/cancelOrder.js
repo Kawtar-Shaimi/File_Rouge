@@ -1,12 +1,4 @@
-function showCancelModal(uuid) {
-    $('#cancel-modal-' + uuid).removeClass('hidden').addClass('flex');
-    $('#show-modal-' + uuid).addClass('hidden');
-}
-
-function closeCancelModal(uuid) {
-    $('#cancel-modal-' + uuid).addClass('hidden').removeClass('flex');
-    $('#show-modal-' + uuid).removeClass('hidden');
-}
+import Swal from "sweetalert2";
 
 $(document).ready(function() {
     $('#reason').on('input', function() {
@@ -25,7 +17,34 @@ $(document).ready(function() {
             $('#update-status').prop('disabled', false);
         }
     })
+
+    $('#cancel-order').on('click', function(e) {
+        e.preventDefault();
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'This action will permanently cancel this order!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc2626',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Yes, cancel it!',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $(`#cancel-form`).submit();
+            }
+        });
+    });
 });
+
+function showCancelModal(uuid) {
+    $('#cancel-modal-' + uuid).removeClass('hidden').addClass('flex');
+    $('#show-modal-' + uuid).addClass('hidden');
+}
+
+function closeCancelModal(uuid) {
+    $('#cancel-modal-' + uuid).addClass('hidden').removeClass('flex');
+    $('#show-modal-' + uuid).removeClass('hidden');
+}
 
 window.showCancelModal = showCancelModal;
 window.closeCancelModal = closeCancelModal;

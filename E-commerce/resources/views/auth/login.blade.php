@@ -29,7 +29,10 @@
 
                 <div>
                     <label for="password" class="block text-sm font-medium text-gray-700">Password:</label>
-                    <input type="password" id="password" name="password" class="w-full p-3 border rounded-md" value="{{ old('password') }}" required>
+                    <div class="relative">
+                        <input type="password" id="password" name="password" class="w-full p-3 border rounded-md" value="{{ old('password') }}" required>
+                        <i class="fa-solid fa-eye absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer" id="togglePassword"></i>
+                    </div>
                 </div>
                 <p id="passwordErr" class="text-red-500 text-sm mt-1"></p>
                 @error('password')

@@ -19,11 +19,13 @@
                     <td class="p-3 border">{{ $visit->last_visited_url }}</td>
                     <td class="p-3 border">{{ $visit->last_visit }}</td>
                     <td class="p-3 border">
-                        <form action="{{ route('admin.visits.delete', $visit->uuid) }}" method="POST" class="inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
-                        </form>
+                        <div class="flex justify-center items-center space-x-2">
+                            <form id="delete-form-{{ $visit->uuid }}" action="{{ route('admin.visits.delete', $visit->uuid) }}" method="POST" class="inline">
+                                @csrf
+                                @method('DELETE')
+                                <button id="delete-{{ $visit->uuid }}" type="submit" class="bg-red-500 text-white px-3 py-1 rounded" onclick="showDeleteConfirmation(event, '{{ $visit->uuid }}')">Delete</button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
             @endforeach
