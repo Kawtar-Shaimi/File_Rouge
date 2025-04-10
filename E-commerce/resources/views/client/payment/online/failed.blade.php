@@ -1,14 +1,12 @@
 @extends('layouts.front-office')
 
+@section('title', 'Payment Failed')
+
 @section('head')
-    @vite([
-    'resources/css/app.css',
-    'resources/js/app.js'
-])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 @endsection
 
 @section('content')
-
     <div class="container mx-auto p-6">
         <div class="bg-white p-8 rounded-lg shadow-lg text-center">
             <h2 class="text-3xl font-bold text-red-600 mb-6">Payment Failed</h2>
@@ -36,5 +34,4 @@
             </div>
         </div>
     </div>
-
 @endsection

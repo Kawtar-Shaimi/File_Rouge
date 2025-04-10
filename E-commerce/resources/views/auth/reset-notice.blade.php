@@ -1,10 +1,9 @@
 @extends('layouts.front-office')
 
+@section('title', 'Reset Password')
+
 @section('head')
-    @vite([
-        'resources/css/app.css',
-        'resources/js/app.js'
-    ])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 @endsection
 
 @section('content')
@@ -16,10 +15,11 @@
                 <p class="text-gray-700 text-base mb-6 leading-relaxed">
                     Please check your email for the password reset link.
                     If you did not receive the email,
-                    <form method="POST" action="{{ route('reset.resend', $user->uuid) }}" class="inline">
-                        @csrf
-                        <button type="submit" class="text-purple-600 font-medium hover:underline">click here to request another</button>.
-                    </form>
+                <form method="POST" action="{{ route('reset.resend', $user->uuid) }}" class="inline">
+                    @csrf
+                    <button type="submit" class="text-purple-600 font-medium hover:underline">click here to request
+                        another</button>.
+                </form>
                 </p>
 
                 <div class="text-sm text-center text-gray-500">

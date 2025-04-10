@@ -28,11 +28,11 @@ class UserFactory extends Factory
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
             'phone' => $this->faker->unique()->phoneNumber(),
-            'password' => Hash::make('123456789'),
+            'password' => Hash::make('Ab#12345'),
             'role' => $this->faker->randomElement(['admin', 'client', 'publisher']),
-            'created_at' => now(),
-            'updated_at' => now(),
-            'email_verified_at' => now()
+            'created_at' => fake()->dateTimeBetween('-1 year', 'now'),
+            'updated_at' => fake()->dateTimeBetween('-1 year', 'now'),
+            'email_verified_at' => fake()->dateTimeBetween('-1 year', 'now'),
         ];
     }
 }

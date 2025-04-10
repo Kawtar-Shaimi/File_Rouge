@@ -2,13 +2,13 @@
     <thead>
         <tr class="bg-gray-200">
             <th class="p-3 border">ID</th>
-            <th class="p-3 border">Nom</th>
+            <th class="p-3 border">Name</th>
             <th class="p-3 border">Description</th>
             <th class="p-3 border">Price</th>
             <th class="p-3 border">Stock</th>
             <th class="p-3 border">Category</th>
             <th class="p-3 border">Created By</th>
-            <th class="p-3 border">Actions</th>
+            <th class="p-3 border">Action</th>
         </tr>
     </thead>
     <tbody>
@@ -35,7 +35,7 @@
             @endforeach
         @else
             <tr>
-                <td colspan="7" class="text-red-500 text-center py-3 px-6 text-2xl font-bold">No Books Yet</td>
+                <td colspan="8" class="text-red-500 text-center py-3 px-6 text-2xl font-bold">No Books Yet</td>
             </tr>
         @endif
     </tbody>

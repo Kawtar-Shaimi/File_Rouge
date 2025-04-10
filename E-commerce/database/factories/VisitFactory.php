@@ -21,7 +21,7 @@ class VisitFactory extends Factory
             'ip_address' => $this->faker->ipv4(),
             'user_agent' => $this->faker->userAgent(),
             'last_visited_url' => $this->faker->url(),
-            'last_visit' => now()
+            'last_visit' => $this->faker->dateTimeBetween('-1 year', 'now'),
         ];
     }
 }

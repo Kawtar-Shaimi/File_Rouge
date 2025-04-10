@@ -1,48 +1,49 @@
 @extends('layouts.front-office')
 
+@section('title', 'Checkout')
+
 @section('head')
-    @vite([
-        'resources/css/app.css',
-        'resources/js/client/payment/checkoutInputValidation.js',
-    ])
+    @vite(['resources/css/app.css', 'resources/js/client/payment/checkoutInputValidation.js'])
 @endsection
 
 @section('content')
 
     <div class="container mx-auto p-6">
         <div class="bg-white p-8 rounded-lg shadow-lg max-w-2xl mx-auto">
-            <h2 class="text-2xl font-bold mb-6 text-center">Finalisez votre commande</h2>
+            <h2 class="text-2xl font-bold mb-6 text-center">Checkout</h2>
 
-            <!-- Récapitulatif de la commande -->
+            <!-- Order Summary -->
             <div class="border-b pb-4 mb-4">
-                <h3 class="text-xl font-semibold mb-4">Récapitulatif de la commande</h3>
+                <h3 class="text-xl font-semibold mb-4">Order Summary</h3>
                 @if ($cart)
                     @foreach ($cart->cartBooks as $cartBook)
                         <div class="flex justify-between mb-2">
                             <span>{{ $cartBook->book->name }}:</span>
-                            <span class="text-green-500">${{ number_format($cartBook->book->price * $cartBook->quantity, 2) }}</span>
+                            <span
+                                class="text-green-500">${{ number_format($cartBook->book->price * $cartBook->quantity, 2) }}</span>
                         </div>
                     @endforeach
                     <div class="flex justify-between font-bold text-lg">
-                        <span>Total à payer:</span>
+                        <span>Total amount:</span>
                         <span>${{ $cart->total_price }}</span>
                     </div>
                 @else
                     <div class="flex justify-between font-bold text-lg">
-                        <span>Total à payer:</span>
+                        <span>Total amount:</span>
                         <span>0</span>
                     </div>
                 @endif
             </div>
 
-            <!-- Formulaire d'adresse -->
-            <h3 class="text-xl font-semibold mb-4">Adresse de livraison</h3>
+            <!-- Shipping Address -->
+            <h3 class="text-xl font-semibold mb-4">Shipping Address</h3>
             <form id="checkout-form" action="{{ route('client.order.makeOrder') }}" method="POST">
                 <div class="space-y-4">
                     @csrf
                     <div>
                         <label for="shipping_name" class="block text-sm font-medium text-gray-700">Name:</label>
-                        <input type="text" id="shipping_name" name="shipping_name" class="w-full p-3 border rounded-md" value="{{ old('shipping_name', Auth::guard('client')->user()->name) }}" required>
+                        <input type="text" id="shipping_name" name="shipping_name" class="w-full p-3 border rounded-md"
+                            value="{{ old('shipping_name', Auth::guard('client')->user()->name) }}" required>
                     </div>
                     <p id="shipping_nameErr" class="text-red-500 text-sm mt-1"></p>
                     @error('shipping_name')
@@ -51,7 +52,8 @@
 
                     <div>
                         <label for="shipping_email" class="block text-sm font-medium text-gray-700">Email:</label>
-                        <input type="email" id="shipping_email" name="shipping_email" class="w-full p-3 border rounded-md" value="{{ old('shipping_email', Auth::guard('client')->user()->email) }}" required>
+                        <input type="email" id="shipping_email" name="shipping_email" class="w-full p-3 border rounded-md"
+                            value="{{ old('shipping_email', Auth::guard('client')->user()->email) }}" required>
                     </div>
                     <p id="shipping_emailErr" class="text-red-500 text-sm mt-1"></p>
                     @error('shipping_email')
@@ -60,7 +62,8 @@
 
                     <div>
                         <label for="shipping_phone" class="block text-sm font-medium text-gray-700">Phone:</label>
-                        <input type="tel" id="shipping_phone" name="shipping_phone" class="w-full p-3 border rounded-md" value="{{ old('shipping_phone', Auth::guard('client')->user()->phone) }}" required>
+                        <input type="tel" id="shipping_phone" name="shipping_phone" class="w-full p-3 border rounded-md"
+                            value="{{ old('shipping_phone', Auth::guard('client')->user()->phone) }}" required>
                     </div>
                     <p id="shipping_phoneErr" class="text-red-500 text-sm mt-1"></p>
                     @error('shipping_phone')
@@ -99,8 +102,10 @@
                     @enderror
 
                     <div>
-                        <label for="shipping_postal_code" class="block text-sm font-medium text-gray-700">Postal Code:</label>
-                        <input type="text" id="shipping_postal_code" name="shipping_postal_code" class="w-full p-3 border rounded-md" value="{{ old('shipping_postal_code') }}" required>
+                        <label for="shipping_postal_code" class="block text-sm font-medium text-gray-700">Postal
+                            Code:</label>
+                        <input type="text" id="shipping_postal_code" name="shipping_postal_code"
+                            class="w-full p-3 border rounded-md" value="{{ old('shipping_postal_code') }}" required>
                     </div>
                     <p id="shipping_postal_codeErr" class="text-red-500 text-sm mt-1"></p>
                     @error('shipping_postal_code')
@@ -116,21 +121,24 @@
                         <!-- Credit Card -->
                         <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-100">
                             <input type="radio" id="credit_card" name="payment_method" value="credit_card" class="mr-3">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/PayPal_logo_2014.svg/200px-PayPal_logo_2014.svg.png" alt="Credit Card" class="w-16">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/PayPal_logo_2014.svg/200px-PayPal_logo_2014.svg.png"
+                                alt="Credit Card" class="w-16">
                             <span class="ml-auto text-gray-600">Credit Card</span>
                         </label>
 
                         <!-- PayPal -->
                         <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-100">
                             <input type="radio" name="payment_method" value="paypal" class="mr-3">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/PayPal_logo_2014.svg/200px-PayPal_logo_2014.svg.png" alt="PayPal" class="w-16">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/PayPal_logo_2014.svg/200px-PayPal_logo_2014.svg.png"
+                                alt="PayPal" class="w-16">
                             <span class="ml-auto text-gray-600">PayPal</span>
                         </label>
 
                         <!-- Cash on Delivery -->
                         <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-100">
                             <input type="radio" name="payment_method" value="cash_on_delivery" class="mr-3" checked>
-                            <img src="https://cdn-icons-png.flaticon.com/512/2331/2331940.png" alt="Cash on Delivery" class="w-10">
+                            <img src="https://cdn-icons-png.flaticon.com/512/2331/2331940.png" alt="Cash on Delivery"
+                                class="w-10">
                             <span class="ml-auto text-gray-600">Cash on Delivery</span>
                         </label>
                     </div>
@@ -140,9 +148,10 @@
                     @enderror
                 </div>
 
-                <!-- Bouton de paiement -->
-                <button id="checkout-btn" type="submit" class="w-full bg-purple-400 text-white font-bold py-3 rounded-lg mt-6 hover:bg-blue-600">
-                    Passer la commande
+                <!-- Checkout -->
+                <button id="checkout-btn" type="submit"
+                    class="w-full bg-purple-400 text-white font-bold py-3 rounded-lg mt-6 hover:bg-blue-600">
+                    Checkout
                 </button>
             </form>
         </div>
@@ -169,7 +178,8 @@
                         data: countries,
                         allowClear: true
                     });
-                    $('.select2-selection').addClass('!w-full !p-3 !border !rounded-md !h-12 !border-gray-300');
+                    $('.select2-selection').addClass(
+                        '!w-full !p-3 !border !rounded-md !h-12 !border-gray-300');
                 },
                 error: function() {
                     console.error("Error fetching countries");
@@ -185,7 +195,9 @@
                     $.ajax({
                         url: "https://countriesnow.space/api/v0.1/countries/cities",
                         method: "POST",
-                        data: { country: countryCode },
+                        data: {
+                            country: countryCode
+                        },
                         success: function(data) {
                             cities = data.data;
 
@@ -200,38 +212,52 @@
                                 data: [],
                                 ajax: {
                                     transport: function(params, success, failure) {
-                                    let searchCity = params.data.term || "";
+                                        let searchCity = params.data.term || "";
 
-                                    if (searchCity !== lastSearchCity) {
-                                        currentIndex = 0;
-                                    }
-
-                                    lastSearchCity = searchCity;
-
-                                    let filteredCities = cities
-                                        .filter(city => city.toLowerCase().includes(searchCity.toLowerCase()))
-                                        .slice(currentIndex, currentIndex + chunkSize);
-
-                                    if (filteredCities.length === 0) {
-
-                                        if (currentIndex + chunkSize > cities.length) {
-                                            currentIndex = cities.length - chunkSize;
-                                        } else {
-                                            currentIndex += chunkSize;
+                                        if (searchCity !== lastSearchCity) {
+                                            currentIndex = 0;
                                         }
 
-                                        filteredCities = cities
-                                        .filter(city => city.toLowerCase().includes(searchCity.toLowerCase()))
-                                        .slice(currentIndex, currentIndex + chunkSize);
-                                    }
+                                        lastSearchCity = searchCity;
 
-                                    success({ results: filteredCities.map(city => ({ id: city, text: city })) });
+                                        let filteredCities = cities
+                                            .filter(city => city.toLowerCase()
+                                                .includes(searchCity.toLowerCase()))
+                                            .slice(currentIndex, currentIndex +
+                                                chunkSize);
+
+                                        if (filteredCities.length === 0) {
+
+                                            if (currentIndex + chunkSize > cities
+                                                .length) {
+                                                currentIndex = cities.length -
+                                                    chunkSize;
+                                            } else {
+                                                currentIndex += chunkSize;
+                                            }
+
+                                            filteredCities = cities
+                                                .filter(city => city.toLowerCase()
+                                                    .includes(searchCity
+                                                        .toLowerCase()))
+                                                .slice(currentIndex, currentIndex +
+                                                    chunkSize);
+                                        }
+
+                                        success({
+                                            results: filteredCities.map(
+                                                city => ({
+                                                    id: city,
+                                                    text: city
+                                                }))
+                                        });
                                     },
                                     delay: 300
                                 },
 
                             });
-                            $('.select2-selection').addClass('!w-full !p-3 !border !rounded-md !h-12 !border-gray-300');
+                            $('.select2-selection').addClass(
+                                '!w-full !p-3 !border !rounded-md !h-12 !border-gray-300');
                         },
                         error: function() {
                             console.error("Error fetching cities");

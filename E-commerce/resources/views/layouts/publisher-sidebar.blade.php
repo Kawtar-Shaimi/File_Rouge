@@ -3,7 +3,7 @@
     <nav class="mt-6">
         <a href="{{ route('publisher.index') }}" class="block px-4 py-2 hover:bg-gray-700">Dashboard</a>
         <a href="{{ route('publisher.books.index') }}" class="block px-4 py-2 hover:bg-gray-700">Books</a>
-        <a href="{{ route('publisher.books.create') }}" class="block px-4 py-2 hover:bg-gray-700">Create Book</a>
+        <a href="{{ route('publisher.books.create') }}" class="block px-4 py-2 hover:bg-gray-700">Add Book</a>
         <a href="{{ route('publisher.reviews.index') }}" class="block px-4 py-2 hover:bg-gray-700">Reviews</a>
         <a href="{{ route('publisher.orders.index') }}" class="block px-4 py-2 hover:bg-gray-700">Orders</a>
         <a href="{{ route('publisher.profile') }}" class="block px-4 py-2 hover:bg-gray-700">Profile</a>

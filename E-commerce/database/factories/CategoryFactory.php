@@ -27,8 +27,8 @@ class CategoryFactory extends Factory
             'name' => $this->faker->word(),
             'description' => $this->faker->text(),
             'admin_id' => $this->faker->randomElement($admin_ids),
-            'created_at' => now(),
-            'updated_at' => now()
+            'created_at' => fake()->dateTimeBetween('-1 year', 'now'),
+            'updated_at' => fake()->dateTimeBetween('-1 year', 'now')
         ];
     }
 }

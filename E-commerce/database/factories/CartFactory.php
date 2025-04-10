@@ -25,7 +25,7 @@ class CartFactory extends Factory
         return [
             'uuid' => $this->faker->uuid(),
             'client_id' => $this->faker->randomElement($client_ids),
-            'total_price' => $this->faker->randomFloat(2, 0, 1000),
+            'total_price' => 0,
             'created_at' => now(),
             'updated_at' => now()
         ];

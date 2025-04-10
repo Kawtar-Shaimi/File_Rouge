@@ -25,8 +25,8 @@ class WishlistFactory extends Factory
         return [
             'uuid' => $this->faker->uuid(),
             'client_id' => $this->faker->randomElement($client_ids),
-            'created_at' => now(),
-            'updated_at' => now()
+            'created_at' => fake()->dateTimeBetween('-1 year', 'now'),
+            'updated_at' => fake()->dateTimeBetween('-1 year', 'now')
         ];
     }
 }

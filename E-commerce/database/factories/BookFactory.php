@@ -39,13 +39,13 @@ class BookFactory extends Factory
             'uuid' => $this->faker->uuid(),
             'name' => $this->faker->word(),
             'description' => $this->faker->text(),
-            'price' => $this->faker->randomFloat(2, 0, 1000),
-            'stock' => $this->faker->randomNumber(3),
+            'price' => $this->faker->randomFloat(2, 50, 200),
+            'stock' => $this->faker->numberBetween(20, 100),
             'image' => $imagePath,
             'category_id' => $this->faker->randomElement($category_ids),
             'publisher_id' => $this->faker->randomElement($publisher_ids),
-            'created_at' => now(),
-            'updated_at' => now()
+            'created_at' => fake()->dateTimeBetween('-1 year', 'now'),
+            'updated_at' => fake()->dateTimeBetween('-1 year', 'now')
         ];
     }
 }

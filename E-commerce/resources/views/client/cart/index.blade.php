@@ -1,5 +1,7 @@
 @extends('layouts.front-office')
 
+@section('title', 'My Cart')
+
 @section('head')
     @vite([
         'resources/css/app.css',
@@ -12,9 +14,9 @@
 
 <div class="container mx-auto p-6">
     <div class="grid grid-cols-3 gap-6">
-        <!-- Section Panier -->
+        <!-- Book Container -->
         <div id="book-container" class="col-span-2 bg-white p-6 rounded-lg shadow-lg">
-            <h2 class="text-2xl font-bold mb-4">Mon Panier</h2>
+            <h2 class="text-2xl font-bold mb-4">My Cart</h2>
             @if ($cart)
                 @foreach ( $cart->cartBooks as $cartBook)
                     <div id="book-{{ $cartBook->book->uuid }}" class="border-b pb-4 mb-4 flex items-center justify-between">
@@ -46,9 +48,9 @@
 
         </div>
 
-        <!-- Récapitulatif -->
+        <!-- Summary -->
         <div class="bg-white p-6 rounded-lg shadow-lg">
-            <h2 class="text-xl font-bold mb-4">Récapitulatif</h2>
+            <h2 class="text-xl font-bold mb-4">Summary</h2>
             @if ($cart)
                 @foreach ( $cart->cartBooks as $cartBook)
                     <div id="total_book_container_{{ $cartBook->book->uuid }}" class="flex justify-between mb-2">
@@ -57,26 +59,26 @@
                     </div>
                 @endforeach
                 <div class="flex justify-between font-bold text-lg">
-                    <span>Total à payer:</span>
+                    <span>Total amount:</span>
                     <span id="total_price">${{ $cart->total_price }}</span>
                 </div>
             @else
                 <div class="flex justify-between font-bold text-lg">
-                    <span>Total à payer:</span>
+                    <span>Total amount:</span>
                     <span>$0</span>
                 </div>
             @endif
             @if ($cart)
-                <a id="checkout-btn" href="{{ route('client.checkout') }}" class="block w-full text-center bg-purple-500 text-white font-bold py-3 mt-4 rounded-lg hover:bg-blue-600 disabled:bg-purple-300">Passer la commande</a>
+                <a id="checkout-btn" href="{{ route('client.checkout') }}" class="block w-full text-center bg-purple-500 text-white font-bold py-3 mt-4 rounded-lg hover:bg-blue-600 disabled:bg-purple-300">Checkout</a>
             @else
-                <button class="w-full bg-purple-500 text-white font-bold py-3 mt-4 rounded-lg disabled:bg-purple-300" disabled > Passer la commande</button>
+                <button class="w-full bg-purple-500 text-white font-bold py-3 mt-4 rounded-lg disabled:bg-purple-300" disabled >Checkout</button>
             @endif
         </div>
     </div>
 
     <!-- Cartes bancaires -->
     <div class="mt-8 bg-white p-6 rounded-lg shadow-lg">
-        <h2 class="text-xl font-bold mb-4">Voilà les cartes bancaires que nous acceptons</h2>
+        <h2 class="text-xl font-bold mb-4">Accepted Payment Methods</h2>
         <div class="flex space-x-6">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/PayPal_logo_2014.svg/1024px-PayPal_logo_2014.svg.png" alt="PayPal" class="w-24 h-24">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Visa_2014_logo.svg/1024px-Visa_2014_logo.svg.png" alt="Visa" class="w-24 h-24">

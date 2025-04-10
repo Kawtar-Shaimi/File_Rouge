@@ -33,10 +33,10 @@ class OrderFactory extends Factory
             'shipping_email' => $this->faker->email(),
             'shipping_name' => $this->faker->name(),
             'payment_method' => $this->faker->randomElement(['credit_card', 'paypal', 'cash_on_delivery']),
-            'total_amount' => $this->faker->randomFloat(2, 0, 1000),
+            'total_amount' => 0,
             'client_id' => $this->faker->randomElement($client_ids),
-            'created_at' => now(),
-            'updated_at' => now()
+            'created_at' => fake()->dateTimeBetween('-1 year', 'now'),
+            'updated_at' => fake()->dateTimeBetween('-1 year', 'now')
         ];
     }
 }

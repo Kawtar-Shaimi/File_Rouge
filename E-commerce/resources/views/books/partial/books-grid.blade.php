@@ -17,7 +17,7 @@
                                 <button id="addOneToCartBtn-{{ $book->uuid }}" class="w-1/5 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white font-bold py-2 px-4" onclick="addOneToCart('{{ $book->uuid }}', {{ $book->stock }})">+</button>
                             @else
                                 <div id="cart-actions" class="w-4/5">
-                                    <label for="quantity-{{ $book->uuid }}" class="text-gray-600 block mr-2">Quantité:</label>
+                                    <label for="quantity-{{ $book->uuid }}" class="text-gray-600 block mr-2">Quantity:</label>
                                     <div class="w-full flex">
                                         <input type="number" id="quantity-{{ $book->uuid }}" name="quantity" min="1" max="{{ $book->stock }}" value="1" class="w-1/5 p-2 bg-gray-100 text-gray-900 rounded-s-lg">
                                         <button class="w-4/5 bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 disabled:bg-purple-300" @if ($book->stock > 0) onclick="addToCart('{{ $book->uuid }}', {{ $book->stock }})" @else disabled @endif>Add to cart</button>
@@ -40,7 +40,7 @@
         @endforeach
     @else
         <div class="col-span-1 md:col-span-2 lg:col-span-4">
-            <p class="text-red-500 text-4xl font-bold text-center py-32">No Book Yet</p>
+            <p class="text-red-500 text-4xl font-bold text-center py-32">No Books Yet</p>
         </div>
     @endif
 </div>

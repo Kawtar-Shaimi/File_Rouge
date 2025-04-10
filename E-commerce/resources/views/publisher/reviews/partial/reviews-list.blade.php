@@ -13,7 +13,8 @@
         @if ($reviews->count() > 0)
             @foreach ($reviews as $review)
                 <tr class="text-center">
-                    <td class="p-3 border underline italic hover:text-blue-400"><a href="{{ route('publisher.reviews.show', $review->uuid) }}">#{{ $review->uuid }}</a></td>
+                    <td class="p-3 border underline italic hover:text-blue-400"><a
+                            href="{{ route('publisher.reviews.show', $review->uuid) }}">#{{ $review->uuid }}</a></td>
                     <td class="p-3 border">{{ $review->book->name }}</td>
                     <td class="p-3 border">{{ $review->client->name }}</td>
                     <td class="p-3 border">{{ Str::limit($review->content, 15) }}</td>
@@ -28,7 +29,7 @@
             @endforeach
         @else
             <tr>
-                <td colspan="4" class="text-red-500 text-center py-3 px-6 text-2xl font-bold">No Reviews Yet</td>
+                <td colspan="6" class="text-red-500 text-center py-3 px-6 text-2xl font-bold">No Reviews Yet</td>
             </tr>
         @endif
     </tbody>

@@ -6,7 +6,7 @@
             <th class="p-3 border">User Agent</th>
             <th class="p-3 border">Last Visited URL</th>
             <th class="p-3 border">Last Visit</th>
-            <th class="p-3 border">Actions</th>
+            <th class="p-3 border">Action</th>
         </tr>
     </thead>
     <tbody>
@@ -20,10 +20,13 @@
                     <td class="p-3 border">{{ $visit->last_visit }}</td>
                     <td class="p-3 border">
                         <div class="flex justify-center items-center space-x-2">
-                            <form id="delete-form-{{ $visit->uuid }}" action="{{ route('admin.visits.delete', $visit->uuid) }}" method="POST" class="inline">
+                            <form id="delete-form-{{ $visit->uuid }}"
+                                action="{{ route('admin.visits.delete', $visit->uuid) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
-                                <button id="delete-{{ $visit->uuid }}" type="submit" class="bg-red-500 text-white px-3 py-1 rounded" onclick="showDeleteConfirmation(event, '{{ $visit->uuid }}')">Delete</button>
+                                <button id="delete-{{ $visit->uuid }}" type="submit"
+                                    class="bg-red-500 text-white px-3 py-1 rounded"
+                                    onclick="showDeleteConfirmation(event, '{{ $visit->uuid }}')">Delete</button>
                             </form>
                         </div>
                     </td>

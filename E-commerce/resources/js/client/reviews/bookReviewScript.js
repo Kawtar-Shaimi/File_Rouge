@@ -1,49 +1,52 @@
-import { showAlert } from '../../showAlert';
+import { showAlert } from "../../showAlert";
 
 function rateBook() {
     let rating = 0;
 
-    $('#review-rating i').on('mouseover', function () {
-        let value = $(this).data('value');
+    $("#review-rating i").on("mouseover", function () {
+        let value = $(this).data("value");
         highlightStars(value);
     });
 
-    $('#review-rating i').on('mouseleave', function () {
+    $("#review-rating i").on("mouseleave", function () {
         highlightStars(rating);
     });
 
-    $('#review-rating i').on('click', function () {
-        rating = $(this).data('value');
-        $('#rating-value').text(rating);
+    $("#review-rating i").on("click", function () {
+        rating = $(this).data("value");
+        $("#rating-value").text(rating);
     });
 
     function highlightStars(value) {
-        $('#review-rating i').each(function () {
-            let starValue = $(this).data('value');
+        $("#review-rating i").each(function () {
+            let starValue = $(this).data("value");
             if (starValue <= value) {
-                $(this).removeClass('fa-regular').addClass('fa-solid');
-                $(this).removeClass('text-gray-400').addClass('text-yellow-400');
+                $(this).removeClass("fa-regular").addClass("fa-solid");
+                $(this)
+                    .removeClass("text-gray-400")
+                    .addClass("text-yellow-400");
             } else {
-                $(this).removeClass('text-yellow-400').addClass('text-gray-400');
-                $(this).removeClass('fa-solid').addClass('fa-regular');
+                $(this)
+                    .removeClass("text-yellow-400")
+                    .addClass("text-gray-400");
+                $(this).removeClass("fa-solid").addClass("fa-regular");
             }
         });
     }
-
 }
 
 $(document).ready(rateBook);
 
 function addReview(bookId) {
-    const csrfToken = $('meta[name="csrf-token"]').attr('content');
+    const csrfToken = $('meta[name="csrf-token"]').attr("content");
 
-    let review_rating = parseInt($("#rating-value").text())
+    let review_rating = parseInt($("#rating-value").text());
     if (!review_rating || review_rating == 0) {
         $("#review-err").text("Review rating is required");
         return;
     }
 
-    let review_content = $("#review-content").val()
+    let review_content = $("#review-content").val();
     if (!review_content || review_content == "") {
         $("#review-err").text("Review content is required");
         return;
@@ -53,34 +56,40 @@ function addReview(bookId) {
     const data = {
         content: review_content,
         rate: review_rating,
-        _token: csrfToken
+        _token: csrfToken,
     };
 
     $.ajax({
         url: url,
-        type: 'POST',
+        type: "POST",
         data: data,
-        success: function(response, _, xhr) {
+        success: function (response, _, xhr) {
             if (xhr.status === 200) {
                 if ($(`#no-reviews-msg`).text() !== "") {
                     $(`#no-reviews-msg-div`).remove();
                 }
-                $(`#review-form`).removeClass('border-b border-b-black').empty();
+                $(`#review-form`)
+                    .removeClass("border-b border-b-black")
+                    .empty();
 
-                let reviews_count = parseInt($(`#reviews_count`).text())
+                let reviews_count = parseInt($(`#reviews_count`).text());
                 $(`#reviews_count`).text(reviews_count + 1);
                 $(`#book_reviews_count`).text(reviews_count + 1);
 
-
-                let reviews_avg = (( parseFloat($(`#reviews_avg`).text()) * reviews_count ) + review_rating) / (reviews_count + 1);
+                let reviews_avg =
+                    (parseFloat($(`#reviews_avg`).text()) * reviews_count +
+                        review_rating) /
+                    (reviews_count + 1);
                 $(`#reviews_avg`).text(reviews_avg.toFixed(1));
 
                 let book_rating_stars = "";
                 for (let i = 1; i <= 5; i++) {
                     if (i <= reviews_avg) {
-                        book_rating_stars += '<i class="fa-solid fa-star ms-2 cursor-pointer text-yellow-400"></i>';
+                        book_rating_stars +=
+                            '<i class="fa-solid fa-star ms-2 cursor-pointer text-yellow-400"></i>';
                     } else {
-                        book_rating_stars += '<i class="fa-regular fa-star ms-2 cursor-pointer"></i>';
+                        book_rating_stars +=
+                            '<i class="fa-regular fa-star ms-2 cursor-pointer"></i>';
                     }
                 }
                 $(`#book_reviews_stars`).html(book_rating_stars);
@@ -88,9 +97,11 @@ function addReview(bookId) {
                 let rating_stars = "";
                 for (let i = 1; i <= 5; i++) {
                     if (i <= review_rating) {
-                        rating_stars += '<i class="fa-solid fa-star ms-2 cursor-pointer text-yellow-400"></i>';
+                        rating_stars +=
+                            '<i class="fa-solid fa-star ms-2 cursor-pointer text-yellow-400"></i>';
                     } else {
-                        rating_stars += '<i class="fa-regular fa-star ms-2 cursor-pointer"></i>';
+                        rating_stars +=
+                            '<i class="fa-regular fa-star ms-2 cursor-pointer"></i>';
                     }
                 }
 
@@ -114,21 +125,21 @@ function addReview(bookId) {
                             </div>
                         </div>
                     </div>
-                `)
+                `);
                 showAlert("success", response.message);
             }
         },
-        error: function(xhr) {
+        error: function (xhr) {
             if (xhr.responseJSON) {
                 if (xhr.responseJSON.message) {
-                    showAlert("error", xhr.responseJSON.message)
+                    showAlert("error", xhr.responseJSON.message);
                 } else {
                     console.error(xhr.responseJSON.message);
                 }
             } else {
                 console.error(xhr.responseJSON.message);
             }
-        }
+        },
     });
 }
 
@@ -142,7 +153,7 @@ function showUpdateReviewForm(bookId, reviewId, content, rate) {
         }
     }
 
-    $(`#review-form`).addClass('border-b border-b-black').html(`
+    $(`#review-form`).addClass("border-b border-b-black").html(`
         <h3 class="text-xl font-bold text-gray-800 mb-4">Leave a Review:</h3>
 
         <div class="flex items-center mb-4 space-x-1" id="review-rating">
@@ -159,20 +170,20 @@ function showUpdateReviewForm(bookId, reviewId, content, rate) {
                 <p id="review-err" class="text-red-500 text-xs mt-1"></p>
             </div>
         </div>
-    `)
-    rateBook()
+    `);
+    rateBook();
 }
 
 function updateReview(reviewId, bookId) {
-    const csrfToken = $('meta[name="csrf-token"]').attr('content');
+    const csrfToken = $('meta[name="csrf-token"]').attr("content");
 
-    let review_rating = parseInt($("#rating-value").text())
+    let review_rating = parseInt($("#rating-value").text());
     if (!review_rating || review_rating == 0) {
         $("#review-err").text("Review rating is required");
         return;
     }
 
-    let review_content = $("#review-content").val()
+    let review_content = $("#review-content").val();
     if (!review_content || review_content == "") {
         $("#review-err").text("Review content is required");
         return;
@@ -183,28 +194,36 @@ function updateReview(reviewId, bookId) {
         content: review_content,
         rate: review_rating,
         _token: csrfToken,
-        _method: 'PUT'
+        _method: "PUT",
     };
 
     $.ajax({
         url: url,
-        type: 'PUT',
+        type: "PUT",
         data: data,
-        success: function(response, _, xhr) {
+        success: function (response, _, xhr) {
             if (xhr.status === 200) {
-                $(`#review-form`).removeClass('border-b border-b-black').empty();
+                $(`#review-form`)
+                    .removeClass("border-b border-b-black")
+                    .empty();
 
                 let reviews_count = parseInt($(`#reviews_count`).text());
 
-                let reviews_avg = (( parseFloat($(`#reviews_avg`).text()) * reviews_count ) - response.data.old_rating + review_rating) / reviews_count;
+                let reviews_avg =
+                    (parseFloat($(`#reviews_avg`).text()) * reviews_count -
+                        response.data.old_rating +
+                        review_rating) /
+                    reviews_count;
                 $(`#reviews_avg`).text(reviews_avg.toFixed(1));
 
                 let book_rating_stars = "";
                 for (let i = 1; i <= 5; i++) {
                     if (i <= reviews_avg) {
-                        book_rating_stars += '<i class="fa-solid fa-star ms-2 cursor-pointer text-yellow-400"></i>';
+                        book_rating_stars +=
+                            '<i class="fa-solid fa-star ms-2 cursor-pointer text-yellow-400"></i>';
                     } else {
-                        book_rating_stars += '<i class="fa-regular fa-star ms-2 cursor-pointer"></i>';
+                        book_rating_stars +=
+                            '<i class="fa-regular fa-star ms-2 cursor-pointer"></i>';
                     }
                 }
                 $(`#book_reviews_stars`).html(book_rating_stars);
@@ -212,9 +231,11 @@ function updateReview(reviewId, bookId) {
                 let rating_stars = "";
                 for (let i = 1; i <= 5; i++) {
                     if (i <= review_rating) {
-                        rating_stars += '<i class="fa-solid fa-star ms-2 cursor-pointer text-yellow-400"></i>';
+                        rating_stars +=
+                            '<i class="fa-solid fa-star ms-2 cursor-pointer text-yellow-400"></i>';
                     } else {
-                        rating_stars += '<i class="fa-regular fa-star ms-2 cursor-pointer"></i>';
+                        rating_stars +=
+                            '<i class="fa-regular fa-star ms-2 cursor-pointer"></i>';
                     }
                 }
 
@@ -236,39 +257,39 @@ function updateReview(reviewId, bookId) {
                             <button id="deleteReviewBtn-${reviewId}" class="bg-red-500 hover:bg-red-600 text-red-500 py-2 px-4 rounded-e-lg" onclick="deleteReview('${reviewId}', '${bookId}')">🗑</button>
                         </div>
                     </div>
-                `)
-                showAlert("success", response.message)
+                `);
+                showAlert("success", response.message);
             }
         },
-        error: function(xhr) {
+        error: function (xhr) {
             if (xhr.responseJSON) {
                 if (xhr.responseJSON.message) {
-                    showAlert("error", xhr.responseJSON.message)
+                    showAlert("error", xhr.responseJSON.message);
                 } else {
                     console.error(xhr.responseJSON.message);
                 }
             } else {
                 console.error(xhr.responseJSON.message);
             }
-        }
+        },
     });
 }
 
 function deleteReview(reviewId, bookId) {
-    const csrfToken = $('meta[name="csrf-token"]').attr('content');
+    const csrfToken = $('meta[name="csrf-token"]').attr("content");
 
     const url = `/client/review/delete/${reviewId}`;
 
     const data = {
         _token: csrfToken,
-        _method: 'DELETE'
+        _method: "DELETE",
     };
 
     $.ajax({
         url: url,
-        type: 'DELETE',
+        type: "DELETE",
         data: data,
-        success: function(response, _, xhr) {
+        success: function (response, _, xhr) {
             if (xhr.status === 200) {
                 $(`#review-${reviewId}`).remove();
 
@@ -276,15 +297,20 @@ function deleteReview(reviewId, bookId) {
                 $(`#reviews_count`).text(reviews_count - 1);
                 $(`#book_reviews_count`).text(reviews_count - 1);
 
-                let reviews_avg = (( parseFloat($(`#reviews_avg`).text()) * reviews_count ) - response.data.old_rating) / (reviews_count - 1);
+                let reviews_avg =
+                    (parseFloat($(`#reviews_avg`).text()) * reviews_count -
+                        response.data.old_rating) /
+                    (reviews_count - 1);
                 $(`#reviews_avg`).text(reviews_avg.toFixed(1));
 
                 let book_rating_stars = "";
                 for (let i = 1; i <= 5; i++) {
                     if (i <= reviews_avg) {
-                        book_rating_stars += '<i class="fa-solid fa-star ms-2 cursor-pointer text-yellow-400"></i>';
+                        book_rating_stars +=
+                            '<i class="fa-solid fa-star ms-2 cursor-pointer text-yellow-400"></i>';
                     } else {
-                        book_rating_stars += '<i class="fa-regular fa-star ms-2 cursor-pointer"></i>';
+                        book_rating_stars +=
+                            '<i class="fa-regular fa-star ms-2 cursor-pointer"></i>';
                     }
                 }
                 $(`#book_reviews_stars`).html(book_rating_stars);
@@ -292,15 +318,15 @@ function deleteReview(reviewId, bookId) {
                 if (response.data.count === 0) {
                     $(`#reviews_count`).text("0.0");
                     $(`#reviews_avg`).text(0);
-                    $('#reviews-container').append(`
+                    $("#reviews-container").append(`
                         <div id="no-reviews-msg-div" class="py-10 flex items-center justify-center">
                             <p id="no-reviews-msg" class="text-red-500 text-4xl font-bold text-center">No Reviews Yet</p>
                         </div>
-                    `)
+                    `);
                 }
 
                 if (response.data.client_count === 0) {
-                    $(`#review-form`).addClass('border-b border-b-black').html(`
+                    $(`#review-form`).addClass("border-b border-b-black").html(`
                         <h3 class="text-xl font-bold text-gray-800 mb-4">Leave a Review:</h3>
 
                         <div class="flex items-center mb-4 space-x-1" id="review-rating">
@@ -321,25 +347,24 @@ function deleteReview(reviewId, bookId) {
                             </div>
                             <p id="review-err" class="text-red-500 text-xs mt-1"></p>
                         </div>
-                    `)
+                    `);
                 }
-                showAlert("success", response.message)
-                rateBook()
+                showAlert("success", response.message);
+                rateBook();
             }
         },
-        error: function(xhr) {
+        error: function (xhr) {
             if (xhr.responseJSON) {
                 if (xhr.responseJSON.message) {
-                    showAlert("error", xhr.responseJSON.message)
+                    showAlert("error", xhr.responseJSON.message);
                 } else {
                     console.error(xhr.responseJSON.message);
                 }
             } else {
                 console.error(xhr.responseJSON.message);
             }
-        }
+        },
     });
-
 }
 
 window.rateBook = rateBook;
