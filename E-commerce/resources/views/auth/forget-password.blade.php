@@ -26,7 +26,7 @@
                     @enderror
 
                     <button id="send-reset-link" type="submit"
-                        class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700">
+                        class="w-full py-3 px-4 bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white font-medium rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
                         Send Password Reset Link
                     </button>
 
