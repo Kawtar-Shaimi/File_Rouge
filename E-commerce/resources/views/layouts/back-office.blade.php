@@ -26,7 +26,7 @@
     @elseif (session()->has('error'))
         <x-alert type="error" :message="session('error')" />
     @endif
-    <main class="min-h-screen bg-purple-400">
+    <main class="min-h-screen bg-gray-50">
         @yield('content')
     </main>
 </body>

@@ -79,6 +79,11 @@
                     },
                     vAxis: {
                         minValue: 0
+                    },
+                    colors: ['#0891b2'],
+                    chartArea: {
+                        width: '85%',
+                        height: '70%'
                     }
                 };
 
@@ -86,10 +91,13 @@
                 incomes_chart.draw(incomes_chart_data, incomes_chart_options);
             @else
                 $('#incomes_chart_div').html(`
-                <p class="w-full h-full m-0 p-0 flex justify-center items-center text-red-500 font-bold text-3xl text-center">No Data To Show</p>
-            `);
+                    <div class="w-full h-full flex justify-center items-center">
+                        <div class="text-center">
+                            <p class="w-full h-full m-0 p-0 flex justify-center items-center text-red-500 font-bold text-3xl text-center">No Data To Show</p>
+                        </div>
+                    </div>
+                `);
             @endif
-
 
             /* Best Saled Books chart */
             @if ($best_saled_books_chart_data->count() > 0)
@@ -112,13 +120,13 @@
                 ]);
 
                 let best_saled_books_chart_options = {
-                    title: "Best Saled Books",
+                    title: "Best Selling Books",
                     bar: {
                         groupWidth: "95%"
                     },
                     legend: {
                         position: "none"
-                    },
+                    }
                 };
 
                 let best_saled_books_chart = new google.visualization.ColumnChart(document.getElementById(
@@ -126,10 +134,13 @@
                 best_saled_books_chart.draw(best_saled_books_chart_view, best_saled_books_chart_options);
             @else
                 $("#best_saled_books_chart_div").html(`
-                <p class="w-full h-full m-0 p-0 flex justify-center items-center text-red-500 font-bold text-3xl text-center">No Data To Show</p>
-            `);
+                    <div class="w-full h-full flex justify-center items-center">
+                        <div class="text-center">
+                            <p class="w-full h-full m-0 p-0 flex justify-center items-center text-red-500 font-bold text-3xl text-center">No Data To Show</p>
+                        </div>
+                    </div>
+                `);
             @endif
-
 
             /* Best Saled Books of the Month chart */
             @if ($best_saled_books_of_the_month_chart_data->count() > 0)
@@ -153,13 +164,17 @@
                 ]);
 
                 let best_saled_books_of_the_month_chart_options = {
-                    title: "Best Saled Books of the Month",
+                    title: "Best Selling Books This Month",
                     bar: {
-                        groupWidth: "95%"
+                        groupWidth: "85%"
                     },
                     legend: {
                         position: "none"
                     },
+                    chartArea: {
+                        width: '80%',
+                        height: '70%'
+                    }
                 };
 
                 let best_saled_books_of_the_month_chart = new google.visualization.ColumnChart(document.getElementById(
@@ -168,10 +183,13 @@
                     best_saled_books_of_the_month_chart_options);
             @else
                 $("#best_saled_books_of_the_month_chart_div").html(`
-                <p class="w-full h-full m-0 p-0 flex justify-center items-center text-red-500 font-bold text-3xl text-center">No Data To Show</p>
-            `);
+                    <div class="w-full h-full flex justify-center items-center">
+                        <div class="text-center">
+                            <p class="w-full h-full m-0 p-0 flex justify-center items-center text-red-500 font-bold text-3xl text-center">No Data To Show</p>
+                        </div>
+                    </div>
+                `);
             @endif
-
 
             /* Best Saled Categories chart */
             @if ($best_saled_categories_chart_data->count() > 0)
@@ -194,13 +212,13 @@
                 ]);
 
                 let best_saled_categories_chart_options = {
-                    title: "Best Saled Categories",
+                    title: "Popular Book Categories",
                     bar: {
                         groupWidth: "95%"
                     },
                     legend: {
                         position: "none"
-                    },
+                    }
                 };
 
                 let best_saled_categories_chart = new google.visualization.ColumnChart(document.getElementById(
@@ -208,10 +226,13 @@
                 best_saled_categories_chart.draw(best_saled_categories_chart_view, best_saled_categories_chart_options);
             @else
                 $("#best_saled_categories_chart_div").html(`
-                <p class="w-full h-full m-0 p-0 flex justify-center items-center text-red-500 font-bold text-3xl text-center">No Data To Show</p>
-            `);
+                    <div class="w-full h-full flex justify-center items-center">
+                        <div class="text-center">
+                            <p class="w-full h-full m-0 p-0 flex justify-center items-center text-red-500 font-bold text-3xl text-center">No Data To Show</p>
+                        </div>
+                    </div>
+                `);
             @endif
-
 
             /* Best Saled Categories of the Month chart */
             @if ($best_saled_categories_of_the_month_chart_data->count() > 0)
@@ -237,11 +258,15 @@
                 let best_saled_categories_of_the_month_chart_options = {
                     title: "Best Saled Categories of the Month",
                     bar: {
-                        groupWidth: "95%"
+                        groupWidth: "85%"
                     },
                     legend: {
                         position: "none"
                     },
+                    chartArea: {
+                        width: '80%',
+                        height: '70%'
+                    }
                 };
 
                 let best_saled_categories_of_the_month_chart = new google.visualization.ColumnChart(document.getElementById(
@@ -250,10 +275,13 @@
                     best_saled_categories_of_the_month_chart_options);
             @else
                 $("#best_saled_categories_of_the_month_chart_div").html(`
-                <p class="w-full h-full m-0 p-0 flex justify-center items-center text-red-500 font-bold text-3xl text-center">No Data To Show</p>
-            `);
+                    <div class="w-full h-full flex justify-center items-center">
+                        <div class="text-center">
+                            <p class="w-full h-full m-0 p-0 flex justify-center items-center text-red-500 font-bold text-3xl text-center">No Data To Show</p>
+                        </div>
+                    </div>
+                `);
             @endif
-
 
             /* Best Rated Books chart */
             @if ($best_rated_books_chart_data->count() > 0)
@@ -290,10 +318,13 @@
                 best_rated_books_chart.draw(best_rated_books_chart_view, best_rated_books_chart_options);
             @else
                 $("#best_rated_books_chart_div").html(`
-                <p class="w-full h-full m-0 p-0 flex justify-center items-center text-red-500 font-bold text-3xl text-center">No Rated Books Yet</p>
-            `);
+                    <div class="w-full h-full flex justify-center items-center">
+                        <div class="text-center">
+                            <p class="w-full h-full m-0 p-0 flex justify-center items-center text-red-500 font-bold text-3xl text-center">No Rated Books Yet</p>
+                        </div>
+                    </div>
+                `);
             @endif
-
 
             /* Best Rated Books of the Month chart */
             @if ($best_rated_books_of_the_month_chart_data->count() > 0)
@@ -332,8 +363,12 @@
                     best_rated_books_of_the_month_chart_options);
             @else
                 $('#best_rated_books_of_the_month_chart_div').html(`
-                <p class="w-full h-full m-0 p-0 flex justify-center items-center text-red-500 font-bold text-3xl text-center">No Rated Books Yet</p>
-            `);
+                    <div class="w-full h-full flex justify-center items-center">
+                        <div class="text-center">
+                            <p class="w-full h-full m-0 p-0 flex justify-center items-center text-red-500 font-bold text-3xl text-center">No Rated Books Yet</p>
+                        </div>
+                    </div>
+                `);
             @endif
         }
     </script>

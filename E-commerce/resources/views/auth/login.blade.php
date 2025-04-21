@@ -29,7 +29,7 @@
                         <label for="password" class="block text-sm font-medium text-gray-700">Password:</label>
                         <div class="relative">
                             <input type="password" id="password" name="password" class="w-full p-3 border rounded-md"
-                                value="{{ old('password') }}" required>
+                                required>
                             <i class="fa-solid fa-eye absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer"
                                 id="togglePassword"></i>
                         </div>
@@ -45,7 +45,7 @@
                     </div>
 
                     <button id="login" type="submit"
-                        class="w-full bg-purple-400 text-white font-bold py-3 rounded-lg hover:bg-blue-600">
+                        class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700">
                         Login
                     </button>
 

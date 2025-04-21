@@ -68,7 +68,7 @@
                                                     min="1" max="{{ $book->stock }}" value="1"
                                                     class="w-1/5 p-2 bg-gray-100 text-gray-900 rounded-s-lg">
                                                 <button
-                                                    class="w-4/5 bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 disabled:bg-purple-300"
+                                                    class="w-4/5 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 disabled:bg-blue-300"
                                                     @if ($book->stock > 0) onclick="addToCart('{{ $book->uuid }}', {{ $book->stock }})" @else disabled @endif>Add
                                                     to cart</button>
                                             </div>

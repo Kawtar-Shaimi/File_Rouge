@@ -1,7 +1,7 @@
 <header class="bg-gray-900 text-gray-200 shadow-lg">
     <div class="container mx-auto px-4 py-4 flex justify-between items-center">
         <!-- Logo -->
-        <a href="{{ route('home') }}" class="text-2xl font-bold text-purple-400">{{ config('app.name') }}</a>
+        <a href="{{ route('home') }}" class="text-2xl font-bold text-blue-500">{{ config('app.name') }}</a>
 
         <!-- Navigation -->
         <nav class="hidden md:flex space-x-4">
@@ -21,7 +21,7 @@
             <div class="flex items-center">
                 <a href="{{ route('client.index') }}" class="flex items-center space-x-4 px-4 py-2 hover:bg-gray-700">
                     <button class="flex items-center space-x-2">
-                        <img src="https://ui-avatars.com/api/?name={{ Auth::guard('client')->user()->name }}&background=c084fc&color=fff"
+                        <img src="https://ui-avatars.com/api/?name={{ Auth::guard('client')->user()->name }}&background=0064e5&color=fff"
                             alt="{{ Auth::guard('client')->user()->name }}" class="w-8 h-8 rounded-full">
                     </button>
                     <span class="hidden md:block">{{ Auth::guard('client')->user()->name }}</span>
@@ -68,7 +68,7 @@
             <div class="flex items-center">
                 <a href="{{ route('publisher.profile') }}" class="flex items-center space-x-4 px-4 py-2 hover:bg-gray-700">
                     <button class="flex items-center space-x-2">
-                        <img src="https://ui-avatars.com/api/?name={{ Auth::guard('publisher')->user()->name }}&background=c084fc&color=fff"
+                        <img src="https://ui-avatars.com/api/?name={{ Auth::guard('publisher')->user()->name }}&background=0064e5&color=fff"
                             alt="{{ Auth::guard('publisher')->user()->name }}" class="w-8 h-8 rounded-full">
                     </button>
                     <span class="hidden md:block">{{ Auth::guard('publisher')->user()->name }}</span>
@@ -85,7 +85,7 @@
             <div class="flex items-center">
                 <a href="{{ route('admin.profile') }}" class="flex items-center space-x-4 px-4 py-2 hover:bg-gray-700">
                     <button class="flex items-center space-x-2">
-                        <img src="https://ui-avatars.com/api/?name={{ Auth::guard('admin')->user()->name }}&background=c084fc&color=fff"
+                        <img src="https://ui-avatars.com/api/?name={{ Auth::guard('admin')->user()->name }}&background=0064e5&color=fff"
                             alt="{{ Auth::guard('admin')->user()->name }}" class="w-8 h-8 rounded-full">
                     </button>
                     <span class="hidden md:block">{{ Auth::guard('admin')->user()->name }}</span>

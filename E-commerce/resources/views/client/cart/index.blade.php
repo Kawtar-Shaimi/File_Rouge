@@ -69,9 +69,9 @@
                 </div>
             @endif
             @if ($cart)
-                <a id="checkout-btn" href="{{ route('client.checkout') }}" class="block w-full text-center bg-purple-500 text-white font-bold py-3 mt-4 rounded-lg hover:bg-blue-600 disabled:bg-purple-300">Checkout</a>
+                <a id="checkout-btn" href="{{ route('client.checkout') }}" class="block w-full text-center bg-gray-700 text-white font-bold py-3 mt-4 rounded-lg hover:bg-blue-600 disabled:bg-gray-300">Checkout</a>
             @else
-                <button class="w-full bg-purple-500 text-white font-bold py-3 mt-4 rounded-lg disabled:bg-purple-300" disabled >Checkout</button>
+                <button class="w-full bg-gray-700 text-white font-bold py-3 mt-4 rounded-lg disabled:bg-gray-300" disabled >Checkout</button>
             @endif
         </div>
     </div>
