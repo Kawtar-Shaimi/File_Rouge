@@ -3,7 +3,7 @@
         @foreach ($books as $book)
             <div id="book-{{ $book->uuid }}" class="group relative bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 book-card transform hover:-translate-y-2">
                 <!-- Optional Category Tag -->
-                <div class="absolute top-4 left-0 bg-gradient-to-r from-indigo-600 to-blue-500 text-white text-xs uppercase font-bold py-1 px-3 rounded-r-full shadow-md z-10">
+                <div class="absolute top-4 left-0 bg-gradient-to-r from-teal-500 to-teal-600 text-white text-xs uppercase font-bold py-1 px-3 rounded-r-full shadow-md z-10">
                     Fiction
                 </div>
                 
@@ -64,14 +64,14 @@
                             @if ($book->isInCart)
                                 <div class="flex items-center border border-gray-200 rounded-lg overflow-hidden">
                                     <button id="removeFromCartBtn-{{ $book->uuid }}"
-                                        class="flex-none w-10 h-10 flex items-center justify-center bg-gradient-to-br from-blue-500 to-indigo-600 text-white text-xl font-bold disabled:opacity-50"
+                                        class="flex-none w-10 h-10 flex items-center justify-center bg-gradient-to-r from-teal-500 to-teal-600 text-white text-xl font-bold disabled:opacity-50"
                                         onclick="removeFromCart('{{ $book->uuid }}')"
                                         {{ $book->bookQuantity === 1 ? 'disabled' : '' }}>−</button>
                                     <input type="text" id="quantity-{{ $book->uuid }}" name="quantity"
                                         value="{{ $book->bookQuantity }}"
                                         class="flex-grow h-10 text-center bg-white text-gray-800 border-0" readonly disabled>
                                     <button id="addOneToCartBtn-{{ $book->uuid }}"
-                                        class="flex-none w-10 h-10 flex items-center justify-center bg-gradient-to-br from-blue-500 to-indigo-600 text-white text-xl font-bold disabled:opacity-50"
+                                        class="flex-none w-10 h-10 flex items-center justify-center bg-gradient-to-r from-teal-500 to-teal-600 text-white text-xl font-bold disabled:opacity-50"
                                         onclick="addOneToCart('{{ $book->uuid }}', {{ $book->stock }})">+</button>
                                 </div>
                             @else
@@ -80,12 +80,12 @@
                                         <div class="relative flex-1">
                                             <input type="number" id="quantity-{{ $book->uuid }}" name="quantity"
                                                 min="1" max="{{ $book->stock }}" value="1"
-                                                class="w-full h-10 pl-3 pr-8 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                                class="w-full h-10 pl-3 pr-8 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
                                             <span class="absolute inset-y-0 right-0 flex items-center pr-2 text-gray-500 pointer-events-none">
                                                 <span class="text-xs">Qty</span>
                                             </span>
                                         </div>
-                                        <button class="h-10 px-4 bg-gradient-to-r from-indigo-600 to-purple-700 text-white font-medium rounded-lg hover:shadow-lg transform hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        <button class="h-10 px-4 bg-gradient-to-r from-teal-500 to-teal-600 text-white font-medium rounded-lg hover:shadow-lg transform hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                                             @if ($book->stock > 0) onclick="addToCart('{{ $book->uuid }}', {{ $book->stock }})" @else disabled @endif>
                                             Add to cart
                                         </button>

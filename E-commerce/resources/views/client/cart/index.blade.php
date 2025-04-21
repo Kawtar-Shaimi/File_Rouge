@@ -99,7 +99,7 @@
                             </div>
                         @endforeach
                     </div>
-                </div>
+                            </div>
             @else
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-12">
                     <div class="text-center">
@@ -136,8 +136,8 @@
                                     <span id="total_book_price_{{ $cartBook->book->uuid }}" class="font-medium text-gray-800">
                                         ${{ number_format($cartBook->book->price * $cartBook->quantity, 2) }}
                                     </span>
-                                </div>
-                            @endforeach
+                    </div>
+                @endforeach
                         </div>
                         
                         <!-- Totals -->
@@ -198,7 +198,7 @@
                     </div>
                 </div>
                 <div class="mt-4 text-xs text-center text-gray-500">All transactions are secure and encrypted</div>
-            </div>
+    </div>
         </div>
     </div>
 </div>
