@@ -91,14 +91,14 @@
                                 @if ($book->isInCart)
                                     <div class="flex items-center border border-gray-200 rounded-lg overflow-hidden shadow-sm flex-grow">
                                         <button id="removeFromCartBtn-{{ $book->uuid }}"
-                                            class="flex-none w-12 h-12 flex items-center justify-center bg-gradient-to-br from-blue-500 to-indigo-600 text-white text-xl font-bold disabled:opacity-50"
+                                            class="flex-none w-12 h-12 flex items-center justify-center bg-gradient-to-r from-teal-500 to-teal-600 text-white text-xl font-bold hover:from-teal-600 hover:to-teal-700 disabled:opacity-50 transition-all duration-200"
                                             onclick="removeFromCart('{{ $book->uuid }}')"
                                             {{ $book->bookQuantity === 1 ? 'disabled' : '' }}>−</button>
                                         <input type="text" id="quantity-{{ $book->uuid }}" name="quantity"
                                             value="{{ $book->bookQuantity }}"
                                             class="flex-grow h-12 text-center bg-white text-gray-800 border-0" readonly disabled>
                                         <button id="addOneToCartBtn-{{ $book->uuid }}"
-                                            class="flex-none w-12 h-12 flex items-center justify-center bg-gradient-to-br from-blue-500 to-indigo-600 text-white text-xl font-bold disabled:opacity-50"
+                                            class="flex-none w-12 h-12 flex items-center justify-center bg-gradient-to-r from-teal-500 to-teal-600 text-white text-xl font-bold hover:from-teal-600 hover:to-teal-700 disabled:opacity-50 transition-all duration-200"
                                             onclick="addOneToCart('{{ $book->uuid }}', {{ $book->stock }})">+</button>
                                     </div>
                                 @else
@@ -107,12 +107,12 @@
                                             <div class="relative flex-1">
                                                 <input type="number" id="quantity-{{ $book->uuid }}" name="quantity"
                                                     min="1" max="{{ $book->stock }}" value="1"
-                                                    class="w-full h-12 pl-4 pr-10 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                                    class="w-full h-12 pl-4 pr-10 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
                                                 <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 pointer-events-none">
                                                     <span class="text-xs">Qty</span>
                                                 </span>
                                             </div>
-                                            <button class="h-12 px-6 bg-gradient-to-r from-indigo-600 to-purple-700 text-white font-medium rounded-lg hover:shadow-lg transform hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                                            <button class="h-12 px-6 bg-gradient-to-r from-teal-500 to-teal-600 text-white font-medium rounded-lg hover:from-teal-600 hover:to-teal-700 hover:shadow-lg transform hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                                                 @if ($book->stock > 0) onclick="addToCart('{{ $book->uuid }}', {{ $book->stock }})" @else disabled @endif>
                                                 Add to cart
                                             </button>
@@ -188,10 +188,10 @@
                             
                             <div class="relative">
                                 <input id="review-content" type="text"
-                                    class="w-full p-4 pr-24 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
+                                    class="w-full p-4 pr-24 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 shadow-sm"
                                     placeholder="Write your review here...">
                                 <button id="submit-review"
-                                    class="absolute right-2 top-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-medium py-2 px-5 rounded-lg hover:shadow-lg transform hover:scale-[1.02] transition-all duration-300"
+                                    class="absolute right-2 top-2 bg-gradient-to-r from-teal-500 to-teal-600 text-white font-medium py-2 px-5 rounded-lg hover:from-teal-600 hover:to-teal-700 hover:shadow-lg transition-all duration-300"
                                     onclick="addReview('{{ $book->uuid }}')">
                                     Post Review
                                 </button>
@@ -209,7 +209,7 @@
                                 <div class="flex justify-between">
                                     <div>
                                         <div class="flex items-center gap-2 mb-2">
-                                            <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold">
+                                            <div class="w-10 h-10 bg-gradient-to-r from-teal-500 to-teal-600 rounded-full flex items-center justify-center text-white font-bold">
                                                 {{ substr($review->client->name, 0, 1) }}
                                             </div>
                                             <div>
@@ -232,7 +232,7 @@
                                         @if ($review->client_id === Auth::guard('client')->id())
                                             <div class="flex items-center space-x-2">
                                                 <button id="showUpdateReviewFormBtn-{{ $review->uuid }}"
-                                                    class="text-blue-600 hover:text-blue-800 transition-colors"
+                                                    class="text-teal-600 hover:text-teal-800 transition-colors"
                                                     onclick="showUpdateReviewForm('{{ $book->uuid }}', '{{ $review->uuid }}', '{{ $review->content }}', {{ $review->rate }})">
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
