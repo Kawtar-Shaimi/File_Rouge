@@ -20,7 +20,7 @@
                         <div class="flex justify-between mb-2">
                             <span>{{ $cartBook->book->name }}:</span>
                             <span
-                                class="text-green-500">${{ number_format($cartBook->book->price * $cartBook->quantity, 2) }}</span>
+                                class="text-teal-600">${{ number_format($cartBook->book->price * $cartBook->quantity, 2) }}</span>
                         </div>
                     @endforeach
                     <div class="flex justify-between font-bold text-lg">
@@ -42,7 +42,7 @@
                     @csrf
                     <div>
                         <label for="shipping_name" class="block text-sm font-medium text-gray-700">Name:</label>
-                        <input type="text" id="shipping_name" name="shipping_name" class="w-full p-3 border rounded-md"
+                        <input type="text" id="shipping_name" name="shipping_name" class="w-full p-3 border rounded-md focus:ring-teal-500 focus:border-teal-500"
                             value="{{ old('shipping_name', Auth::guard('client')->user()->name) }}" required>
                     </div>
                     <p id="shipping_nameErr" class="text-red-500 text-sm mt-1"></p>
@@ -52,7 +52,7 @@
 
                     <div>
                         <label for="shipping_email" class="block text-sm font-medium text-gray-700">Email:</label>
-                        <input type="email" id="shipping_email" name="shipping_email" class="w-full p-3 border rounded-md"
+                        <input type="email" id="shipping_email" name="shipping_email" class="w-full p-3 border rounded-md focus:ring-teal-500 focus:border-teal-500"
                             value="{{ old('shipping_email', Auth::guard('client')->user()->email) }}" required>
                     </div>
                     <p id="shipping_emailErr" class="text-red-500 text-sm mt-1"></p>
@@ -62,7 +62,7 @@
 
                     <div>
                         <label for="shipping_phone" class="block text-sm font-medium text-gray-700">Phone:</label>
-                        <input type="tel" id="shipping_phone" name="shipping_phone" class="w-full p-3 border rounded-md"
+                        <input type="tel" id="shipping_phone" name="shipping_phone" class="w-full p-3 border rounded-md focus:ring-teal-500 focus:border-teal-500"
                             value="{{ old('shipping_phone', Auth::guard('client')->user()->phone) }}" required>
                     </div>
                     <p id="shipping_phoneErr" class="text-red-500 text-sm mt-1"></p>
@@ -72,7 +72,7 @@
 
                     <div>
                         <label for="shipping_address" class="block text-sm font-medium text-gray-700">Address:</label>
-                        <textarea id="shipping_address" name="shipping_address" class="w-full p-3 border rounded-md" required>{{ old('shipping_address') }}</textarea>
+                        <textarea id="shipping_address" name="shipping_address" class="w-full p-3 border rounded-md focus:ring-teal-500 focus:border-teal-500" required>{{ old('shipping_address') }}</textarea>
                     </div>
                     <p id="shipping_addressErr" class="text-red-500 text-sm mt-1"></p>
                     @error('shipping_address')
@@ -81,7 +81,7 @@
 
                     <div>
                         <label for="shipping_country" class="block text-sm font-medium text-gray-700">Country:</label>
-                        <select id="shipping_country" name="shipping_country" class="w-full p-3 border rounded-md" required>
+                        <select id="shipping_country" name="shipping_country" class="w-full p-3 border rounded-md focus:ring-teal-500 focus:border-teal-500" required>
                             <option selected value="">Select a country</option>
                         </select>
                     </div>
@@ -92,7 +92,7 @@
 
                     <div>
                         <label for="shipping_city" class="block text-sm font-medium text-gray-700">City:</label>
-                        <select id="shipping_city" name="shipping_city" class="w-full p-3 border rounded-md" required>
+                        <select id="shipping_city" name="shipping_city" class="w-full p-3 border rounded-md focus:ring-teal-500 focus:border-teal-500" required>
                             <option selected value="">Select a city</option>
                         </select>
                     </div>
@@ -105,7 +105,7 @@
                         <label for="shipping_postal_code" class="block text-sm font-medium text-gray-700">Postal
                             Code:</label>
                         <input type="text" id="shipping_postal_code" name="shipping_postal_code"
-                            class="w-full p-3 border rounded-md" value="{{ old('shipping_postal_code') }}" required>
+                            class="w-full p-3 border rounded-md focus:ring-teal-500 focus:border-teal-500" value="{{ old('shipping_postal_code') }}" required>
                     </div>
                     <p id="shipping_postal_codeErr" class="text-red-500 text-sm mt-1"></p>
                     @error('shipping_postal_code')
@@ -119,24 +119,24 @@
 
                     <div class="space-y-4">
                         <!-- Credit Card -->
-                        <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-100">
-                            <input type="radio" id="credit_card" name="payment_method" value="credit_card" class="mr-3">
+                        <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition duration-150">
+                            <input type="radio" id="credit_card" name="payment_method" value="credit_card" class="mr-3 text-teal-600 focus:ring-teal-500">
                             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/PayPal_logo_2014.svg/200px-PayPal_logo_2014.svg.png"
                                 alt="Credit Card" class="w-16">
                             <span class="ml-auto text-gray-600">Credit Card</span>
                         </label>
 
                         <!-- PayPal -->
-                        <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-100">
-                            <input type="radio" name="payment_method" value="paypal" class="mr-3">
+                        <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition duration-150">
+                            <input type="radio" name="payment_method" value="paypal" class="mr-3 text-teal-600 focus:ring-teal-500">
                             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/PayPal_logo_2014.svg/200px-PayPal_logo_2014.svg.png"
                                 alt="PayPal" class="w-16">
                             <span class="ml-auto text-gray-600">PayPal</span>
                         </label>
 
                         <!-- Cash on Delivery -->
-                        <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-100">
-                            <input type="radio" name="payment_method" value="cash_on_delivery" class="mr-3" checked>
+                        <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition duration-150">
+                            <input type="radio" name="payment_method" value="cash_on_delivery" class="mr-3 text-teal-600 focus:ring-teal-500" checked>
                             <img src="https://cdn-icons-png.flaticon.com/512/2331/2331940.png" alt="Cash on Delivery"
                                 class="w-10">
                             <span class="ml-auto text-gray-600">Cash on Delivery</span>
@@ -150,7 +150,7 @@
 
                 <!-- Checkout -->
                 <button id="checkout-btn" type="submit"
-                    class="w-full bg-purple-400 text-white font-bold py-3 rounded-lg mt-6 hover:bg-blue-600">
+                    class="w-full bg-gradient-to-r from-teal-500 to-teal-600 text-white font-bold py-3 rounded-lg mt-6 hover:from-teal-600 hover:to-teal-700 transition duration-150 shadow-md">
                     Checkout
                 </button>
             </form>

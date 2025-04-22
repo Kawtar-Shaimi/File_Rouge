@@ -117,6 +117,11 @@ Route::middleware('trackVisit')->group(function () {
             Route::get('/{uuid}', 'show')->name('show');
         });
 
+        /* Client Orders list route (plural) */
+        Route::controller(OrderController::class)->prefix('/orders')->as('orders.')->group(function () {
+            Route::get('/{uuid}', 'show')->name('show');
+        });
+
         /* Client Payment routes */
         Route::controller(PaymentController::class)->prefix('/payment')->as('payment.')->group(function () {
             /* Stripe route */

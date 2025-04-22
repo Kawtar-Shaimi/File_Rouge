@@ -206,19 +206,25 @@ class OrderController extends Controller
             Notification::send($admin, new NotificationsAdminOrderPlaced($order));
         }
 
-        return redirect()->route('client.order.success')
-            ->with('order_number', $order->order_number)
-            ->with('success', 'Order passed successfully');
+        // Store order number in session
+        session()->put('order_number', $order->order_number);
+        session()->put('last_order_uuid', $order->uuid);
+
+        return redirect()->route('client.order.success');
     }
 
     public function successOrder(Request $request)
     {
-        if (!$request->session()->has('order_number')) {
+        if (!session()->has('order_number')) {
             return redirect()->route('home')->with('error', 'You didnt make any order');
         }
-        return view('client.payment.success', [
-            'order_number' => $request->session()->get('order_number'),
-        ]);
+
+        $order_number = session('order_number');
+        
+        // Keep the order number for this request only, then remove it
+        session()->forget('order_number');
+        
+        return view('client.payment.success', compact('order_number'));
     }
 
     public function show(string $uuid)
