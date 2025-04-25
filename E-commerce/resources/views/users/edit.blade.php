@@ -49,7 +49,7 @@
 
                 <!-- Submit -->
                 <button id="update-user" type="submit"
-                    class="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition">Update</button>
+                    class="w-full bg-purple-400 text-white p-3 rounded-lg hover:bg-blue-700 transition">Update</button>
             </form>
         </div>
     </div>

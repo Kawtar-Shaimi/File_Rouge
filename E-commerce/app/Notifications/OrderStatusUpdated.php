@@ -27,7 +27,7 @@ class OrderStatusUpdated extends Notification
     {
         return [
             'message' => "Your order {$this->order->order_number} status has been updated to {$this->order->status}",
-            'url' => route('client.orders.show', $this->order->uuid),
+            'url' => route('client.order.show', $this->order->uuid),
             'url_text' => 'View order',
         ];
     }
@@ -36,7 +36,7 @@ class OrderStatusUpdated extends Notification
     {
         return [
             'message' => "Your order {$this->order->order_number} status has been updated to {$this->order->status}",
-            'url' => route('client.orders.show', $this->order->uuid),
+            'url' => route('client.order.show', $this->order->uuid),
             'url_text' => 'View order',
         ];
     }

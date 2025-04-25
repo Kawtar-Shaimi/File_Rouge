@@ -45,7 +45,7 @@
                     @enderror
 
                     <button id="auth.reset-password" type="submit"
-                        class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700">
+                        class="w-full bg-purple-400 text-white font-bold py-3 rounded-lg hover:bg-blue-600">
                         Reset Password
                     </button>
 

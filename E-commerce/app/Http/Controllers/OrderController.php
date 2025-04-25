@@ -48,7 +48,6 @@ class OrderController extends Controller
 
     private function handleCreditCardPayment(OrderRequest $request, $total_price)
     {
-<<<<<<< HEAD
         Stripe::setApiKey(env('STRIPE_SECRET'));
 
         $paymentIntent = PaymentIntent::create([
@@ -59,19 +58,6 @@ class OrderController extends Controller
                 'allow_redirects' => 'never', // This prevents any redirects, including 3D Secure
             ],
         ]);
-=======
-        try {
-            // Using the user's provided Stripe API key
-            Stripe::setApiKey(env('STRIPE_KEY'));
-            $paymentIntent = PaymentIntent::create([
-                'amount' => (int) ($total_price * 100),
-                'currency' => 'usd',
-                'automatic_payment_methods' => [
-                    'enabled' => true,
-                    'allow_redirects' => 'never',
-                ],
-            ]);
->>>>>>> 19c5031 (Fixing an error on admin profile)
 
         session()->put('order', [
             'uuid' => Str::uuid(),
@@ -220,25 +206,19 @@ class OrderController extends Controller
             Notification::send($admin, new NotificationsAdminOrderPlaced($order));
         }
 
-        // Store order number in session
-        session()->put('order_number', $order->order_number);
-        session()->put('last_order_uuid', $order->uuid);
-
-        return redirect()->route('client.order.success');
+        return redirect()->route('client.order.success')
+            ->with('order_number', $order->order_number)
+            ->with('success', 'Order passed successfully');
     }
 
     public function successOrder(Request $request)
     {
-        if (!session()->has('order_number')) {
+        if (!$request->session()->has('order_number')) {
             return redirect()->route('home')->with('error', 'You didnt make any order');
         }
-
-        $order_number = session('order_number');
-        
-        // Keep the order number for this request only, then remove it
-        session()->forget('order_number');
-        
-        return view('client.payment.success', compact('order_number'));
+        return view('client.payment.success', [
+            'order_number' => $request->session()->get('order_number'),
+        ]);
     }
 
     public function show(string $uuid)

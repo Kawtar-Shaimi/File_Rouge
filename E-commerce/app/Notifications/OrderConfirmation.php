@@ -27,7 +27,7 @@ class OrderConfirmation extends Notification
     {
         return [
             'message' => "Your order has been placed successfully, order number: {$this->order->order_number}",
-            'url' => route('client.orders.show', $this->order->uuid),
+            'url' => route('client.order.show', $this->order->uuid),
             'url_text' => 'View order',
         ];
     }
@@ -36,7 +36,7 @@ class OrderConfirmation extends Notification
     {
         return [
             'message' => "Your order has been placed successfully, order number: {$this->order->order_number}",
-            'url' => route('client.orders.show', $this->order->uuid),
+            'url' => route('client.order.show', $this->order->uuid),
             'url_text' => 'View order',
         ];
     }

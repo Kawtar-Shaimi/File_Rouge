@@ -9,8 +9,8 @@
 @section('content')
 
     <div class="container mx-auto p-6">
-        <div id="book-container" class="bg-gradient-to-b from-gray-50 to-white p-6 rounded-lg shadow-lg border border-gray-200">
-            <h2 class="text-2xl font-bold mb-6 text-navy-700 border-b border-teal-200 pb-3">My Wishlist</h2>
+        <div id="book-container" class="bg-white p-6 rounded-lg shadow-lg">
+            <h2 class="text-2xl font-bold mb-4">My Wishlist</h2>
 
             @if ($wishlist)
                 @php
@@ -18,15 +18,15 @@
                 @endphp
                 @foreach ($wishlist->wishlistBooks as $wishlistBook)
                     <div id="book-{{ $wishlistBook->book->uuid }}"
-                        class="border-b border-gray-200 pb-6 mb-6 flex flex-col md:flex-row md:items-center justify-between hover:bg-gray-50 rounded-lg p-3 transition duration-150">
-                        <a href="{{ route('books.show', $wishlistBook->book->uuid) }}" class="flex-grow">
+                        class="border-b pb-4 mb-4 flex items-center justify-between">
+                        <a href="{{ route('books.show', $wishlistBook->book->uuid) }}">
                             <div class="flex items-center">
                                 <img src="{{ asset('storage/' . $wishlistBook->book->image) }}"
-                                    alt="{{ $wishlistBook->book->name }}" class="w-24 h-32 object-cover rounded-md mr-4 shadow-md">
+                                    alt="{{ $wishlistBook->book->name }}" class="w-24 h-24 rounded-md mr-4">
                                 <div>
-                                    <h3 class="text-lg font-semibold text-navy-800">{{ $wishlistBook->book->name }}</h3>
+                                    <h3 class="text-lg font-semibold">{{ $wishlistBook->book->name }}</h3>
                                     <p class="text-gray-600">{{ Str::limit($wishlistBook->book->description, 16) }}</p>
-                                    <p class="text-teal-600 font-bold">{{ $wishlistBook->book->price }}</p>
+                                    <p class="text-green-500 font-bold">{{ $wishlistBook->book->price }}</p>
                                 </div>
                             </div>
                         </a>
@@ -42,20 +42,20 @@
                                     ->first()->quantity
                                 : 0;
                         @endphp
-                        <div id="actions" class="mt-4 md:mt-0">
-                            <div class="flex items-center justify-end">
+                        <div id="actions">
+                            <div class="mt-4 flex items-center justify-end">
                                 <button id="removeFromCartBtn-{{ $wishlistBook->book->uuid }}"
-                                    class="w-1/5 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 disabled:from-gray-300 disabled:to-gray-400 text-white font-bold py-2 px-4 rounded-s-lg transition duration-150"
+                                    class="w-1/5 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white font-bold py-2 px-4 rounded-s-lg"
                                     onclick="removeFromCart('{{ $wishlistBook->book->uuid }}')"
                                     {{ $quantity === 1 ? 'disabled' : '' }}>-</button>
                                 <input type="text" id="quantity-{{ $wishlistBook->book->uuid }}" name="quantity"
-                                    value="{{ $quantity }}" class="w-1/5 text-center p-2 bg-gray-100 text-gray-900 font-medium"
+                                    value="{{ $quantity }}" class="w-1/5 text-center p-2 bg-gray-100 text-gray-900"
                                     readonly disabled>
                                 <button id="addOneToCartBtn-{{ $wishlistBook->book->uuid }}"
-                                    class="w-1/5 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 disabled:from-gray-300 disabled:to-gray-400 text-white font-bold py-2 px-4 transition duration-150"
+                                    class="w-1/5 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white font-bold py-2 px-4"
                                     onclick="addOneToCart('{{ $wishlistBook->book->uuid }}', {{ $wishlistBook->book->stock }})">+</button>
                                 <button id="toggleWishlistBtn-{{ $wishlistBook->book->uuid }}"
-                                    class="w-1/5 bg-gradient-to-r from-navy-600 to-navy-700 hover:from-navy-700 hover:to-navy-800 disabled:from-gray-300 disabled:to-gray-400 text-white font-bold py-2 px-4 rounded-e-lg transition duration-150"
+                                    class="w-1/5 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white font-bold py-2 px-4 rounded-e-lg border-s border-black"
                                     onclick="deleteFromWishlist('{{ $wishlistBook->book->uuid }}')">
                                     <svg class="w-6 fill-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                         <path
@@ -67,14 +67,8 @@
                     </div>
                 @endforeach
             @else
-                <div class="py-16 flex items-center justify-center">
-                    <div class="text-center">
-                        <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                        </svg>
-                        <p class="text-teal-600 text-3xl font-bold text-center mb-2">Your Wishlist Is Empty</p>
-                        <p class="text-gray-500">Add books to your wishlist to keep track of items you're interested in</p>
-                    </div>
+                <div class="py-10 flex items-center justify-center">
+                    <p class="text-red-500 text-4xl font-bold text-center">Your Wishlist Is Empty</p>
                 </div>
             @endif
         </div>
