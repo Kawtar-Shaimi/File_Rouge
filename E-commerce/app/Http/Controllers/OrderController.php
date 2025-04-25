@@ -48,6 +48,7 @@ class OrderController extends Controller
 
     private function handleCreditCardPayment(OrderRequest $request, $total_price)
     {
+<<<<<<< HEAD
         Stripe::setApiKey(env('STRIPE_SECRET'));
 
         $paymentIntent = PaymentIntent::create([
@@ -58,6 +59,19 @@ class OrderController extends Controller
                 'allow_redirects' => 'never', // This prevents any redirects, including 3D Secure
             ],
         ]);
+=======
+        try {
+            // Using the user's provided Stripe API key
+            Stripe::setApiKey(env('STRIPE_KEY'));
+            $paymentIntent = PaymentIntent::create([
+                'amount' => (int) ($total_price * 100),
+                'currency' => 'usd',
+                'automatic_payment_methods' => [
+                    'enabled' => true,
+                    'allow_redirects' => 'never',
+                ],
+            ]);
+>>>>>>> 19c5031 (Fixing an error on admin profile)
 
         session()->put('order', [
             'uuid' => Str::uuid(),
