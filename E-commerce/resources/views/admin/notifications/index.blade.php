@@ -14,7 +14,7 @@
         <div id="notifications-container" class="bg-white p-6 rounded-lg shadow-lg overflow-x-auto">
 
             @php
-                $admin = \App\Models\User::find(Auth::guard('admin')->user()->id);
+                $admin = Auth::guard('admin')->user();
             @endphp
             @if ($admin->notifications->count() > 0)
                 @foreach ($admin->notifications as $notification)

@@ -39,8 +39,8 @@ class NotificationsController extends Controller
             'status' => 'success',
             'message' => 'Notification deleted',
             'data' => [
-                'count' => User::find(Auth::guard($guard)->user()->id)->notifications->count(),
-                'unread_count' => User::find(Auth::guard($guard)->user()->id)->unreadNotifications()->count()
+                'count' => Auth::guard($guard)->user()->notifications->count(),
+                'unread_count' => Auth::guard($guard)->user()->unreadNotifications->count()
             ]
         ], 200)->header('Content-Type', 'application/json');
     }
@@ -54,7 +54,7 @@ class NotificationsController extends Controller
             'status' => 'success',
             'message' => 'Notification marked as read',
             'data' => [
-                'count' => User::find(Auth::guard($guard)->user()->id)->unreadNotifications()->count()
+                'count' => Auth::guard($guard)->user()->unreadNotifications->count()
             ]
         ], 200)->header('Content-Type', 'application/json');
     }

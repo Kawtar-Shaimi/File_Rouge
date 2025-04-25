@@ -12,7 +12,7 @@
         <div id="notifications-container" class="bg-white p-6 rounded-lg shadow-lg">
             <h2 class="text-2xl font-bold mb-4">My Notifications</h2>
             @php
-                $user = \App\Models\User::find(Auth::guard('client')->user()->id);
+                $user = Auth::guard('client')->user();
             @endphp
 
             @if ($user->notifications->count() > 0)

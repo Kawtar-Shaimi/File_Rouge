@@ -11,7 +11,7 @@
         <a href="{{ route('admin.payments.index') }}" class="block px-4 py-2 hover:bg-gray-700">Payments</a>
         <a href="{{ route('admin.visits.index') }}" class="block px-4 py-2 hover:bg-gray-700">Visits</a>
         <a href="{{ route('admin.profile') }}" class="block px-4 py-2 hover:bg-gray-700">Profile</a>
-        <a href="{{ route('notifications.admin') }}" class="block px-4 py-2 hover:bg-gray-700">Notifications <span id="notification-count" class="bg-red-500 text-white px-2 py-0.5 rounded-full ms-5">{{ \App\Models\User::find(Auth::guard('admin')->user()->id)->unreadNotifications->count() }}</span></a>
+        <a href="{{ route('notifications.admin') }}" class="block px-4 py-2 hover:bg-gray-700">Notifications <span id="notification-count" class="bg-red-500 text-white px-2 py-0.5 rounded-full ms-5">{{ Auth::guard('admin')->user()->unreadNotifications->count() }}</span></a>
         <form class="w-full" method="POST" action="{{ route('logout', 'admin') }}">
             @csrf
             <button type="submit" class="block w-full text-left px-4 py-2 hover:bg-gray-700">Logout</button>

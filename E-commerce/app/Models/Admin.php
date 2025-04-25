@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 
 class Admin extends User
 {
+    use Notifiable;
+
     protected $table = 'users';
 
     protected static function boot()

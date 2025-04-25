@@ -14,7 +14,7 @@
         <h2 class="text-2xl font-bold mt-8 mb-4">My Notifications</h2>
         <div id="notifications-container" class="bg-white p-6 rounded-lg shadow-lg overflow-x-auto">
             @php
-                $publisher = \App\Models\User::find(Auth::guard('publisher')->user()->id);
+                $publisher = Auth::guard('publisher')->user();
             @endphp
 
             @if ($publisher->notifications->count() > 0)

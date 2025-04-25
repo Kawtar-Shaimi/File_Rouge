@@ -26,7 +26,7 @@ class OrderCancelled extends Notification
     {
         return [
             'message' => "Your order {$this->order->order_number} has been canceled due to: {$this->reason}",
-            'url' => route('client.orders.show', $this->order->uuid),
+            'url' => route('client.order.show', $this->order->uuid),
             'url_text' => 'View order',
         ];
     }
@@ -35,7 +35,7 @@ class OrderCancelled extends Notification
     {
         return [
             'message' => "Your order {$this->order->order_number} has been canceled due to: {$this->reason}",
-            'url' => route('client.orders.show', $this->order->uuid),
+            'url' => route('client.order.show', $this->order->uuid),
             'url_text' => 'View order',
         ];
     }

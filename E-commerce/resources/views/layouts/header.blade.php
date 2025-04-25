@@ -29,7 +29,7 @@
                 <div id="notification" class="relative mx-5">
                     <i class="fa-regular fa-bell text-xl cursor-pointer"></i>
                     @php
-                        $user = \App\Models\User::find(Auth::guard('client')->user()->id);
+                        $user = Auth::guard('client')->user();
                     @endphp
                     <span id="notification-count"
                         class="absolute top-0 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-sm cursor-pointer">
