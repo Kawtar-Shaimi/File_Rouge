@@ -30,7 +30,7 @@
     @elseif (session()->has('error'))
         <x-alert type="error" :message="session('error')" />
     @endif
-    <main class="min-h-screen bg-green-400">
+    <main class="min-h-screen bg-gradient-to-br from-slate-50 to-emerald-50">
         @include('layouts.header')
         @yield('content')
         @if (!Auth::guard('publisher')->check() && !Auth::guard('admin')->check())
