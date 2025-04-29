@@ -14,7 +14,7 @@
                 class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
             <p id="order-number-err" class="text-red-500 mt-5"></p>
             <button id="track-btn"
-                class="mt-4 px-6 py-2 bg-teal-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-800 transition-all duration-300">
+                class="mt-4 px-6 py-2 bg-teal-600 text-white font-semibold rounded-lg shadow-md hover:bg-teal-800 transition-all duration-300">
                 Track Order
             </button>
         </div>
