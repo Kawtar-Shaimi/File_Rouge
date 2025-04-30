@@ -54,7 +54,7 @@
                                 <option value="asc" selected>Ascending</option>
                                 <option value="desc">Descending</option>
                             </select>
-                        </div>
+                        </div> 
                     </div>
                 </div>
 
