@@ -204,6 +204,8 @@ Route::prefix('/admin')->as('admin.')->middleware(['auth:admin', 'ensureEmailIsV
     /* Admin Books routes */
     Route::controller(AdminController::class)->prefix('/books')->as('books.')->group(function () {
         Route::get('/', 'books')->name('index');
+        Route::get('/create', 'createBook')->name('create');
+        Route::post('/store', 'storeBook')->name('store');
         Route::get('/{uuid}', 'book')->name('show');
         Route::delete('/delete/{uuid}', 'destroyBook')->name('delete');
     });

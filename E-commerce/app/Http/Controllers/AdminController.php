@@ -233,6 +233,40 @@ class AdminController extends Controller
         return view('admin.books.index', compact('books'));
     }
 
+    public function createBook()
+    {
+        $categories = Category::all();
+        $publishers = User::where('role', 'publisher')->get();
+        return view('admin.books.create', compact('categories', 'publishers'));
+    }
+
+    public function storeBook(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+            'category_id' => 'required|exists:categories,id',
+            'publisher_id' => 'required|exists:users,id',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
+        $imagePath = $request->file('image')->store('books', 'public');
+
+        $book = Book::create([
+            'name' => $validated['name'],
+            'description' => $validated['description'],
+            'price' => $validated['price'],
+            'stock' => $validated['stock'],
+            'category_id' => $validated['category_id'],
+            'publisher_id' => $validated['publisher_id'],
+            'image' => $imagePath
+        ]);
+
+        return redirect()->route('admin.books.index')->with('success', 'Book created successfully!');
+    }
+
     public function book(string $uuid)
     {
         $book = Book::where('uuid', $uuid)->firstOrFail();

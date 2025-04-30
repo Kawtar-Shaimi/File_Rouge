@@ -43,7 +43,7 @@
 
                         <!-- Submit -->
                         <button id="update-category" type="submit"
-                            class="w-full bg-purple-400 text-white p-3 rounded-lg hover:bg-blue-700 transition">Update
+                            class="w-full bg-teal-400 text-white p-3 rounded-lg hover:bg-blue-700 transition">Update
                             Category</button>
                     </form>
                 </div>
