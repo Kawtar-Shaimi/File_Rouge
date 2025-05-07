@@ -32,7 +32,7 @@ $(document).ready(function () {
                             "in shipping": {
                                 progress: "33%",
                                 index: 1,
-                                color: "blue",
+                                color: "teal",
                             },
                             completed: {
                                 progress: "66%",

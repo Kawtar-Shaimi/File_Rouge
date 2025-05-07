@@ -22,7 +22,7 @@
                 successfully processed.</p>
             <p class="text-xl font-semibold text-gray-700 mb-6">Your order code is {{ $order_number }}</p>
             <a href="{{ route('home') }}">
-                <button class="bg-purple-400 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-600">
+                <button class="bg-teal-400 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-600">
                     Return to the home page
                 </button>
             </a>

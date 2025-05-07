@@ -18,7 +18,7 @@
             </div>
             <!-- Bouton de paiement -->
             <button id="pay-button"
-                class="w-full bg-purple-400 text-white font-bold py-3 rounded-lg mt-6 hover:bg-blue-600">
+                class="w-full bg-teal-400 text-white font-bold py-3 rounded-lg mt-6 hover:bg-blue-600">
                 Pay
             </button>
         </div>

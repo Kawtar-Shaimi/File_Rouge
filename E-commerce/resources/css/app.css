@@ -17,3 +17,22 @@
         display: none;
     }
 }
+
+/* Global rule to eliminate focus-visible styling on wishlist buttons */
+[id^="toggleWishlistBtn-"] {
+    background-color: transparent !important;
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+}
+
+[id^="toggleWishlistBtn-"]:focus,
+[id^="toggleWishlistBtn-"]:focus-visible,
+[id^="toggleWishlistBtn-"]:active,
+[id^="toggleWishlistBtn-"]:hover {
+    background-color: transparent !important;
+    outline: none !important;
+    box-shadow: none !important;
+}

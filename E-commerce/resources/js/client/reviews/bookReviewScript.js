@@ -118,7 +118,7 @@ function addReview(bookId) {
                         </div>
                         <div id="actions">
                             <div class="mt-4 flex items-center justify-end">
-                                <button id="updateReviewBtn-${response.data.review_id}" class="w-4/5 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-s-lg" onclick="showUpdateReviewForm('${bookId}', '${response.data.review_id}', '${review_content}', ${review_rating})">
+                                <button id="updateReviewBtn-${response.data.review_id}" class="w-4/5 bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-s-lg" onclick="showUpdateReviewForm('${bookId}', '${response.data.review_id}', '${review_content}', ${review_rating})">
                                     update
                                 </button>
                                 <button id="deleteReviewBtn-${response.data.review_id}" class="bg-red-500 hover:bg-red-600 text-red-500 py-2 px-4 rounded-e-lg" onclick="deleteReview('${response.data.review_id}', '${bookId}')">🗑</button>
@@ -163,8 +163,8 @@ function showUpdateReviewForm(bookId, reviewId, content, rate) {
 
         <div class="mb-4">
             <div class="flex justify-center">
-                <input id="review-content" type="text" value="${content}" class="w-4/5 p-3 border border-gray-300 rounded-s-lg focus:ring focus:ring-purple-400" placeholder="Write your review here...">
-                <button id="submit-review" class="w-1/5 bg-purple-500 text-white font-bold py-3 rounded-e-lg hover:bg-purple-600 transition duration-200" onclick="updateReview('${reviewId}', '${bookId}')">
+                <input id="review-content" type="text" value="${content}" class="w-4/5 p-3 border border-gray-300 rounded-s-lg focus:ring focus:ring-teal-400" placeholder="Write your review here...">
+                <button id="submit-review" class="w-1/5 bg-teal-500 text-white font-bold py-3 rounded-e-lg hover:bg-teal-600 transition duration-200" onclick="updateReview('${reviewId}', '${bookId}')">
                     Send
                 </button>
                 <p id="review-err" class="text-red-500 text-xs mt-1"></p>
@@ -251,7 +251,7 @@ function updateReview(reviewId, bookId) {
                     </div>
                     <div id="actions">
                         <div class="mt-4 flex items-center justify-end">
-                            <button id="updateReviewBtn-${reviewId}" class="w-4/5 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-s-lg" onclick="showUpdateReviewForm('${bookId}', '${reviewId}', '${review_content}', ${review_rating})">
+                            <button id="updateReviewBtn-${reviewId}" class="w-4/5 bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-s-lg" onclick="showUpdateReviewForm('${bookId}', '${reviewId}', '${review_content}', ${review_rating})">
                                 update
                             </button>
                             <button id="deleteReviewBtn-${reviewId}" class="bg-red-500 hover:bg-red-600 text-red-500 py-2 px-4 rounded-e-lg" onclick="deleteReview('${reviewId}', '${bookId}')">🗑</button>
@@ -340,8 +340,8 @@ function deleteReview(reviewId, bookId) {
 
                         <div class="mb-4">
                             <div class="flex justify-center">
-                                <input id="review-content" type="text" class="w-4/5 p-3 border border-gray-300 rounded-s-lg focus:ring focus:ring-purple-400" placeholder="Write your review here...">
-                                <button id="submit-review" class="w-1/5 bg-purple-500 text-white font-bold py-3 rounded-e-lg hover:bg-purple-600 transition duration-200" onclick="addReview('${bookId}')">
+                                <input id="review-content" type="text" class="w-4/5 p-3 border border-gray-300 rounded-s-lg focus:ring focus:ring-teal-400" placeholder="Write your review here...">
+                                <button id="submit-review" class="w-1/5 bg-teal-500 text-white font-bold py-3 rounded-e-lg hover:bg-teal-600 transition duration-200" onclick="addReview('${bookId}')">
                                     Send
                                 </button>
                             </div>

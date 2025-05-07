@@ -25,6 +25,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Str;
 
 class AdminController extends Controller
 {
@@ -242,29 +243,35 @@ class AdminController extends Controller
 
     public function storeBook(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'price' => 'required|numeric|min:0',
-            'stock' => 'required|integer|min:0',
-            'category_id' => 'required|exists:categories,id',
-            'publisher_id' => 'required|exists:users,id',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
-        ]);
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'description' => 'required|string',
+                'price' => 'required|numeric|min:0',
+                'stock' => 'required|integer|min:0',
+                'category_id' => 'required|exists:categories,id',
+                'publisher_id' => 'required|exists:users,id',
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+            ]);
 
-        $imagePath = $request->file('image')->store('books', 'public');
+            $imagePath = $request->file('image')->store('books', 'public');
 
-        $book = Book::create([
-            'name' => $validated['name'],
-            'description' => $validated['description'],
-            'price' => $validated['price'],
-            'stock' => $validated['stock'],
-            'category_id' => $validated['category_id'],
-            'publisher_id' => $validated['publisher_id'],
-            'image' => $imagePath
-        ]);
+            $book = Book::create([
+                'uuid' => Str::uuid(),
+                'name' => $validated['name'],
+                'description' => $validated['description'],
+                'price' => $validated['price'],
+                'stock' => $validated['stock'],
+                'category_id' => $validated['category_id'],
+                'publisher_id' => $validated['publisher_id'],
+                'image' => $imagePath
+            ]);
 
-        return redirect()->route('admin.books.index')->with('success', 'Book created successfully!');
+            return redirect()->route('admin.books.index')->with('success', 'Book created successfully!');
+        } catch (\Exception $e) {
+            \Log::error('Admin book creation error: ' . $e->getMessage());
+            return back()->with('error', 'Book creation failed. Please try again.')->withInput();
+        }
     }
 
     public function book(string $uuid)
@@ -276,31 +283,37 @@ class AdminController extends Controller
 
     public function destroyBook(string $uuid)
     {
-        $book = Book::where('uuid', $uuid)->firstOrFail();
+        try {
+            $book = Book::where('uuid', $uuid)->firstOrFail();
 
-        $book_name = $book->name;
-        $publisher = $book->publisher;
+            $book_name = $book->name;
+            $publisher = $book->publisher;
 
-        $isDeleted = $book->delete();
+            $isDeleted = $book->delete();
 
-        if (!$isDeleted) {
-            return back()->with('error', 'Book not deleted.');
+            if (!$isDeleted) {
+                return back()->with('error', 'Book not deleted.');
+            }
+
+            // Comment out email notifications temporarily to avoid SMTP errors
+            /*
+            Mail::to($publisher->email)->send(new PublisherBookRemoved($publisher, $book_name));
+            Notification::send($publisher, new NotificationsPublisherBookRemoved($book_name));
+
+            $admins = User::where('role', 'admin')->get();
+            $admin_name = Auth::guard('admin')->user()->name;
+
+            foreach ($admins as $admin) {
+                Mail::to($admin->email)->send(new AdminBookRemoved($admin, $book_name, $admin_name));
+                Notification::send($admin, new NotificationsAdminBookRemoved($book_name, $publisher->name, $admin_name));
+            }
+            */
+
+            return redirect()->route('admin.books.index')->with('success', 'Book deleted successfully.');
+        } catch (\Exception $e) {
+            \Log::error('Admin book deletion error: ' . $e->getMessage());
+            return back()->with('error', 'Book deletion failed. Please try again.');
         }
-
-        Mail::to($publisher->email)->send(new PublisherBookRemoved($publisher, $book_name));
-
-        Notification::send($publisher, new NotificationsPublisherBookRemoved($book_name));
-
-        $admins = User::where('role', 'admin')->get();
-        $admin_name = Auth::guard('admin')->user()->name;
-
-        foreach ($admins as $admin) {
-            Mail::to($admin->email)->send(new AdminBookRemoved($admin, $book_name, $admin_name));
-
-            Notification::send($admin, new NotificationsAdminBookRemoved($book_name, $publisher->name, $admin_name));
-        }
-
-        return redirect()->route('admin.books.index')->with('success', 'Book deleted successfully.');
     }
 
     public function orders()
@@ -338,81 +351,95 @@ class AdminController extends Controller
 
     public function changeOrderStatus(ChangeOrderStatusRequest $request, string $uuid)
     {
-        $order = Order::where('uuid', $uuid)->firstOrFail();
+        try {
+            $order = Order::where('uuid', $uuid)->firstOrFail();
 
-        $revertedStatusArr = [
-            'pending' => ["in shipping", "completed", "cancelled"],
-            'in shipping' => ["completed", "cancelled"],
-            'completed' => ["cancelled"],
-            'cancelled' => ["completed"],
-        ];
+            $revertedStatusArr = [
+                'pending' => ["in shipping", "completed", "cancelled"],
+                'in shipping' => ["completed", "cancelled"],
+                'completed' => ["cancelled"],
+                'cancelled' => ["completed"],
+            ];
 
-        if (in_array($order->status, $revertedStatusArr[$request->status])) {
-            return back()->withErrors([
-                'status' => 'Status cannot be reverted.'
-            ]);
-        }
-
-        if ($request->status === "cancelled") {
-
-            if ($request->reason === "") {
+            if (in_array($order->status, $revertedStatusArr[$request->status])) {
                 return back()->withErrors([
-                    'reason' => 'Reason is required.'
+                    'status' => 'Status cannot be reverted.'
                 ]);
             }
 
-            $order->update([
-                "cancellation_reason" => $request->reason
-            ]);
+            if ($request->status === "cancelled") {
 
-            $order->payment()->update([
-                "status" => "failed"
-            ]);
+                if ($request->reason === "") {
+                    return back()->withErrors([
+                        'reason' => 'Reason is required.'
+                    ]);
+                }
 
-            foreach ($order->orderBooks as $orderBook) {
-                $orderBook->book()->increment('stock', $orderBook->quantity);
-                $orderBook->update([
-                    'is_cancelled' => true,
-                    'cancellation_reason' => $request->reason
+                $order->update([
+                    "cancellation_reason" => $request->reason
                 ]);
 
-                Mail::to($orderBook->book->publisher->email)->send(new PublisherOrderCanceled($orderBook->book->publisher, $orderBook, $request->reason, $orderBook->book->name));
+                $order->payment()->update([
+                    "status" => "failed"
+                ]);
 
-                Notification::send($orderBook->book->publisher, new NotificationsPublisherOrderCanceled($orderBook->order, $request->reason, $orderBook->book->name));
+                foreach ($order->orderBooks as $orderBook) {
+                    $orderBook->book()->increment('stock', $orderBook->quantity);
+                    $orderBook->update([
+                        'is_cancelled' => true,
+                        'cancellation_reason' => $request->reason
+                    ]);
+
+                    // Comment out email notifications
+                    /*
+                    Mail::to($orderBook->book->publisher->email)->send(new PublisherOrderCanceled($orderBook->book->publisher, $orderBook, $request->reason, $orderBook->book->name));
+
+                    Notification::send($orderBook->book->publisher, new NotificationsPublisherOrderCanceled($orderBook->order, $request->reason, $orderBook->book->name));
+                    */
+                }
+
+                // Comment out email notifications
+                /*
+                Mail::to($order->client->email)->send(new OrderCancelled($order, $request->reason));
+
+                Notification::send($order->client, new NotificationsOrderCancelled($order, $request->reason));
+
+                $admins = User::where('role', 'admin')->get();
+
+                foreach ($admins as $admin) {
+                    Mail::to($admin->email)->send(new AdminOrderCanceled($admin, $order, $request->reason));
+
+                    Notification::send($admin, new NotificationsAdminOrderCanceled($order, $request->reason));
+                }
+                */
             }
 
-            Mail::to($order->client->email)->send(new OrderCancelled($order, $request->reason));
-
-            Notification::send($order->client, new NotificationsOrderCancelled($order, $request->reason));
-
-            $admins = User::where('role', 'admin')->get();
-
-            foreach ($admins as $admin) {
-                Mail::to($admin->email)->send(new AdminOrderCanceled($admin, $order, $request->reason));
-
-                Notification::send($admin, new NotificationsAdminOrderCanceled($order, $request->reason));
-            }
-        }
-
-        $isUpdated = $order->update([
-            'status' => $request->status
-        ]);
-
-        if (!$isUpdated) {
-            return back()->with('error', 'Order status not updated.');
-        }
-
-        if ($request->status === "completed") {
-            $order->payment()->update([
-                "status" => "paid"
+            $isUpdated = $order->update([
+                'status' => $request->status
             ]);
+
+            if (!$isUpdated) {
+                return back()->with('error', 'Order status not updated.');
+            }
+
+            if ($request->status === "completed") {
+                $order->payment()->update([
+                    "status" => "paid"
+                ]);
+            }
+
+            // Comment out email notifications
+            /*
+            Mail::to($order->client->email)->send(new OrderStatusUpdated($order));
+
+            Notification::send($order->client, new NotificationsOrderStatusUpdated($order));
+            */
+
+            return redirect()->route('admin.orders.index', $order)->with('success', 'Order status updated successfully.');
+        } catch (\Exception $e) {
+            \Log::error('Order status change error: ' . $e->getMessage());
+            return back()->with('error', 'Failed to update order status. Please try again.');
         }
-
-        Mail::to($order->client->email)->send(new OrderStatusUpdated($order));
-
-        Notification::send($order->client, new NotificationsOrderStatusUpdated($order));
-
-        return redirect()->route('admin.orders.index', $order)->with('success', 'Order status updated successfully.');
     }
 
     public function profile()

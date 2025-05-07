@@ -22,7 +22,7 @@
             <p class="text-xl text-gray-600 mb-6">Please try again or use a different payment method.</p>
             <div class="flex justify-center items-center space-x-4">
                 <a href="{{ route('client.payment.online.try-again') }}">
-                    <button class="bg-purple-400 text-white font-bold py-3 px-6 rounded-lg hover:bg-purple-600">
+                    <button class="bg-teal-400 text-white font-bold py-3 px-6 rounded-lg hover:bg-teal-600">
                         Try Again
                     </button>
                 </a>

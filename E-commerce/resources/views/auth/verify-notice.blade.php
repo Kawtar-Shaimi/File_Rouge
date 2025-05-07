@@ -7,7 +7,7 @@
 @endsection
 
 @section('content')
-    <main class="min-h-screen bg-purple-400 flex items-center justify-center py-12">
+    <main class="min-h-screen bg-teal-400 flex items-center justify-center py-12">
         <div class="container mx-auto px-4">
             <div class="max-w-xl mx-auto bg-white p-8 rounded-xl shadow-lg">
                 <h2 class="text-3xl font-semibold text-gray-800 text-center mb-6">Verify Your Email</h2>
@@ -17,7 +17,7 @@
                     If you did not receive the email,
                 <form method="POST" action="{{ route('verify.resend', $user->uuid) }}" class="inline">
                     @csrf
-                    <button type="submit" class="text-purple-600 font-medium hover:underline">click here to request
+                    <button type="submit" class="text-teal-600 font-medium hover:underline">click here to request
                         another</button>.
                 </form>
                 </p>

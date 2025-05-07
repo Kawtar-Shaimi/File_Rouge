@@ -22,11 +22,11 @@ function addToCart(bookId, stock) {
                         "flex items-end"
                     );
                     $(`#book-${bookId} #actions #cart-actions`).html(`
-                        <button id="removeFromCartBtn-${bookId}" class="w-1/5 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white font-bold py-2 px-4 rounded-s-lg" onclick="removeFromCart('${bookId}')" ${
+                        <button id="removeFromCartBtn-${bookId}" class="w-1/5 bg-teal-500 hover:bg-teal-600 disabled:bg-teal-300 text-white font-bold py-2 px-4 rounded-s-lg" onclick="removeFromCart('${bookId}')" ${
                         quantity === 1 ? "disabled" : ""
                     }>-</button>
                         <input type="text" id="quantity-${bookId}" name="quantity" value="${quantity}" class="w-3/5 text-center p-2 bg-gray-100 text-gray-900" readonly disabled>
-                        <button id="addOneToCartBtn-${bookId}" class="w-1/5 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white font-bold py-2 px-4" onclick="addOneToCart('${bookId}', ${stock})">+</button>
+                        <button id="addOneToCartBtn-${bookId}" class="w-1/5 bg-teal-500 hover:bg-teal-600 disabled:bg-teal-300 text-white font-bold py-2 px-4" onclick="addOneToCart('${bookId}', ${stock})">+</button>
                     `);
                     showAlert("success", response.message);
                 }

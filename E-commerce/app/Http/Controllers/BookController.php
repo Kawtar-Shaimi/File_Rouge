@@ -110,40 +110,47 @@ class BookController extends Controller
 
     public function store(StoreBookRequest $request)
     {
-        $category = Category::where('uuid', $request->category_id)->firstOrFail();
+        try {
+            $category = Category::where('uuid', $request->category_id)->firstOrFail();
 
-        $image = $request->file('image');
-        $image_name = uniqid("book_") . "_" . time() . "." . $image->extension();
-        $image_path = $image->storeAs('books_images', $image_name, 'public');
+            $image = $request->file('image');
+            $image_name = uniqid("book_") . "_" . time() . "." . $image->extension();
+            $image_path = $image->storeAs('books_images', $image_name, 'public');
 
-        $book = Book::create([
-            'uuid' => Str::uuid(),
-            'name' => $request->name,
-            'price' => $request->price,
-            'category_id' => $category->id,
-            'stock' => $request->stock,
-            'description' => $request->description,
-            'image' => $image_path,
-            'publisher_id' => Auth::guard('publisher')->id(),
-        ]);
+            $book = Book::create([
+                'uuid' => Str::uuid(),
+                'name' => $request->name,
+                'price' => $request->price,
+                'category_id' => $category->id,
+                'stock' => $request->stock,
+                'description' => $request->description,
+                'image' => $image_path,
+                'publisher_id' => Auth::guard('publisher')->id(),
+            ]);
 
-        if (!$book) {
-            return back()->with('error', 'Book creation failed');
+            if (!$book) {
+                return back()->with('error', 'Book creation failed');
+            }
+
+            // Comment out email sending temporarily to avoid SMTP errors
+            /*
+            $user = Auth::guard('publisher')->user();
+            Mail::to($user->email)->send(new PublisherBookCreated($user, $book->name, $book->uuid));
+            Notification::send($user, new NotificationsPublisherBookCreated($book->name, $book->uuid));
+
+            $admins = User::where('role', 'admin')->get();
+            foreach ($admins as $admin) {
+                Mail::to($admin->email)->send(new AdminBookCreated($admin, $book));
+                Notification::send($admin, new NotificationsAdminBookCreated($book));
+            }
+            */
+
+            return redirect()->route('publisher.books.index')->with('success', 'Book created successfully');
+        } catch (Exception $e) {
+            // Log the error but don't show technical details to user
+            \Log::error('Book creation error: ' . $e->getMessage());
+            return back()->with('error', 'Book creation failed. Please try again.');
         }
-
-        $user = Auth::guard('publisher')->user();
-
-        Mail::to($user->email)->send(new PublisherBookCreated($user, $book->name, $book->uuid));
-        Notification::send($user, new NotificationsPublisherBookCreated($book->name, $book->uuid));
-
-        $admins = User::where('role', 'admin')->get();
-
-        foreach ($admins as $admin) {
-            Mail::to($admin->email)->send(new AdminBookCreated($admin, $book));
-            Notification::send($admin, new NotificationsAdminBookCreated($book));
-        }
-
-        return redirect()->route('publisher.books.index')->with('success', 'Book created successfully');
     }
 
     public function edit(string $uuid)
@@ -155,102 +162,117 @@ class BookController extends Controller
 
     public function update(UpdateBookRequest $request, string $uuid)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric',
-            'category_id' => 'required|exists:categories,uuid',
-            'stock' => 'required|numeric',
-            'description' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
+        try {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'price' => 'required|numeric',
+                'category_id' => 'required|exists:categories,uuid',
+                'stock' => 'required|numeric',
+                'description' => 'required|string',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            ]);
 
-        $book = Book::where('uuid', $uuid)->firstOrFail();
+            $book = Book::where('uuid', $uuid)->firstOrFail();
 
-        $category = Category::where('uuid', $request->category_id)->firstOrFail();
+            $category = Category::where('uuid', $request->category_id)->firstOrFail();
 
-        $isUpdated = $book->update([
-            'name' => $request->name,
-            'price' => $request->price,
-            'category_id' => $category->id,
-            'stock' => $request->stock,
-            'description' => $request->description,
-        ]);
+            $isUpdated = $book->update([
+                'name' => $request->name,
+                'price' => $request->price,
+                'category_id' => $category->id,
+                'stock' => $request->stock,
+                'description' => $request->description,
+            ]);
 
-        if (!$isUpdated) {
-            return back()->with('error', 'Book update failed');
+            if (!$isUpdated) {
+                return back()->with('error', 'Book update failed');
+            }
+
+            if ($request->hasFile('image')) {
+                if ($book->image) {
+                    $isImageDeleted = Storage::disk('public')->delete($book->image);
+
+                    if (!$isImageDeleted) {
+                        return back()->with('error', 'Book image deletion failed');
+                    }
+
+                    $image = $request->file('image');
+                    $image_name = uniqid("book_") . "_" . time() . "." . $image->extension();
+                    $image_path = $image->storeAs('books_images', $image_name, 'public');
+                    $isImageUpdated = $book->update([
+                        'image' => $image_path
+                    ]);
+                    if (!$isImageUpdated) {
+                        return back()->with('error', 'Book image update failed');
+                    }
+                }
+            }
+
+            // Comment out email notifications temporarily to avoid SMTP errors
+            /*
+            $user = Auth::guard('publisher')->user();
+
+            Mail::to($user->email)->send(new PublisherBookUpdated($user, $book->name, $book->uuid));
+
+            Notification::send($user, new NotificationsPublisherBookUpdated($book->name, $book->uuid));
+
+            $admins = User::where('role', 'admin')->get();
+
+            foreach ($admins as $admin) {
+                Mail::to($admin->email)->send(new AdminBookUpdated($admin, $book));
+                Notification::send($admin, new NotificationsAdminBookUpdated($book));
+            }
+            */
+
+            return redirect()->route('publisher.books.index')->with('success', 'Book updated successfully');
+        } catch (Exception $e) {
+            \Log::error('Book update error: ' . $e->getMessage());
+            return back()->with('error', 'Book update failed. Please try again.')->withInput();
         }
+    }
 
-        if ($request->hasFile('image')) {
+    public function destroy(string $uuid)
+    {
+        try {
+            $book = Book::where('uuid', $uuid)->firstOrFail();
+
             if ($book->image) {
                 $isImageDeleted = Storage::disk('public')->delete($book->image);
 
                 if (!$isImageDeleted) {
                     return back()->with('error', 'Book image deletion failed');
                 }
-
-                $image = $request->file('image');
-                $image_name = uniqid("book_") . "_" . time() . "." . $image->extension();
-                $image_path = $image->storeAs('books_images', $image_name, 'public');
-                $isImageUpdated = $book->update([
-                    'image' => $image_path
-                ]);
-                if (!$isImageUpdated) {
-                    return back()->with('error', 'Book image update failed');
-                }
             }
-        }
 
-        $user = Auth::guard('publisher')->user();
+            $book_name = $book->name;
+            $publisher_name = $book->publisher->name;
 
-        Mail::to($user->email)->send(new PublisherBookUpdated($user, $book->name, $book->uuid));
+            $isDeleted = $book->delete();
 
-        Notification::send($user, new NotificationsPublisherBookUpdated($book->name, $book->uuid));
-
-        $admins = User::where('role', 'admin')->get();
-
-        foreach ($admins as $admin) {
-            Mail::to($admin->email)->send(new AdminBookUpdated($admin, $book));
-            Notification::send($admin, new NotificationsAdminBookUpdated($book));
-        }
-
-        return redirect()->route('publisher.books.index')->with('success', 'Book updated successfully');
-    }
-
-    public function destroy(string $uuid)
-    {
-
-        $book = Book::where('uuid', $uuid)->firstOrFail();
-
-        if ($book->image) {
-            $isImageDeleted = Storage::disk('public')->delete($book->image);
-
-            if (!$isImageDeleted) {
-                return back()->with('error', 'Book image deletion failed');
+            if (!$isDeleted) {
+                return back()->with('error', 'Book deletion failed');
             }
+
+            // Comment out email notifications temporarily to avoid SMTP errors
+            /*
+            $user = Auth::guard('publisher')->user();
+
+            Mail::to($user->email)->send(new PublisherBookDeleted($user, $book_name));
+
+            Notification::send($user, new NotificationsPublisherBookDeleted($book_name));
+
+            $admins = User::where('role', 'admin')->get();
+
+            foreach ($admins as $admin) {
+                Mail::to($admin->email)->send(new AdminBookDeleted($admin, $book_name, $publisher_name));
+                Notification::send($admin, new NotificationsAdminBookDeleted($book_name, $publisher_name));
+            }
+            */
+
+            return redirect()->route('publisher.books.index')->with('success', 'Book deleted successfully');
+        } catch (Exception $e) {
+            \Log::error('Book deletion error: ' . $e->getMessage());
+            return back()->with('error', 'Book deletion failed. Please try again.');
         }
-
-        $book_name = $book->name;
-        $publisher_name = $book->publisher->name;
-
-        $isDeleted = $book->delete();
-
-        if (!$isDeleted) {
-            return back()->with('error', 'Book deletion failed');
-        }
-
-        $user = Auth::guard('publisher')->user();
-
-        Mail::to($user->email)->send(new PublisherBookDeleted($user, $book_name));
-
-        Notification::send($user, new NotificationsPublisherBookDeleted($book_name));
-
-        $admins = User::where('role', 'admin')->get();
-
-        foreach ($admins as $admin) {
-            Mail::to($admin->email)->send(new AdminBookDeleted($admin, $book_name, $publisher_name));
-            Notification::send($admin, new NotificationsAdminBookDeleted($book_name, $publisher_name));
-        }
-
-        return redirect()->route('publisher.books.index')->with('success', 'Book deleted successfully');
     }
 }

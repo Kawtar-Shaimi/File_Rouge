@@ -1,0 +1,12 @@
+<VirtualHost *:80>
+     ServerName laravelht.vn
+     DocumentRoot D:/Lavarel/HTPortal/public
+     SetEnv APPLICATION_ENV "development"
+     <Directory D:/Lavarel/HTPortal/public>
+         DirectoryIndex index.php
+         AllowOverride All
+         Require all granted
+         Order allow,deny
+         Allow from all
+     </Directory>
+ </VirtualHost>
